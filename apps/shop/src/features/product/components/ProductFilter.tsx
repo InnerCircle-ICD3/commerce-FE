@@ -64,7 +64,7 @@ export function ProductFilter({
                                         intensity,
                                     }));
                                 }}
-                                className={filterbutton({
+                                className={filterButton({
                                     active:
                                         filter.intensity?.id === intensity.id,
                                 })}
@@ -90,7 +90,7 @@ export function ProductFilter({
                                         cupSize,
                                     }));
                                 }}
-                                className={filterbutton({
+                                className={filterButton({
                                     active: filter.cupSize?.id === cupSize.id,
                                 })}
                             >
@@ -114,7 +114,7 @@ export function ProductFilter({
     );
 }
 
-const filterbutton = cva("py-2 px-4 rounded-sm border", {
+const filterButton = cva("py-2 px-4 rounded-sm border", {
     variants: {
         active: {
             true: "border-black text-black font-medium",
