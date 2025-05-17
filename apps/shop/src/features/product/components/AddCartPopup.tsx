@@ -1,6 +1,7 @@
 "use client";
 
 import { useState } from "react";
+import { CancelIcon } from "@/src/features/cart/icons/Cancel";
 
 export default function AddToCartPopup({ onClose, onAddToCart }: { onClose: () => void; onAddToCart: () => void }) {
     const [selectedQuantity, setSelectedQuantity] = useState<number | "">("");
@@ -25,7 +26,9 @@ export default function AddToCartPopup({ onClose, onAddToCart }: { onClose: () =
             <div className="flex flex-col justify-start items-end w-[600px] overflow-hidden rounded-2xl">
                 <div className="flex justify-between items-center self-stretch flex-grow-0 flex-shrink-0 relative px-6 py-4 bg-white border-t-0 border-r-0 border-b border-l-0 border-[#E8E8EA]">
                     <p className="flex-grow-0 flex-shrink-0 text-2xl font-bold text-center text-black">장바구니 담기</p>
-                    <DeleteIcon onClick={onClose} className="w-8 h-8 relative" />
+                    <button type="button" onClick={onClose}>
+                        <CancelIcon className="w-8 h-8 relative" />
+                    </button>
                 </div>
                 <div className="flex flex-col justify-start items-start self-stretch flex-grow-0 flex-shrink-0 gap-10 px-6 pt-6 pb-10 bg-white">
                     <div className="flex flex-col justify-start items-start self-stretch flex-grow-0 flex-shrink-0 gap-4">
