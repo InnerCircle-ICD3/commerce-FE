@@ -3,29 +3,38 @@ export interface ProductType {
     title: string;
     description: string;
     price: number;
-    pricePerUnit?: string;
+    pricePerUnit: string;
     images: string[];
     tags: string[];
-    badges: Array<{
+    badges: {
         text: string;
         bgColor: string;
         textColor?: string;
-    }>;
+    }[];
     inStock: boolean;
-    coffeeSize?: string;
-    aromaFeatures?: string[];
-    bodyLevel?: number;
-    bitterLevel?: number;
-    acidLevel?: number;
-    roastLevel?: number;
-    quantity?: number;
-    limitDescription?: string;
-    additionalDescription?: string;
+    coffeeSize: string;
+    aromaFeatures: string[];
+    bodyLevel: number;
+    bitterLevel: number;
+    acidLevel: number;
+    roastLevel: number;
+    quantity: number;
+    limitDescription: string;
+    additionalDescription: string;
+    // 제품 상세 정보
     productDetails?: ProductDetails;
 }
 
 export interface ProductDetails {
-    detailText: string;
+    foodType: string;
+    origin: string;
+    expiryInfo: string;
+    volume: string;
+    ingredients: string;
+    returnPolicy: string;
+    storageMethod: string;
+    packaging: string;
+    notices: string[];
 }
 
 export interface ReviewType {
@@ -44,9 +53,4 @@ export interface RecommendedProductType {
     price: number;
     image: string;
     inStock: boolean;
-}
-
-export interface ProductCategoryType {
-    id: number;
-    label: string;
 }

@@ -3,7 +3,7 @@
 import { useRef, useState } from "react";
 
 export default function ProductQuantity() {
-    const [quantity, setQuantity] = useState(10);
+    const [quantity, setQuantity] = useState(0);
     const [selectedButton, setSelectedButton] = useState<number | null>(null);
     const [isInputActive, setIsInputActive] = useState(false);
     const inputRef = useRef<HTMLInputElement>(null);

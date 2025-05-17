@@ -40,9 +40,7 @@ export default function CoffeeLetter() {
             </section>
             <section className="flex flex-col justify-center self-stretch my-auto min-w-60">
                 <div className="flex flex-col justify-center">
-                    <h2 className="text-base font-semibold tracking-tight leading-snug text-neutral-700">
-                        4월 커피레터
-                    </h2>
+                    <h2 className="text-base font-semibold tracking-tight leading-snug text-neutral-700">커피레터</h2>
                     <h3 className="mt-3 text-3xl font-bold tracking-tight leading-9 text-black">
                         잠시 걸음을 멈추고
                         <br />

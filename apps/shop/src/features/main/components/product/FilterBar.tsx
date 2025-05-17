@@ -14,10 +14,7 @@ export const FilterBar = () => {
             </button>
 
             <nav className="flex gap-2.5 items-center self-stretch my-auto min-w-60 text-neutral-700">
-                <button
-                    type="button"
-                    className="flex gap-1 items-center self-stretch my-auto font-bold text-green-700"
-                >
+                <button type="button" className="flex gap-1 items-center self-stretch my-auto font-bold text-green-700">
                     <img
                         src="https://cdn.builder.io/api/v1/image/assets/TEMP/f8621762b7af151dad6726f0db8e3c3a7b94a7aa"
                         alt="Recommended"
