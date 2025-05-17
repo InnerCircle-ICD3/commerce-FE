@@ -1,16 +1,13 @@
 import type { ProductType } from "@/src/features/product/types";
 import ProductQuantity from "./ProductQuantity";
 import AddToCart from "./AddToCart";
+import { formatCurrency } from "@/src/shared/utils/formatUtils";
 
 interface ProductInfoProps {
     product: ProductType;
 }
 
 export function ProductInfo({ product }: ProductInfoProps) {
-    const formatPrice = (price: number) => {
-        return price.toLocaleString();
-    };
-
     return (
         <div className="flex flex-col gap-8 w-full max-w-xl">
             {/* 뱃지 영역 */}
@@ -38,8 +35,7 @@ export function ProductInfo({ product }: ProductInfoProps) {
             {/* 가격 정보 */}
             <div className="space-y-2">
                 <div className="flex items-center">
-                    <span className="text-2xl font-bold text-emerald-700">₩</span>
-                    <span className="text-2xl font-bold text-emerald-700 ml-1">{formatPrice(product.price)}</span>
+                    <span className="text-2xl font-bold text-emerald-700">{formatCurrency(product.price)}</span>
                 </div>
                 {product.pricePerUnit && <p className="text-sm text-gray-600">{product.pricePerUnit}</p>}
             </div>

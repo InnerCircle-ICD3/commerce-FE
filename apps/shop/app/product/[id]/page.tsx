@@ -1,10 +1,5 @@
 import { ProductPage } from "@/src/features/product/components/ProductPage";
-import {
-    mockProduct,
-    mockReviews,
-    mockReviewStats,
-    mockRecommendedProducts,
-} from "@/src/features/product/data/mockProduct";
+import { mockProduct, mockReviews, mockReviewStats, mockRecommendedProducts } from "@/src/features/product/data/mockProduct";
 import type { Metadata } from "next";
 
 export const metadata: Metadata = {
@@ -12,16 +7,14 @@ export const metadata: Metadata = {
     description: mockProduct.description,
 };
 
-export default function ProductDetailPage({
-    params,
-}: { params: { id: string } }) {
+interface ProductDetailPageProps {
+    params: Promise<{ id: string }>;
+}
+
+export default async function ProductDetailPage({ params }: ProductDetailPageProps) {
     // ID를 사용하여 필요한 데이터를 불러올 예정
-    return (
-        <ProductPage
-            product={mockProduct}
-            reviews={mockReviews}
-            reviewStats={mockReviewStats}
-            recommendedProducts={mockRecommendedProducts}
-        />
-    );
+    // const resolvedParams = await params;
+    // const id = resolvedParams.id;
+
+    return <ProductPage product={mockProduct} reviews={mockReviews} reviewStats={mockReviewStats} recommendedProducts={mockRecommendedProducts} />;
 }

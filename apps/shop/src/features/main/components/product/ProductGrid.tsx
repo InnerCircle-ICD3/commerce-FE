@@ -9,54 +9,63 @@ type BannerItem = {
     description: string;
 };
 
-type ProductItem = ProductCardProps;
+type ProductItem = ProductCardProps & {
+    type: "product";
+};
+
 type ProductGridItem = BannerItem | ProductItem;
 
 interface ProductGridProps {
     products: ProductGridItem[];
 }
 
+/**
+ * ProductItem 타입인지 확인하는 타입 가드
+ */
+const isProductItem = (item: ProductGridItem): item is ProductItem => {
+    return item.type === "product";
+};
+
+/**
+ * BannerItem 타입인지 확인하는 타입 가드
+ */
+const isBannerItem = (item: ProductGridItem): item is BannerItem => {
+    return item.type === "banner";
+};
+
+/**
+ * 안정적인 고유 키 생성 함수
+ */
+const getUniqueKey = (product: ProductGridItem, index: number): string => {
+    // 유효한 ID가 있는 경우 사용
+    if ("id" in product && typeof product.id === "string" && product.id) {
+        return product.id;
+    }
+
+    // 타입에 따라 적절한 식별자 생성
+    if (isBannerItem(product)) {
+        return `banner-${index}-${product.title.substring(0, 10).replace(/\s+/g, "-")}`;
+    }
+
+    if (isProductItem(product)) {
+        return `product-${index}-${product.name.substring(0, 10).replace(/\s+/g, "-")}`;
+    }
+
+    // 기본 키 생성
+    return `item-${index}`;
+};
+
 export const ProductGrid = ({ products }: ProductGridProps) => {
     return (
-        <div className="flex flex-wrap gap-4 items-start w-full max-md:max-w-full">
+        <div className="grid grid-cols-2 md:grid-cols-3 lg:grid-cols-4 gap-4 w-full">
             {products.map((product, index) => {
-                const getUniqueKey = (
-                    product: ProductGridItem,
-                    index: number,
-                ) => {
-                    if ("id" in product && product.id) {
-                        return product.id;
-                    }
-
-                    if ("type" in product && product.type === "banner") {
-                        return `banner-${index}-${product.title.substring(0, 10).replace(/\s+/g, "-")}`;
-                    }
-
-                    if ("name" in product && product.name) {
-                        return `product-${index}-${product.name.substring(0, 10).replace(/\s+/g, "-")}`;
-                    }
-
-                    return `item-${index}-${Date.now()}-${Math.random().toString(36).substr(2, 9)}`;
-                };
-
                 const uniqueKey = getUniqueKey(product, index);
 
-                if ("type" in product && product.type === "banner") {
-                    return (
-                        <BannerCard
-                            key={uniqueKey}
-                            image={product.image}
-                            title={product.title}
-                            description={product.description}
-                        />
-                    );
+                if (isBannerItem(product)) {
+                    return <BannerCard key={uniqueKey} image={product.image} title={product.title} description={product.description} />;
                 }
-                return (
-                    <ProductCard
-                        key={uniqueKey}
-                        {...(product as ProductItem)}
-                    />
-                );
+
+                return <ProductCard key={uniqueKey} {...product} />;
             })}
         </div>
     );

@@ -129,3 +129,12 @@ input[type="number"]::-webkit-inner-spin-button {
     -webkit-appearance: none; /* Chrome, Safari, Edge */
     margin: 0;
 }
+
+/* checkbox 색 검은색으로 통일 */
+input[type="checkbox"] {
+    accent-color: black;
+}
+
+button {
+    cursor: pointer;
+}

@@ -1,7 +1,9 @@
 import { Fragment } from "react";
+import { AddToCartButton } from "./AddToCartButton";
 import { Badge } from "./Badge";
 import { ProductFeature } from "./ProductFeature";
 import AddToCart from "@/src/features/product/components/AddToCart";
+import { formatCurrency } from "@/src/shared/utils/formatUtils";
 
 interface ProductBadge {
     text: string;
@@ -26,70 +28,49 @@ export interface ProductCardProps {
     outOfStock?: boolean;
 }
 
-export const ProductCard = ({
-    badges,
-    image,
-    features,
-    name,
-    description,
-    price,
-    unit,
-    outOfStock = false,
-}: ProductCardProps) => {
+export const ProductCard = ({ badges, image, features, name, description, price, unit, outOfStock = false }: ProductCardProps) => {
     return (
-        <article className="flex flex-col grow shrink justify-between px-4 py-5 bg-white rounded-xl border border-solid border-[color:var(--Line-Sub2,rgba(112,115,124,0.08))] h-[36rem] min-w-48 w-52 overflow-hidden">
-            <div className="flex flex-col flex-1 w-full">
-                <div className="w-full">
-                    <div className="flex flex-wrap gap-1 items-start w-full text-xs tracking-tight leading-snug text-center mb-4">
-                        {badges.map((badge, index) => {
-                            const badgeKey = `badge-${index}-${badge.text.replace(/\s+/g, "-")}`;
-                            return (
-                                <Badge key={badgeKey} variant={badge.variant}>
-                                    {badge.text}
-                                </Badge>
-                            );
-                        })}
+        <article className="w-full h-full pt-4 pb-6 px-4 bg-white rounded-xl border border-gray-200/10 flex flex-col justify-start items-start gap-4">
+            <div className="self-stretch flex-1 flex flex-col justify-between items-center gap-3">
+                <div className="self-stretch flex flex-col justify-start items-start gap-3">
+                    {/* 이미지 영역 */}
+                    <div className="self-stretch flex items-center justify-center overflow-hidden aspect-[136/117]">
+                        <img src={image} alt={name} className="w-full h-full object-cover" />
                     </div>
 
-                    <div className="px-1.5 mt-4 w-full h-44 flex items-center justify-center">
-                        <img src={image} alt={name} className="object-contain max-h-full max-w-full" />
-                    </div>
-
-                    <div className="flex gap-4 justify-center items-center mt-4 w-full text-center text-neutral-700 h-10">
+                    {/* 특징 영역 */}
+                    <div className="self-stretch flex justify-center items-center gap-4">
                         {features.map((feature, index) => {
                             const featureKey = `feature-${index}-${feature.value.replace(/\s+/g, "-")}`;
                             return (
                                 <Fragment key={featureKey}>
-                                    {index > 0 && (
-                                        <div className="shrink-0 self-stretch my-auto w-0 h-5 border border-solid bg-zinc-500 bg-opacity-20 border-zinc-500 border-opacity-20" />
-                                    )}
+                                    {index > 0 && <div className="w-0 h-5 origin-top-left border-l border-gray-200" />}
                                     <ProductFeature {...feature} />
                                 </Fragment>
                             );
                         })}
                     </div>
 
-                    <div className="mt-12 w-full">
-                        <div className="flex flex-col items-start w-full">
-                            <h3 className="text-base font-bold tracking-tight leading-snug text-black h-6 overflow-hidden">
-                                {name}
-                            </h3>
-                            <p className="mt-2 text-sm tracking-tight leading-5 text-neutral-900 h-10 overflow-hidden">
+                    {/* 제품 정보 영역 */}
+                    <div className="self-stretch flex flex-col justify-start items-start gap-4">
+                        <div className="self-stretch flex flex-col justify-start items-start gap-2">
+                            <h3 className="self-stretch text-center text-black text-base font-bold leading-normal">{name}</h3>
+                            <p className="self-stretch h-10 text-center text-neutral-900 text-sm font-normal leading-relaxed overflow-hidden">
                                 {description}
                             </p>
                         </div>
-                        <div className="flex flex-col mt-4 w-full leading-snug">
-                            <div className="flex gap-1 justify-center items-start w-full text-2xl font-bold tracking-tight text-green-700 whitespace-nowrap">
-                                <span>₩</span>
-                                <span>{price.toLocaleString()}</span>
+                        <div className="self-stretch flex flex-col justify-start items-center gap-0.5">
+                            <div className="self-stretch flex justify-center items-start gap-1">
+                                <span className="text-center text-emerald-700 text-2xl font-bold leading-relaxed">{formatCurrency(price)}</span>
                             </div>
-                            <p className="self-center text-sm tracking-tight text-neutral-700">{unit}</p>
+                            <p className="text-center text-neutral-700 text-sm">{unit}</p>
                         </div>
                     </div>
                 </div>
 
-                <div className="mt-auto pt-4 pb-8">
-                    <AddToCart title={name} inStock={!outOfStock} withPopup={true} />
+                {/* 버튼 영역 */}
+                <div className="self-stretch h-12 px-1 py-0.5">
+                    <AddToCartButton disabled={outOfStock} />
                 </div>
             </div>
         </article>

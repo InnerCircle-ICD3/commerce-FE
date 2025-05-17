@@ -3,6 +3,7 @@
 import type { RecommendedProductType } from "@/src/features/product/types";
 import { useToast } from "@/src/shared/hooks/useToast";
 import AddToCart from "@/src/features/product/components/AddToCart";
+import { formatCurrency } from "@/src/shared/utils/formatUtils";
 
 interface RecommendedProductsProps {
     products: RecommendedProductType[];
@@ -38,7 +39,7 @@ export function RecommendedProducts({ products }: RecommendedProductsProps) {
                                 </div>
 
                                 <div className="absolute bottom-[5.625rem] left-0 right-0 flex justify-center">
-                                    <div className="text-[#257a57] font-bold text-2xl">₩ {product.price.toLocaleString()}</div>
+                                    <div className="text-[#257a57] font-bold text-2xl">{formatCurrency(product.price)}</div>
                                 </div>
 
                                 <AddToCart title={product.title} inStock={product.inStock} withPopup={true} />

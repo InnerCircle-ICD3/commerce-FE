@@ -10,6 +10,9 @@ export default function Page() {
             <Link href="/product/1">
                 <Button className="w-auto">(임시) 커피 상품 상세 페이지로 이동</Button>
             </Link>
+            <Link href="/order">
+                <Button className="w-auto">(임시) 주문 내역 리스트 페이지로 이동</Button>
+            </Link>
             <Link href="/order/123456456789">
                 <Button className="w-auto">(임시) 주문 상세 페이지로 이동</Button>
             </Link>

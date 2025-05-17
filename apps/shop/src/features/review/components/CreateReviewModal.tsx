@@ -4,6 +4,7 @@ import { Modal } from "@/src/shared/components/shared/Modal";
 import Rating from "./Rating";
 import { useState } from "react";
 import { Button } from "@/src/shared/components/shared/button";
+import { formatCurrency } from "@/src/shared/utils/formatUtils";
 
 const MAX_CONTENT_LENGTH = 999;
 interface CreateReviewModalProps {
@@ -37,7 +38,7 @@ export default function CreateReviewModal({ product, isOpen, onClickClose }: Cre
                 <div className="w-50 h-40">이미지</div>
                 <div>
                     <p className="text-2xl font-bold mb-6">{product.title}</p>
-                    <p className="text-2xl font-bold text-primary">₩ {product.price.toLocaleString()}</p>
+                    <p className="text-2xl font-bold text-primary">{formatCurrency(product.price)}</p>
                 </div>
             </div>
             <div>
