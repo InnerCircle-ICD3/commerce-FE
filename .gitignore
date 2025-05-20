@@ -1,1 +1,5 @@
+# 의존성 폴더
 node_modules
+
+# Mac OS 시스템 파일
+**/.DS_Store
