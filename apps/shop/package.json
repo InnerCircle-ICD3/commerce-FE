@@ -10,6 +10,7 @@
     "dependencies": {
         "@commerce-fe/stores": "workspace:*",
         "@commerce-fe/utils": "workspace:*",
+        "@radix-ui/react-select": "^2.2.5",
         "@radix-ui/react-slot": "^1.2.0",
         "class-variance-authority": "^0.7.1",
         "clsx": "^2.1.1",

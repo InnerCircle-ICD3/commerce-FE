@@ -2,6 +2,7 @@
 import { Button } from "@/src/shared/components/shared/button";
 import { useModal } from "@/src/shared/hooks/useModal";
 import { useEffect } from "react";
+import AddAddress from "./AddAddress";
 
 export default function SelectShippingInfo() {
     const { openModal, closeModal, Modal } = useModal();
@@ -38,7 +39,7 @@ export default function SelectShippingInfo() {
                 <div>TODO: 배송 메시지</div>
             </div>
             <Modal title="배송지 변경" onClickClose={closeModal}>
-                <p>TODO: 배송지 변경 폼 추가</p>
+                <AddAddress />
             </Modal>
         </div>
     );
