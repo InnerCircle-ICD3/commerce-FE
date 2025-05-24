@@ -69,7 +69,9 @@ export default function SelectShippingInfo() {
                 </p>
                 <p>{address?.recipientPhone}</p>
             </div>
-            <div className="mt-4"></div>
+            <div className="mt-4">
+                <SelectDeliveryMessage />
+            </div>
             <Modal title="배송지 변경" onClickClose={closeModal}>
                 <AddressList addresses={addressList} onSelect={handleChangeAddress} currentAddress={address} />
             </Modal>
