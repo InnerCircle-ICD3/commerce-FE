@@ -169,7 +169,7 @@
         @apply border-border outline-ring/50;
     }
     body {
-        font-family: 'Pretendard';
+        font-family: 'Pretendard', sans-serif;
         @apply bg-background text-foreground;
     }
 
