@@ -30,9 +30,6 @@ export default function AddressItem({ address, onClick, checked }: AddressItemPr
                 </p>
                 <p>{address.recipientPhone}</p>
             </div>
-            <div>
-                <div>TODO: 배송 메시지</div>
-            </div>
         </div>
     );
 }
