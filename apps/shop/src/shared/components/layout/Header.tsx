@@ -2,6 +2,7 @@ import SearchProduct from "@/src/features/product/components/SearchProduct";
 import Tags from "./Tags";
 import { SubNav } from "./SubNav";
 import Link from "next/link";
+import ChatButton from "@/src/features/chat/components/ChatButton";
 
 function Header() {
     return (
@@ -16,6 +17,7 @@ function Header() {
                 <SearchProduct />
 
                 <nav className="flex gap-6 justify-center items-center self-stretch my-auto">
+                    <ChatButton />
                     <Link href="/cart">
                         <img
                             src="https://cdn.builder.io/api/v1/image/assets/TEMP/d83c3984fea3767c661c7b9a7ae20f706764920a"
