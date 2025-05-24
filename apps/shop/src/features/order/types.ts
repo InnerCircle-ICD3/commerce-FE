@@ -83,3 +83,14 @@ export type OrderItemType = {
         couponCode: string;
     }[];
 };
+
+export type AddressType = {
+    id: number;
+    name: string;
+    address1: string;
+    address2: string;
+    zipCode: string;
+    recipientName: string;
+    recipientPhone: string;
+    isDefault: boolean;
+};
