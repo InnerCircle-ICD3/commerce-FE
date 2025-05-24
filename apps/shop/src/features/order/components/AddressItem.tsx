@@ -19,7 +19,7 @@ export default function AddressItem({ address, onClick, checked }: AddressItemPr
                     </div>
                     {address.isDefault && <span className="text-sm text-gray-500 bg-gray-100 rounded-sm px-2 py-1">기본 배송지</span>}
                 </div>
-                <div>
+                <div className="flex items-center gap-2">
                     <Button variant="outline">수정</Button>
                     <Button variant="outline">삭제</Button>
                 </div>
