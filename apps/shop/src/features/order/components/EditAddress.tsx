@@ -3,22 +3,27 @@ import { Input } from "@/src/shared/components/shared/input";
 import { Select, SelectContent, SelectItem, SelectTrigger } from "@/src/shared/components/shared/select";
 import { SelectValue } from "@radix-ui/react-select";
 import { cva } from "class-variance-authority";
+import type { AddressType } from "../types";
 
-export default function AddAddress() {
-    // TODO: 배송지 추가 후 배송지 목록 조회
+interface EditAddressProps {
+    address?: AddressType;
+}
+
+export default function EditAddress({ address }: EditAddressProps) {
+    // TODO: address 값에 따라 주소 추가 or 주소 편집 분기처리
     return (
         <form className="flex flex-col gap-6">
             <div>
                 <h4 className={labelStyle()}>배송지명</h4>
-                <Input id="name" />
+                <Input id="name" defaultValue={address?.name} />
             </div>
             <div>
                 <h4 className={labelStyle()}>이름</h4>
-                <Input id="recipientName" />
+                <Input id="recipientName" defaultValue={address?.recipientName} />
             </div>
             <div>
                 <h4 className={labelStyle()}>전화번호</h4>
-                <Input id="recipientPhone" />
+                <Input id="recipientPhone" defaultValue={address?.recipientPhone} />
             </div>
             <div>
                 <div className="flex flex-col gap-2 mb-6">
@@ -27,24 +32,11 @@ export default function AddAddress() {
                         <Input name="zipCode" placeholder="우편번호" />
                         <Button variant="outline">주소 찾기</Button>
                     </div>
-                    <Input name="address1" placeholder="주소" />
-                    <Input name="address2" placeholder="상세주소" />
-                </div>
-                <div>
-                    <h4 className={labelStyle()}>배송 요청사항(선택)</h4>
-                    <Select>
-                        <SelectTrigger className="w-full">
-                            <SelectValue placeholder="선택" />
-                        </SelectTrigger>
-                        <SelectContent>
-                            <SelectItem value="1">1</SelectItem>
-                            <SelectItem value="2">2</SelectItem>
-                            <SelectItem value="3">3</SelectItem>
-                        </SelectContent>
-                    </Select>
+                    <Input name="address1" placeholder="주소" defaultValue={address?.address1} />
+                    <Input name="address2" placeholder="상세주소" defaultValue={address?.address2} />
                 </div>
                 <div className="flex items-center gap-1 my-6">
-                    <input type="checkbox" name="isDefault" id="isDefault" />
+                    <input type="checkbox" name="isDefault" id="isDefault" defaultChecked={address?.isDefault} />
                     <label htmlFor="isDefault">기본 배송지로 설정</label>
                 </div>
                 <Button size="full">저장하기</Button>

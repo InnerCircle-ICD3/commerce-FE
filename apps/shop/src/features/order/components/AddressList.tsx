@@ -28,9 +28,11 @@ export default function AddressList({ addresses, onSelect, currentAddress }: Add
 
     return (
         <div>
-            <div>
-                {/*  */}
-                <Button variant="outline">배송지 추가하기</Button>
+            <div className="mb-4">
+                {/* TODO: 배송지 추가 버튼 클릭 시 모달 추가 or 이동 */}
+                <Button variant="outline" size="full">
+                    배송지 추가하기
+                </Button>
             </div>
             <ul className="flex flex-col gap-5">
                 {addresses.map(address => (
