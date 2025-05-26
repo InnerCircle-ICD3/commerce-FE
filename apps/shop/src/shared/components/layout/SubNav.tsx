@@ -1,4 +1,4 @@
-import React from 'react';
+import { Fragment } from "react";
 
 interface SubNavItemProps {
     text: string;
@@ -32,20 +32,18 @@ const menuItems: MenuItem[] = [
 
 export function SubNav() {
     return (
-        <div className="w-full bg-black text-white">
+        <nav aria-label="Sub Navigation" className="w-full bg-black text-white">
             <div className="flex items-center justify-center h-14 mx-auto max-w-screen-xl">
-                <div className="flex items-center justify-start w-full px-4 sm:px-6 lg:px-8 flex-nowrap overflow-x-auto hide-scrollbar">
-                    <div className="flex items-center space-x-5 flex-nowrap min-w-min">
-                        {menuItems.map((item) => (
-                            <React.Fragment key={item.id}>
-                                <SubNavItem text={item.text} />
-                                {menuItems.indexOf(item) < menuItems.length - 1 && <SubNavSeparator />}
-                            </React.Fragment>
-                        ))}
-                    </div>
+                <div className="flex items-center justify-start w-full px-4 sm:px-6 lg:px-8 overflow-x-auto hide-scrollbar">
+                    {menuItems.map((item, index) => (
+                        <Fragment key={item.id}>
+                            <SubNavItem text={item.text} />
+                            {index < menuItems.length - 1 && <SubNavSeparator />}
+                        </Fragment>
+                    ))}
                 </div>
             </div>
-        </div>
+        </nav>
     );
 }
 
