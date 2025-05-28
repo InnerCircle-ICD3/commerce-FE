@@ -1,7 +1,33 @@
+"use client";
+
 import React from "react";
 import { KakaoIcon, NaverIcon, GoogleIcon } from "@/src/shared/components/shared/Icon";
+import { useRouter } from "next/navigation";
+import { signIn } from "next-auth/react";
 
 export default function LoginComponent() {
+    const router = useRouter();
+
+    const handleNaverLogin = () => {
+        // NextAuth의 signIn 함수를 사용하여 네이버 로그인 시작
+        signIn("naver", {
+            callbackUrl: "/main", // 로그인 성공 후 리다이렉트될 URL
+            redirect: true, // 자동 리다이렉트 활성화
+        });
+    };
+
+    // Kakao 로그인 처리 함수 (나중에 구현 예정)
+    const handleKakaoLogin = () => {
+        // TODO: 카카오 로그인 구현
+        alert("카카오 로그인은 아직 구현되지 않았습니다.");
+    };
+
+    // Google 로그인 처리 함수 (나중에 구현 예정)
+    const handleGoogleLogin = () => {
+        // TODO: 구글 로그인 구현
+        alert("구글 로그인은 아직 구현되지 않았습니다.");
+    };
+
     return (
         <div className="w-full min-h-[80vh] flex items-center justify-center mt-[-3rem]">
             {/* 메인 컨텐츠 */}
@@ -13,7 +39,11 @@ export default function LoginComponent() {
 
                 <div className="space-y-2">
                     {/* 카카오 로그인 버튼 */}
-                    <button type="button" className="w-full h-12 rounded-lg bg-[#fee500] flex items-center justify-center gap-2">
+                    <button
+                        type="button"
+                        className="w-full h-12 rounded-lg bg-[#fee500] flex items-center justify-center gap-2"
+                        onClick={handleKakaoLogin}
+                    >
                         <div className="w-5 h-5 flex items-center justify-center">
                             <KakaoIcon />
                         </div>
@@ -21,7 +51,11 @@ export default function LoginComponent() {
                     </button>
 
                     {/* 네이버 로그인 버튼 */}
-                    <button type="button" className="w-full h-12 rounded-lg bg-[#00c73c] flex items-center justify-center gap-2">
+                    <button
+                        type="button"
+                        className="w-full h-12 rounded-lg bg-[#00c73c] flex items-center justify-center gap-2"
+                        onClick={handleNaverLogin}
+                    >
                         <div className="w-5 h-5 flex items-center justify-center">
                             <NaverIcon />
                         </div>
@@ -32,6 +66,7 @@ export default function LoginComponent() {
                     <button
                         type="button"
                         className="w-full h-12 rounded-lg bg-white border border-gray-200/70 flex items-center justify-center gap-2"
+                        onClick={handleGoogleLogin}
                     >
                         <div className="w-5 h-5 flex items-center justify-center">
                             <GoogleIcon />

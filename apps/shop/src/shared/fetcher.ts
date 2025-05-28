@@ -8,9 +8,9 @@ export type CustomError = Error & {
     message: string;
 };
 
-const createFetcher = (url: string, getHeaders?: () => HeadersInit) => {
+const createFetcher = (url: string, getHeaders?: () => Promise<HeadersInit> | HeadersInit) => {
     return async function fetcher<T>(path: string, options: RequestInit = {}): Promise<ApiResponse<T>> {
-        const headers = getHeaders?.() ?? {};
+        const headers = getHeaders ? await getHeaders() : {};
         const res = await fetch(`${url}${path}`, {
             ...options,
             headers: {
@@ -43,7 +43,20 @@ export const fetchClient = () => {
         throw new Error("NEXT_PUBLIC_API_URL이 설정되지 않았습니다.");
     }
 
-    return createFetcher(process.env.NEXT_PUBLIC_API_URL);
+    return createFetcher(process.env.NEXT_PUBLIC_API_URL, async () => {
+        // NextAuth 세션에서 JWT 토큰 가져오기
+        if (typeof window !== "undefined") {
+            const { getSession } = await import("next-auth/react");
+            const session = await getSession();
+
+            if (session?.accessToken) {
+                return {
+                    Authorization: `Bearer ${session.accessToken}`,
+                };
+            }
+        }
+        return {};
+    });
 };
 
 export const fetchServer = () => {

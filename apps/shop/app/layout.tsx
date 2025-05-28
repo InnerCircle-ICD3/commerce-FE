@@ -3,12 +3,7 @@
 import { Geist, Geist_Mono } from "next/font/google";
 import localFont from "next/font/local";
 import "./globals.css";
-import TanstackQueryProviders from "@/src/shared/TanstackQueryProviders";
-import Footer from "@/src/shared/components/layout/Footer";
-import Header from "@/src/shared/components/layout/Header";
-import UserIdInitializer from "@/src/shared/components/UserIdInitializer";
-import { ChatNotificationProvider } from "@/src/features/chat/components/ChatNotificationProvider";
-import ChatButton from "@/src/features/chat/components/ChatButton";
+import Providers from "./providers";
 
 const geistSans = Geist({
     variable: "--font-geist-sans",
@@ -49,15 +44,7 @@ export default function RootLayout({
     return (
         <html lang="ko">
             <body className={`${geistSans.variable} ${geistMono.variable} ${pretendard.variable} antialiased`}>
-                <TanstackQueryProviders>
-                    <ChatNotificationProvider>
-                        <UserIdInitializer />
-                        <Header />
-                        <main>{children}</main>
-                        <Footer />
-                        <ChatButton isFloating={true} />
-                    </ChatNotificationProvider>
-                </TanstackQueryProviders>
+                <Providers>{children}</Providers>
             </body>
         </html>
     );
