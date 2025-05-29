@@ -57,7 +57,7 @@ export default function SelectShippingInfo() {
             <h4 className="text-lg font-bold">배송지</h4>
             <div className="flex justify-between items-center mb-5">
                 <div className="flex items-center gap-2">
-                    <h3 className="font-bold">{address?.alias}</h3>
+                    <h3 className="font-bold text-base">{address?.alias}</h3>
                     {address?.isDefault && <span className="text-sm text-gray-500 bg-gray-100 rounded-sm px-2 py-1">기본 배송지</span>}
                 </div>
                 <Button variant="outline" onClick={openModal}>
@@ -74,8 +74,7 @@ export default function SelectShippingInfo() {
                 <SelectDeliveryMessage />
             </div>
             <Modal title="배송지 변경" onClickClose={closeModal}>
-                {/* <AddressList addresses={addressList} onSelect={handleChangeAddress} currentAddress={address} /> */}
-                <EditAddress address={address} />
+                <AddressList addresses={addressList} onSelect={handleChangeAddress} currentAddress={address} />
             </Modal>
         </div>
     );

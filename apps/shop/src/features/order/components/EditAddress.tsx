@@ -8,6 +8,7 @@ import { z } from "zod";
 import { useDaumPostcodePopup } from "react-daum-postcode";
 interface EditAddressProps {
     address?: AddressType;
+    onComplete?: () => void;
 }
 
 const createAddressSchema = z.object({
@@ -18,7 +19,7 @@ const createAddressSchema = z.object({
     address2: z.string(),
     zipCode: z.string(),
 });
-export default function EditAddress({ address }: EditAddressProps) {
+export default function EditAddress({ address, onComplete }: EditAddressProps) {
     const { inputs, setInputs, handleChange } = useZodForm(
         createAddressSchema,
         {
@@ -33,7 +34,8 @@ export default function EditAddress({ address }: EditAddressProps) {
     );
     const { mutate, isPending } = useEditAddress({
         onSuccess: () => {
-            console.log("success");
+            // TODO: 배송지 캐싱 무효화
+            onComplete?.();
         },
     });
 
