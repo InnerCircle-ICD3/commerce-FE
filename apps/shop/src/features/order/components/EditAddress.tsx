@@ -1,21 +1,51 @@
 import { Button } from "@/src/shared/components/shared/button";
 import { Input } from "@/src/shared/components/shared/input";
-import { Select, SelectContent, SelectItem, SelectTrigger } from "@/src/shared/components/shared/select";
-import { SelectValue } from "@radix-ui/react-select";
 import { cva } from "class-variance-authority";
 import type { AddressType } from "../types";
+import { useEditAddress } from "../hooks/useEditAddress";
+import { useZodForm } from "@/src/shared/hooks/useZodForm";
+import { z } from "zod";
 
 interface EditAddressProps {
     address?: AddressType;
 }
 
+const createAddressSchema = z.object({
+    alias: z.string(),
+    recipientName: z.string(),
+    recipientPhone: z.string(),
+    address1: z.string(),
+    address2: z.string(),
+    zipCode: z.string(),
+});
 export default function EditAddress({ address }: EditAddressProps) {
-    // TODO: address 값에 따라 주소 추가 or 주소 편집 분기처리
+    const { inputs } = useZodForm(
+        createAddressSchema,
+        {
+            alias: "",
+            recipientName: "",
+            recipientPhone: "",
+            address1: "",
+            address2: "",
+            zipCode: "",
+        },
+        { validateOnChange: true },
+    );
+    const { mutate, isPending } = useEditAddress({
+        onSuccess: () => {
+            console.log("success");
+        },
+    });
+
+    const handleSubmit = () => {
+        mutate({ address: { ...inputs, isDefault: false, id: address?.id } });
+    };
+
     return (
-        <form className="flex flex-col gap-6">
+        <form className="flex flex-col gap-6" onSubmit={handleSubmit}>
             <div>
                 <h4 className={labelStyle()}>배송지명</h4>
-                <Input id="name" defaultValue={address?.name} />
+                <Input id="alias" defaultValue={address?.alias} />
             </div>
             <div>
                 <h4 className={labelStyle()}>이름</h4>
@@ -39,7 +69,9 @@ export default function EditAddress({ address }: EditAddressProps) {
                     <input type="checkbox" name="isDefault" id="isDefault" defaultChecked={address?.isDefault} />
                     <label htmlFor="isDefault">기본 배송지로 설정</label>
                 </div>
-                <Button size="full">저장하기</Button>
+                <Button size="full" type="button" onClick={handleSubmit}>
+                    저장하기
+                </Button>
             </div>
         </form>
     );

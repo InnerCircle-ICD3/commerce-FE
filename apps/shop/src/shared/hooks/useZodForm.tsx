@@ -2,16 +2,10 @@ import { useState } from "react";
 import { type ZodObject, ZodError, type z } from "zod";
 
 // uncontrolled input element 기반
-export function useZodForm<T extends ZodObject<z.ZodRawShape>>(
-    schema: T,
-    options?: {
-        initialValues?: z.infer<T>;
-        validateOnChange?: boolean;
-    },
-) {
+export function useZodForm<T extends ZodObject<z.ZodRawShape>>(schema: T, initialValues: z.infer<T>, options?: { validateOnChange?: boolean }) {
     type FormData = z.infer<typeof schema>;
 
-    const [inputs, setInputs] = useState<Partial<FormData>>(options?.initialValues || {});
+    const [inputs, setInputs] = useState<FormData>(initialValues);
     const [errors, setErrors] = useState<Partial<Record<keyof FormData, string>>>({});
 
     const handleChange = (e: React.ChangeEvent<HTMLInputElement>) => {
