@@ -62,5 +62,6 @@ export function useZodForm<T extends ZodObject<z.ZodRawShape>>(schema: T, initia
         handleChange,
         validate,
         reset,
+        setInputs,
     };
 }
