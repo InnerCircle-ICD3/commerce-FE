@@ -77,9 +77,9 @@ export default function UserReviewCard({ review, onEdit, onDelete }: UserReviewC
 
             {/* 관리자 답변 */}
             {review.adminReply && (
-                <div className="bg-gray-50 rounded-lg p-4 border-l-4 border-blue-500">
+                <div className="bg-gray-50 rounded-lg p-4 border-l-4 border-[#257A57]">
                     <div className="flex items-center gap-2 mb-2">
-                        <span className="text-sm font-medium text-blue-600">관리자 답변</span>
+                        <span className="text-sm font-medium text-[#257A57]">관리자 답변</span>
                         <span className="text-xs text-gray-500">{formatDate(review.adminReply.createdAt)}</span>
                     </div>
                     <p className="text-sm text-gray-700">{review.adminReply.content}</p>

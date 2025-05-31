@@ -26,7 +26,7 @@ export default async function ReviewManagePage() {
                             </div>
                             <div className="text-right">
                                 <div className="text-sm text-gray-600">이번 달 작성</div>
-                                <div className="text-lg font-semibold text-blue-600 mt-1">
+                                <div className="text-lg font-semibold text-[#257A57] mt-1">
                                     {/* TODO: 이번 달 작성한 리뷰 수 계산 */}
                                     0개
                                 </div>

@@ -1,6 +1,4 @@
 import { Fragment } from "react";
-import { AddToCartButton } from "./AddToCartButton";
-import { Badge } from "./Badge";
 import { ProductFeature } from "./ProductFeature";
 import AddToCart from "@/src/features/product/components/AddToCart";
 import { formatCurrency } from "@/src/shared/utils/formatUtils";
@@ -18,6 +16,7 @@ interface ProductFeatureType {
 }
 
 export interface ProductCardProps {
+    productId: number;
     badges: ProductBadge[];
     image: string;
     features: ProductFeatureType[];
@@ -25,10 +24,10 @@ export interface ProductCardProps {
     description: string;
     price: number;
     unit: string;
-    outOfStock?: boolean;
+    stockQuantity: number;
 }
 
-export const ProductCard = ({ badges, image, features, name, description, price, unit, outOfStock = false }: ProductCardProps) => {
+export const ProductCard = ({ productId, badges, image, features, name, description, price, unit, stockQuantity }: ProductCardProps) => {
     return (
         <article className="w-full h-full pt-4 pb-6 px-4 bg-white rounded-xl border border-gray-200/10 flex flex-col justify-start items-start gap-4">
             <div className="self-stretch flex-1 flex flex-col justify-between items-center gap-3">
@@ -70,7 +69,7 @@ export const ProductCard = ({ badges, image, features, name, description, price,
 
                 {/* 버튼 영역 */}
                 <div className="self-stretch h-12 px-1 py-0.5">
-                    <AddToCartButton disabled={outOfStock} />
+                    <AddToCart productId={productId} title={name} stockQuantity={stockQuantity} withPopup={true} />
                 </div>
             </div>
         </article>

@@ -22,6 +22,7 @@ export interface ProductType {
     limitDescription?: string;
     additionalDescription?: string;
     productDetails?: ProductDetails;
+    stockQuantity: number;
 }
 
 export interface ProductDetails {
@@ -43,7 +44,7 @@ export interface RecommendedProductType {
     description: string;
     price: number;
     image: string;
-    inStock: boolean;
+    stockQuantity: number;
 }
 
 export interface ProductCategoryType {

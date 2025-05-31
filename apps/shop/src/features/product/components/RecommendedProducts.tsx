@@ -31,7 +31,7 @@ export function RecommendedProducts({ products }: RecommendedProductsProps) {
                                     <div className="text-[#257a57] font-bold text-2xl">{formatCurrency(product.price)}</div>
                                 </div>
 
-                                <AddToCart title={product.title} inStock={product.inStock} withPopup={true} />
+                                <AddToCart productId={product.id} title={product.title} stockQuantity={product.stockQuantity} withPopup={true} />
                             </div>
                         </div>
                     ))}

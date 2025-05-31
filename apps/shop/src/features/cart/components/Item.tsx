@@ -1,22 +1,30 @@
 "use client";
 
+import { CancelIcon } from "@/src/shared/icons/Cancel";
 import QuantityChange from "./QuantityChange";
+import { formatNumber } from "@/src/shared/utils/formatUtils";
 
 interface ItemProps {
-    title: string;
+    productId: number;
+    name: string;
     price: number;
     quantity: number;
     stockQuantity: number;
     image: string;
+    selected: boolean;
+    onSelectChange: () => void;
+    onDelete: () => void;
 }
 
 const LOW_STOCK_QUANTITY = 10;
+const QUANTITY_STEP = 10;
 
-export default function Item({ title, price, quantity, stockQuantity, image }: ItemProps) {
-    // todo: 재고가 10개 이하일 때 표시하는 부분의 디자인은 아직 안나옴
+export default function Item({ productId, name, price, quantity, stockQuantity, image, selected, onSelectChange, onDelete }: ItemProps) {
+    const totalPrice = (quantity / QUANTITY_STEP) * price;
+
     const getQuantityMessage = () => {
-        if (quantity <= 0) {
-            return "품절";
+        if (stockQuantity === 0) {
+            return "상품이 품절되었습니다.";
         }
 
         return `품절 임박! 남은 수량: ${stockQuantity}`;
@@ -25,40 +33,27 @@ export default function Item({ title, price, quantity, stockQuantity, image }: I
     return (
         <div className="md:min-w-md">
             <div className="flex justify-between items-center">
-                <input type="checkbox" className="w-4.5 h-4.5" />
-                <button type="button">
-                    <svg
-                        width="24"
-                        height="24"
-                        viewBox="0 0 24 24"
-                        fill="none"
-                        xmlns="http://www.w3.org/2000/svg"
-                        className="flex-grow-0 flex-shrink-0 w-6 h-6 relative"
-                        preserveAspectRatio="none"
-                        aria-hidden="true"
-                    >
-                        <path
-                            d="M6.39945 18.6537L5.3457 17.5999L10.9457 11.9999L5.3457 6.39994L6.39945 5.34619L11.9995 10.9462L17.5995 5.34619L18.6532 6.39994L13.0532 11.9999L18.6532 17.5999L17.5995 18.6537L11.9995 13.0537L6.39945 18.6537Z"
-                            fill="#37383C"
-                            fillOpacity="0.61"
-                        />
-                    </svg>
+                <input type="checkbox" className="w-4.5 h-4.5" checked={selected} onChange={onSelectChange} />
+                <button type="button" onClick={onDelete}>
+                    <CancelIcon className="w-6 h-6" />
                 </button>
             </div>
             <div className="flex items-center gap-4 p-4 border-b border-gray-200">
-                <img src={image} alt={title} className="w-16 h-16 object-cover" />
+                <img src={image} alt={name} className="w-16 h-16 object-cover" />
                 <div className="flex flex-col flex-grow">
                     <div className="flex flex-col justify-start items-start flex-grow gap-2">
-                        <h2 className="flex-grow-0 flex-shrink-0 text-sm font-bold text-left text-black">{title}</h2>
+                        <h2 className="flex-grow-0 flex-shrink-0 text-sm font-bold text-left text-black">{name}</h2>
                         <div className="flex gap-1 items-center">
-                            <p className="flex-grow-0 flex-shrink-0 text-sm font-bold text-center text-[#257a57]">&#8361; {price.toLocaleString()}</p>
+                            <p className="flex-grow-0 flex-shrink-0 text-sm font-bold text-center text-[#257a57]">
+                                &#8361; {formatNumber(totalPrice)}
+                            </p>
                             <p className="flex-grow-0 flex-shrink-0 text-xs text-center text-[#257a57]">
-                                ({quantity} x &#8361;{price.toLocaleString()})
+                                ({quantity} x &#8361;{formatNumber(price)})
                             </p>
                         </div>
-                        <QuantityChange initQuantity={quantity} />
+                        <QuantityChange productId={productId} initQuantity={quantity} stockQuantity={stockQuantity} />
                     </div>
-                    <div>{stockQuantity < LOW_STOCK_QUANTITY && <p className="text-red-500 text-xs font-bold">{getQuantityMessage()}</p>}</div>
+                    <div>{stockQuantity < LOW_STOCK_QUANTITY && <p className="text-red-500 text-xs font-bold mt-2">{getQuantityMessage()}</p>}</div>
                 </div>
             </div>
         </div>

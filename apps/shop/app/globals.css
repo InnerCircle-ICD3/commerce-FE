@@ -3,24 +3,24 @@
 
 /* Pretendard 폰트 추가 */
 @font-face {
-    font-family: 'Pretendard';
+    font-family: "Pretendard";
     font-weight: 400;
     font-display: swap;
-    src: url('../public/fonts/Pretendard-Regular.woff2') format('woff2');
+    src: url("../public/fonts/Pretendard-Regular.woff2") format("woff2");
 }
 
 @font-face {
-    font-family: 'Pretendard';
+    font-family: "Pretendard";
     font-weight: 600;
     font-display: swap;
-    src: url('../public/fonts/Pretendard-SemiBold.woff2') format('woff2');
+    src: url("../public/fonts/Pretendard-SemiBold.woff2") format("woff2");
 }
 
 @font-face {
-    font-family: 'Pretendard';
+    font-family: "Pretendard";
     font-weight: 700;
     font-display: swap;
-    src: url('../public/fonts/Pretendard-Bold.woff2') format('woff2');
+    src: url("../public/fonts/Pretendard-Bold.woff2") format("woff2");
 }
 
 @custom-variant dark (&:is(.dark *));
@@ -81,7 +81,7 @@
     /* normal 색상 */
     --color-normal-strong: #000000;
     --color-normal-default: #171719;
-    --color-normal-sub: rgba(46, 47, 51, 0.88); /* 2E2F33, 88% */ 
+    --color-normal-sub: rgba(46, 47, 51, 0.88); /* 2E2F33, 88% */
     --color-normal-sub2: rgba(55, 56, 60, 0.61); /* 37383C, 61% */
     --color-normal-caption: rgba(55, 56, 60, 0.28); /* 37383C, 28% */
     --color-normal-disable: rgba(55, 56, 60, 0.16); /* 37383C, 16% */
@@ -169,7 +169,7 @@
         @apply border-border outline-ring/50;
     }
     body {
-        font-family: 'Pretendard', sans-serif;
+        font-family: "Pretendard", sans-serif;
         @apply bg-background text-foreground;
     }
 
@@ -288,6 +288,10 @@ input[type="checkbox"] {
 
 button {
     cursor: pointer;
+}
+
+button:disabled {
+    cursor: not-allowed;
 }
 
 /* 스크롤바를 숨기는 유틸리티 클래스 */
