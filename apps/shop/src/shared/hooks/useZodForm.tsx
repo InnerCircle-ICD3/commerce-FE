@@ -52,7 +52,7 @@ export function useZodForm<T extends ZodObject<z.ZodRawShape>>(schema: T, initia
     };
 
     const reset = () => {
-        setInputs({});
+        setInputs(initialValues);
         setErrors({});
     };
 
