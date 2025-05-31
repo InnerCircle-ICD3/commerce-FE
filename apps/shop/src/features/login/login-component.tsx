@@ -1,7 +1,37 @@
+"use client";
+
 import React from "react";
 import { KakaoIcon, NaverIcon, GoogleIcon } from "@/src/shared/components/shared/Icon";
+import { useUserStore } from "@packages/stores/userStore";
+import { useRouter } from "next/navigation";
 
 export default function LoginComponent() {
+    const router = useRouter();
+
+    const { login } = useUserStore();
+
+    // TODO : 네이버 로그인 적용 후 삭제 예정
+    const handleTestLogin = () => {
+        // 테스트용 사용자 정보
+        const userInfo = {
+            id: "123",
+            name: "김팔공",
+            nickname: "팔공팔공일",
+            email: "user1234@kakao.com",
+        };
+        
+        const testUser = userInfo;
+
+        // 테스트용 토큰
+        const testToken = "test_token_123456";
+
+        // 로그인 처리
+        login(testUser, testToken);
+        
+        // 메인 페이지로 리다이렉트
+        router.push("/main");
+    };
+
     return (
         <div className="w-full min-h-[80vh] flex items-center justify-center mt-[-3rem]">
             {/* 메인 컨텐츠 */}
@@ -21,7 +51,11 @@ export default function LoginComponent() {
                     </button>
 
                     {/* 네이버 로그인 버튼 */}
-                    <button type="button" className="w-full h-12 rounded-lg bg-[#00c73c] flex items-center justify-center gap-2">
+                    <button 
+                        type="button" 
+                        className="w-full h-12 rounded-lg bg-[#00c73c] flex items-center justify-center gap-2"
+                        onClick={handleTestLogin}
+                    >
                         <div className="w-5 h-5 flex items-center justify-center">
                             <NaverIcon />
                         </div>
