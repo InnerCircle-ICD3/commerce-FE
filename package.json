@@ -7,7 +7,12 @@
         "test": "echo \"Error: no test specified\" && exit 1",
         "preinstall": "npx only-allow pnpm",
         "lint": "biome check .",
-        "format": "biome format --write ."
+        "format": "biome format --write .",
+        "build:shop": "pnpm turbo run build --filter=shop",
+        "dev:admin": "pnpm --filter admin dev",
+        "dev:shop": "pnpm --filter shop dev",
+        "build:admin": "pnpm turbo run build --filter=admin",
+        "build:all": "pnpm turbo run build"
     },
     "keywords": [],
     "author": "",
