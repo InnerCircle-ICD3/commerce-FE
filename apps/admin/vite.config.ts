@@ -16,6 +16,7 @@ export default defineConfig({
                 __dirname,
                 "../../packages/stores",
             ),
+            "@": path.resolve(__dirname, "./src"),
         },
     },
 });
