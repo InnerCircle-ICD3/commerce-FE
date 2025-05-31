@@ -3,22 +3,39 @@
 import { useState } from "react";
 import { CancelIcon } from "@/src/shared/icons/Cancel";
 
-export default function AddToCartPopup({ onClose, onAddToCart }: { onClose: () => void; onAddToCart: () => void }) {
+type AddToCartPopupProps = {
+    stockQuantity: number;
+    onClose: () => void;
+    onAddToCart: (quantity: number) => void;
+};
+
+export default function AddToCartPopup({ stockQuantity, onClose, onAddToCart }: AddToCartPopupProps) {
     const [selectedQuantity, setSelectedQuantity] = useState<number | "">("");
-    const quantities = [10, 20, 30, 40, 50, 60];
+    const [errorMessage, setErrorMessage] = useState<string | null>(null);
+    const quantities = [10, 20, 30, 40, 50, 60].filter(quantity => quantity <= stockQuantity);
 
     const handleQuantityChange = (event: React.ChangeEvent<HTMLInputElement>) => {
         const value = Number.parseInt(event.target.value);
 
         if (!Number.isNaN(value)) {
             setSelectedQuantity(value);
+            setErrorMessage(null);
         } else {
             setSelectedQuantity("");
+            setErrorMessage(null);
         }
     };
 
     const handleQuantitySelect = (quantity: number) => {
         setSelectedQuantity(quantity);
+        setErrorMessage(null);
+    };
+
+    const handleAddToCart = () => {
+        if (Number.isNaN(selectedQuantity)) return;
+
+        const quantity = selectedQuantity === "" ? 0 : Number(selectedQuantity);
+        onAddToCart(quantity);
     };
 
     return (
@@ -37,11 +54,12 @@ export default function AddToCartPopup({ onClose, onAddToCart }: { onClose: () =
                         </div>
                         <input
                             type="number"
-                            placeholder="10개 단위로 수량을 입력해 주세요."
+                            placeholder="수량을 입력해 주세요."
                             className="flex justify-start items-center flex-grow-0 flex-shrink-0 w-[552px] h-10 relative gap-2.5 px-1 pb-2 border-t-0 border-r-0 border-b border-l-0 border-black"
                             value={selectedQuantity}
                             onChange={handleQuantityChange}
                         />
+                        {errorMessage && <p className="text-xs text-red-500 mt-1">{errorMessage}</p>}
                         <div className="flex justify-start items-center self-stretch flex-grow-0 flex-shrink-0 gap-2">
                             {quantities.map(quantity => (
                                 <button
@@ -66,7 +84,7 @@ export default function AddToCartPopup({ onClose, onAddToCart }: { onClose: () =
                     <button
                         type="button"
                         className="flex justify-center items-center self-stretch flex-grow-0 flex-shrink-0 h-12 relative gap-2 px-4 py-3 rounded-lg bg-[#257a57] text-white text-sm font-semibold"
-                        onClick={onAddToCart}
+                        onClick={handleAddToCart}
                     >
                         장바구니 담기
                     </button>

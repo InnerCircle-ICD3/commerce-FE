@@ -2,16 +2,24 @@
 
 import AddCartPopup from "@/src/features/product/components/AddCartPopup";
 import AddToCartButton from "@/src/features/product/components/AddToCartButton";
+import { type CustomError, fetchClient } from "@/src/shared/fetcher";
 import { useToast } from "@/src/shared/hooks/useToast";
 import { useState } from "react";
+import type { AddCartItemResponse } from "../../cart/types/cart";
 
-export default function AddToCart({
-    title,
-    inStock,
-    withPopup = false,
-}: { title: string; inStock: boolean; withPopup?: boolean }) {
+type AddToCartProps = {
+    productId: number;
+    title: string;
+    stockQuantity: number;
+    withPopup?: boolean;
+    quantity?: number;
+};
+
+export default function AddToCart({ productId, title, stockQuantity, withPopup = false, quantity }: AddToCartProps) {
     const { toast, ToastUI } = useToast();
     const [isPopupOpen, setIsPopupOpen] = useState(false);
+    const fetch = fetchClient();
+    const inStock = stockQuantity > 0;
 
     const onButtonClick = () => {
         if (!inStock) {
@@ -21,19 +29,77 @@ export default function AddToCart({
         if (withPopup) {
             setIsPopupOpen(true);
         } else {
-            AddToCart();
+            if (!quantity && quantity !== 0) return;
+            validateQuantity(quantity) && addToCart(quantity);
         }
     };
 
-    const AddToCart = () => {
-        //todo: 장바구니 추가 로직 구현
-        showToast();
+    const validateQuantity = (quantity: number) => {
+        if (quantity < 1) {
+            toast({
+                message: "수량은 1개 이상이어야 합니다.",
+            });
+
+            return false;
+        }
+
+        if (quantity > stockQuantity) {
+            toast({
+                message: `재고가 부족합니다. 현재 재고는 ${stockQuantity}개입니다.`,
+            });
+
+            return false;
+        }
+
+        return true;
     };
 
-    const showToast = () => {
+    const addToCart = (quantity: number) => {
+        fetch<AddCartItemResponse>("/cart/items", {
+            method: "POST",
+            headers: { "Content-Type": "application/json" },
+            body: JSON.stringify({
+                productId,
+                quantity: quantity,
+            }),
+        })
+            .then(res => {
+                if (res.data) {
+                    showToast(res.data);
+                }
+            })
+            .catch(error => {
+                showErrorToast(error as CustomError);
+            });
+    };
+
+    const onAddToCartInPopup = (quantity: number) => {
+        if (!validateQuantity(quantity)) {
+            return;
+        }
+
+        addToCart(quantity);
+        setIsPopupOpen(false);
+    };
+
+    const showToast = (res: AddCartItemResponse) => {
+        if (res.requiresQuantityAdjustment) {
+            toast({
+                message: `재고가 ${res.stockQuantity}개로 한정되어 ${res.quantity}개만 장바구니에 추가되었습니다.`,
+            });
+        } else {
+            toast({
+                message: `${title} 상품이 장바구니에 담겼습니다.`,
+            });
+        }
+    };
+
+    const showErrorToast = (error: CustomError) => {
         toast({
-            message: `${title} 상품이 장바구니에 담겼습니다.`,
+            message: "장바구니에 추가하는 데 실패했습니다.",
         });
+
+        console.error(`장바구니 추가 실패: ${error.code} - ${error.message}`);
     };
 
     const handlePopupClose = () => {
@@ -43,7 +109,7 @@ export default function AddToCart({
     return (
         <>
             <AddToCartButton inStock={inStock} onClick={onButtonClick} />
-            {isPopupOpen && <AddCartPopup onClose={handlePopupClose} onAddToCart={AddToCart} />}
+            {isPopupOpen && <AddCartPopup stockQuantity={stockQuantity} onClose={handlePopupClose} onAddToCart={onAddToCartInPopup} />}
             {ToastUI}
         </>
     );

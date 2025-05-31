@@ -27,6 +27,7 @@ const emptyProduct: ProductType = {
     productDetails: {
         detailText: "",
     },
+    stockQuantity: 0,
 };
 
 /**

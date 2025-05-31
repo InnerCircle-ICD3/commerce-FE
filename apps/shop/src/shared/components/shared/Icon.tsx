@@ -375,3 +375,63 @@ export const CupSizeCircleIcon = ({ size = "md", title = "원형 컵 사이즈 �
         </svg>
     );
 };
+
+/**
+ * 수량 증가 아이콘
+ * 장바구니 수량 증가 버튼(QuantityChange.tsx)에 사용
+ */
+
+export const QuantityIncreaseIcon = ({ size = "md", title = "수량 증가 아이콘", ...props }: Omit<IconProps, "direction" | "strokeWidth">) => {
+    const uniqueId = useId();
+    const titleId = `quantity-increase-icon-${uniqueId}`;
+
+    const width = SOCIAL_ICON_DIMENSIONS[size];
+    const height = SOCIAL_ICON_DIMENSIONS[size];
+
+    return (
+        <svg
+            width={width}
+            height={height}
+            viewBox="0 0 20 20"
+            fill="none"
+            xmlns="http://www.w3.org/2000/svg"
+            role="img"
+            aria-labelledby={titleId}
+            {...props}
+        >
+            <title id={titleId}>{title}</title>
+            <path
+                d="M9.33398 10.6666H5.33398V9.33325H9.33398V5.33325H10.6673V9.33325H14.6673V10.6666H10.6673V14.6666H9.33398V10.6666Z"
+                fill="black"
+            />
+        </svg>
+    );
+};
+
+/**
+ * 수량 감소 아이콘
+ * 장바구니 수량 감소 버튼(QuantityChange.tsx)에 사용
+ */
+export const QuantityDecreaseIcon = ({ size = "md", title = "수량 감소 아이콘", ...props }: Omit<IconProps, "direction" | "strokeWidth">) => {
+    const uniqueId = useId();
+    const titleId = `quantity-decrease-icon-${uniqueId}`;
+
+    const width = SOCIAL_ICON_DIMENSIONS[size];
+    const height = SOCIAL_ICON_DIMENSIONS[size];
+
+    return (
+        <svg
+            width={width}
+            height={height}
+            viewBox="0 0 20 20"
+            fill="none"
+            xmlns="http://www.w3.org/2000/svg"
+            role="img"
+            aria-labelledby={titleId}
+            {...props}
+        >
+            <title id={titleId}>{title}</title>
+            <path d="M5.33398 10.6666V9.33325H14.6673V10.6666H5.33398Z" fill="black" />
+        </svg>
+    );
+};

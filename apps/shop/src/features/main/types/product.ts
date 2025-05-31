@@ -14,13 +14,13 @@ export type Feature = {
 
 export type BannerProduct = {
     type: "banner";
-    id?: string;
     image: string;
     title: string;
     description: string;
 };
 
 export type RegularProduct = {
+    productId: number;
     type: "product";
     badges: Badge[];
     image: string;
@@ -30,6 +30,7 @@ export type RegularProduct = {
     price: number;
     unit: string;
     outOfStock?: boolean;
+    stockQuantity: number;
 };
 
 export type ProductType = BannerProduct | RegularProduct;

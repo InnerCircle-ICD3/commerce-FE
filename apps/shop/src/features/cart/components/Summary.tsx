@@ -1,19 +1,17 @@
 "use client";
 
-import type { CartItem } from "@/app/cart/page";
 import { useRouter } from "next/navigation";
+import type { CartItem } from "@/src/features/cart/types/cart";
+import { formatNumber } from "@/src/shared/utils/formatUtils";
+import { useCheckoutCartStore } from "@/src/features/cart/stores/checkoutCartStore";
 
-interface SummaryProps {
-    cartItems: CartItem[];
-    shippingFee: number;
-}
-
-export default function Summary({ cartItems, shippingFee }: SummaryProps) {
+export default function Summary({ cartItems }: { cartItems: CartItem[] }) {
     const QUANTITY_STEP = 10;
-    const totalPrice = cartItems.reduce((acc, item) => acc + item.price * (item.quantity / QUANTITY_STEP), 0) + shippingFee;
+    const totalPrice = cartItems.reduce((acc, item) => acc + item.price * (item.quantity / QUANTITY_STEP), 0);
     const router = useRouter();
 
     const handleCheckout = () => {
+        useCheckoutCartStore.getState().setCartItems(cartItems);
         router.push("/order/checkout");
     };
 
@@ -25,28 +23,24 @@ export default function Summary({ cartItems, shippingFee }: SummaryProps) {
         >
             <h2 className="text-xl font-bold text-left text-black mb-6">구매 금액</h2>
             {cartItems.map(item => (
-                <div key={item.id} className="flex justify-between w-full items-center mt-2">
+                <div key={item.cartItemId} className="flex justify-between w-full items-center mt-2">
                     <p className="text-sm text-left text-[#47484C]">
-                        {item.title}(x{item.quantity})
+                        {item.name}(x{item.quantity})
                     </p>
-                    <p>&#8361; {item.price.toLocaleString()}</p>
+                    <p>&#8361; {formatNumber(item.price)}</p>
                 </div>
             ))}
-            <div className="flex justify-between w-full items-center mt-2">
-                <p className="text-sm text-left text-[#47484C]">배송비</p>
-                <p>&#8361; {shippingFee.toLocaleString()}</p>
-            </div>
-            <hr className="border-t border-gray-200 my-4" />
+            <hr className="border-t border-gray-300 my-4" />
             <div className="flex justify-between w-full items-center mt-2 font-bold">
                 <p>Total</p>
-                <p>&#8361; {totalPrice.toLocaleString()}</p>
+                <p>&#8361; {formatNumber(totalPrice)}</p>
             </div>
             <button
                 type="button"
                 className="flex justify-center items-center self-stretch flex-shrink-0 mt-4 w-full h-12 relative gap-2 px-4 py-3 rounded-lg bg-[#257a57] text-sm font-semibold text-center text-white"
                 onClick={handleCheckout}
             >
-                {totalPrice.toLocaleString()}원 구매하기
+                {formatNumber(totalPrice)}원 구매하기
             </button>
         </div>
     );

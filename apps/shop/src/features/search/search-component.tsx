@@ -112,7 +112,7 @@ export default function SearchComponent() {
                                             <span className="text-[#257a57] font-bold text-2xl">₩ 11,500</span>
                                         </div>
                                         <p className="text-center text-[#37383c]/60 text-sm mb-4">10 캡슐</p>
-                                        <AddToCart title="스위트 바닐라향* 디카페나토" inStock={true} withPopup={true} />
+                                        <AddToCart productId={1} title="스위트 바닐라향* 디카페나토" stockQuantity={100} withPopup={true} />
                                     </div>
                                 </div>
 
@@ -155,7 +155,7 @@ export default function SearchComponent() {
                                             <span className="text-[#257a57] font-bold text-2xl">₩ 8,000</span>
                                         </div>
                                         <p className="text-center text-[#37383c]/60 text-sm mb-4">10 캡슐</p>
-                                        <AddToCart title="알티시오 디카페나토" inStock={true} withPopup={true} />
+                                        <AddToCart productId={2} title="알티시오 디카페나토" stockQuantity={100} withPopup={true} />
                                     </div>
                                 </div>
 
@@ -195,7 +195,7 @@ export default function SearchComponent() {
                                             <span className="text-[#257a57] font-bold text-2xl">₩ 12,000</span>
                                         </div>
                                         <p className="text-center text-[#37383c]/60 text-sm mb-4">10 캡슐</p>
-                                        <AddToCart title="비비다" inStock={true} withPopup={true} />
+                                        <AddToCart productId={3} title="비비다" stockQuantity={20} withPopup={true} />
                                     </div>
                                 </div>
 
@@ -234,7 +234,7 @@ export default function SearchComponent() {
                                             <span className="text-[#257a57] font-bold text-2xl">₩ 11,000</span>
                                         </div>
                                         <p className="text-center text-[#37383c]/60 text-sm mb-4">10 캡슐</p>
-                                        <AddToCart title="엘살바도르" inStock={true} withPopup={true} />
+                                        <AddToCart productId={4} title="엘살바도르" stockQuantity={0} withPopup={true} />
                                     </div>
                                 </div>
                             </div>
