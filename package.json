@@ -8,6 +8,7 @@
         "preinstall": "npx only-allow pnpm",
         "lint": "biome check .",
         "format": "biome format --write .",
+        "chat": "node simple-chat-server.js",
         "build:shop": "pnpm turbo run build --filter=shop",
         "dev:admin": "pnpm --filter admin dev",
         "dev:shop": "pnpm --filter shop dev",
@@ -32,6 +33,7 @@
     },
     "dependencies": {
         "@tanstack/react-query": "^5.74.11",
-        "zustand": "^5.0.3"
+        "zustand": "^5.0.3",
+        "ws": "^8.14.2"
     }
 }
