@@ -50,7 +50,6 @@ export default function EditAddress({ address, onComplete }: EditAddressProps) {
         setInputs({ ...inputs, address1: data.address, zipCode: data.zonecode, address2: "" });
     };
 
-    console.log(errors);
     return (
         <form className="flex flex-col gap-2" onSubmit={handleSubmit}>
             <div>
