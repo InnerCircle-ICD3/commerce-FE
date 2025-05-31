@@ -12,6 +12,6 @@ if (rootElement) {
             <TanstackQueryProviders>
                 <RouterProvider router={router} />
             </TanstackQueryProviders>
-        </StrictMode>
+        </StrictMode>,
     );
 }
