@@ -1,15 +1,17 @@
 "use client";
 
 import { useState } from "react";
+import Link from "next/link";
 import type { ReviewType } from "@/src/features/product/types";
 
 interface ProductReviewsProps {
+    productId: string;
     reviews: ReviewType[];
     totalRating: number;
     ratingCounts: number[];
 }
 
-export function ProductReviews({ reviews, totalRating, ratingCounts }: ProductReviewsProps) {
+export function ProductReviews({ productId, reviews, totalRating, ratingCounts }: ProductReviewsProps) {
     const [expanded, setExpanded] = useState(false);
 
     const renderStars = (rating: number) => {
@@ -45,9 +47,11 @@ export function ProductReviews({ reviews, totalRating, ratingCounts }: ProductRe
             <div className="max-w-6xl mx-auto">
                 <div className="flex items-center justify-between mb-8">
                     <h2 className="text-2xl font-bold">리뷰</h2>
-                    <svg width="32" height="32" viewBox="0 0 32 32" fill="none" xmlns="http://www.w3.org/2000/svg" aria-hidden="true">
-                        <path d="M12 8L20 16L12 24" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round" />
-                    </svg>
+                    <Link href={`/reviews/${productId}`}>
+                        <svg width="32" height="32" viewBox="0 0 32 32" fill="none" xmlns="http://www.w3.org/2000/svg" aria-hidden="true">
+                            <path d="M12 8L20 16L12 24" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round" />
+                        </svg>
+                    </Link>
                 </div>
 
                 <div className="flex gap-8 mb-12">

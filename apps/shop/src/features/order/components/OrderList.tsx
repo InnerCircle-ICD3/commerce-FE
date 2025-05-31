@@ -1,4 +1,4 @@
-import type { OrderType } from "../types";
+import type { OrderType } from "@/src/features/order/types";
 
 interface OrderListProps {
     orders: OrderType[];

@@ -1,7 +1,7 @@
 "use client";
 
 import { useCallback, useState } from "react";
-import type { AddressType } from "../types";
+import type { AddressType } from "@/src/features/order/types";
 import AddressItem from "./AddressItem";
 import { Button } from "@/src/shared/components/shared/button";
 import { useModal } from "@/src/shared/hooks/useModal";

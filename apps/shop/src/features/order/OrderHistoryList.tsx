@@ -1,6 +1,6 @@
 import { Button } from "@/src/shared/components/shared/button";
 import Image from "next/image";
-import type { OrderHistoryItem } from "@/src/features/order/mocks/orderHistoryMock";
+import type { OrderHistoryItem } from "@/src/features/order/types/orderHistory";
 import { ArrowIcon } from "@/src/shared/components/shared/Icon";
 import { formatCurrency } from "@/src/shared/utils/formatUtils";
 import Link from "next/link";

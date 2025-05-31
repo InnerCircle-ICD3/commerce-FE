@@ -1,36 +1,4 @@
-// 주문 관련 타입 정의
-export interface Product {
-    id: string;
-    name: string;
-    price: number;
-    quantity: number;
-    unitPrice: number;
-    imageSrc: string;
-}
-
-export interface PaymentItem {
-    id: string;
-    name: string;
-    price: number;
-}
-
-export interface ShippingInfo {
-    name: string;
-    address: string;
-    phone: string;
-    memo?: string;
-}
-
-export interface OrderDetailData {
-    orderId: string;
-    orderStatus: string;
-    orderDate: string;
-    products: Product[];
-    paymentItems: PaymentItem[];
-    shipping: ShippingInfo;
-    totalAmount: number;
-    discount: number;
-}
+import type { OrderDetailData } from "@/src/features/order/types/orderDetail";
 
 // 목 데이터 함수
 export const getMockOrderDetail = (orderId: string): OrderDetailData => {

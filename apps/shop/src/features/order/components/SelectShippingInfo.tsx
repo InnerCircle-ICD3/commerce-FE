@@ -2,7 +2,7 @@
 import { Button } from "@/src/shared/components/shared/button";
 import { useModal } from "@/src/shared/hooks/useModal";
 import AddressList from "./AddressList";
-import type { AddressType } from "../types";
+import type { AddressType } from "@/src/features/order/types";
 import { useState } from "react";
 import SelectDeliveryMessage from "./SelectDeliveryMessage";
 import EditAddress from "./EditAddress";

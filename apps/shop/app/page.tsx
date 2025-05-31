@@ -22,6 +22,9 @@ export default function Page() {
             <Link href="/order/123456456789">
                 <Button className="w-auto">(임시) 주문 상세 페이지로 이동</Button>
             </Link>
+            <Link href="/reviews/1">
+                <Button className="w-auto">(임시) 리뷰 관리 페이지로 이동</Button>
+            </Link>
         </div>
     );
 }

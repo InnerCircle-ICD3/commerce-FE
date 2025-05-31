@@ -1,5 +1,5 @@
 "use client";
-import type { AddressType } from "../types";
+import type { AddressType } from "@/src/features/order/types";
 import { Button } from "@/src/shared/components/shared/button";
 interface AddressItemProps {
     address: AddressType;

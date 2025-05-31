@@ -38,7 +38,12 @@ export function ProductPage({ product, reviews, reviewStats, recommendedProducts
 
                 <ProductDetails product={product} />
                 <ProductVideo />
-                <ProductReviews reviews={reviews} totalRating={reviewStats.totalRating} ratingCounts={reviewStats.ratingCounts} />
+                <ProductReviews
+                    productId={product.id.toString()}
+                    reviews={reviews}
+                    totalRating={reviewStats.totalRating}
+                    ratingCounts={reviewStats.ratingCounts}
+                />
                 {/* <RecommendedProducts products={recommendedProducts} /> */}
             </main>
         </div>
