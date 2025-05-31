@@ -1,5 +1,5 @@
 import { OrderHistoryList } from "./OrderHistoryList";
-import type { OrderHistoryItem } from "@/src/features/order/mocks/orderHistoryMock";
+import type { OrderHistoryItem } from "@/src/features/order/types/orderHistory";
 import { ArrowIcon, FilterIcon, SearchIcon } from "@/src/shared/components/shared/Icon";
 
 interface OrderHistoryPageProps {

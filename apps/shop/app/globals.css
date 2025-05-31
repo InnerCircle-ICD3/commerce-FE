@@ -289,3 +289,16 @@ input[type="checkbox"] {
 button {
     cursor: pointer;
 }
+
+/* 스크롤바를 숨기는 유틸리티 클래스 */
+.hide-scrollbar {
+    /* Firefox용 */
+    scrollbar-width: none;
+    /* IE/Edge용 */
+    -ms-overflow-style: none;
+}
+
+/* Webkit 기반 브라우저(Chrome, Safari, Opera 등)용 */
+.hide-scrollbar::-webkit-scrollbar {
+    display: none;
+}

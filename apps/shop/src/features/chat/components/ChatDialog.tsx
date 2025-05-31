@@ -13,11 +13,15 @@ const ChatDialog = ({ onClose }: ChatDialogProps) => {
         <div className="fixed top-0 right-0 z-50 flex items-end justify-end p-4 sm:p-6 md:p-8" onClick={e => e.stopPropagation()}>
             <div
                 className="w-full sm:w-[22rem] md:w-[26rem] lg:w-[30rem] h-[90vh] max-h-[42rem] bg-white rounded-2xl shadow-[0_0_20px_rgba(0,0,0,0.15)] overflow-hidden flex flex-col"
+                aria-modal="true"
+                aria-labelledby="chatTitle"
                 onClick={e => e.stopPropagation()}
             >
                 {/* 헤더 */}
                 <div className="w-full h-[4.5rem] border-b border-[#EEEEEE] flex items-center justify-between px-6">
-                    <h2 className="text-xl font-bold py-2">채팅</h2>
+                    <h2 id="chatTitle" className="text-xl font-bold py-2">
+                        채팅
+                    </h2>
                     <button onClick={onClose} className="w-8 h-8 flex items-center justify-center" type="button">
                         <svg
                             width="24"
@@ -136,6 +140,7 @@ const ChatDialog = ({ onClose }: ChatDialogProps) => {
                                 value={message}
                                 onChange={e => setMessage(e.target.value)}
                                 placeholder="채팅을 입력하세요"
+                                aria-label="채팅 메시지 입력"
                                 className="w-full h-12 pl-4 pr-10 border border-[#EEEEEE] rounded-lg focus:outline-none focus:ring-1 focus:ring-[#257A57]"
                             />
                         </div>

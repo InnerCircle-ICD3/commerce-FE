@@ -1,12 +1,4 @@
-// 주문 내역 관련 타입 정의
-export interface OrderHistoryItem {
-    id: string;
-    status: "준비중" | "배송중" | "배송완료" | "반품완료";
-    statusDate?: string;
-    productName: string;
-    price: number;
-    imageSrc: string;
-}
+import type { OrderHistoryItem } from "@/src/features/order/types/orderHistory";
 
 // 목 데이터 함수
 export const getMockOrderHistory = (): OrderHistoryItem[] => {

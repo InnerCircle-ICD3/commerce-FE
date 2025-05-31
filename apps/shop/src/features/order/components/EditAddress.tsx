@@ -3,7 +3,7 @@ import { Input } from "@/src/shared/components/shared/input";
 import { Select, SelectContent, SelectItem, SelectTrigger } from "@/src/shared/components/shared/select";
 import { SelectValue } from "@radix-ui/react-select";
 import { cva } from "class-variance-authority";
-import type { AddressType } from "../types";
+import type { AddressType } from "@/src/features/order/types";
 
 interface EditAddressProps {
     address?: AddressType;

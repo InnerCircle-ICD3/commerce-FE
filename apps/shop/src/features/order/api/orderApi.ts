@@ -1,8 +1,8 @@
 import { fetchData } from "@/src/shared/utils/api";
 import { getMockOrderDetail } from "@/src/features/order/mocks/orderDetailMock";
 import { getMockOrderHistory } from "@/src/features/order/mocks/orderHistoryMock";
-import type { OrderDetailData } from "@/src/features/order/mocks/orderDetailMock";
-import type { OrderHistoryItem } from "@/src/features/order/mocks/orderHistoryMock";
+import type { OrderDetailData } from "@/src/features/order/types/orderDetail";
+import type { OrderHistoryItem } from "@/src/features/order/types/orderHistory";
 
 /**
  * 빈 주문 상세 정보 객체 (에러 발생 시 반환용)

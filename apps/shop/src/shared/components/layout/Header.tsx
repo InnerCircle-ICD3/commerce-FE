@@ -6,9 +6,9 @@ import ChatButton from "@/src/features/chat/components/ChatButton";
 
 function Header() {
     return (
-        <div className="w-full bg-white border-b border-solid border-b-[color:var(--Line-Sub2,rgba(112,115,124,0.08))]">
+        <div className="w-full bg-white">
             <header className="flex flex-wrap gap-8 items-center px-6 py-4 mx-auto max-w-7xl">
-                <div className="self-stretch my-auto text-2xl font-bold tracking-tight leading-snug text-center text-black w-33">
+                <div className="self-stretch my-auto text-2xl font-bold tracking-tight leading-snug text-center text-black whitespace-nowrap">
                     <Link href="/main" className="cursor-pointer">
                         <h1 className="self-stretch text-black">801 COFFEE</h1>
                     </Link>

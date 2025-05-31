@@ -1,4 +1,4 @@
-import type { OrderItemType } from "../types";
+import type { OrderItemType } from "@/src/features/order/types";
 import Image from "next/image";
 
 interface OrderItemProps {
