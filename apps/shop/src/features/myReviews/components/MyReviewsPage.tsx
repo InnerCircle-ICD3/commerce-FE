@@ -1,11 +1,13 @@
-import { getUserReviews } from "@/src/features/userReview/api/userReviewApi";
-import UserReviewList from "@/src/features/userReview/components/UserReviewList";
+import MyReviewList from "@/src/features/myReviews/components/MyReviewList";
 
-export default async function ReviewManagePage() {
-    // 사용자의 리뷰 목록
-    const reviewsData = await getUserReviews(0, 10);
-    const reviews = reviewsData.content || [];
+interface MyReviewsPageProps {
+    reviews: any[];
+    totalElements: number;
+    totalPages: number;
+    currentPage: number;
+}
 
+export default function MyReviewsPage({ reviews, totalElements, totalPages, currentPage }: MyReviewsPageProps) {
     return (
         <div className="min-h-screen bg-white">
             {/* 메인 콘텐츠 */}
@@ -22,7 +24,7 @@ export default async function ReviewManagePage() {
                         <div className="flex items-center justify-between">
                             <div>
                                 <div className="text-sm text-gray-600">총 작성 리뷰</div>
-                                <div className="text-2xl font-bold text-black mt-1">{reviewsData.totalElements || 0}개</div>
+                                <div className="text-2xl font-bold text-black mt-1">{totalElements}개</div>
                             </div>
                             <div className="text-right">
                                 <div className="text-sm text-gray-600">이번 달 작성</div>
@@ -35,9 +37,9 @@ export default async function ReviewManagePage() {
                     </div>
 
                     {/* 리뷰 목록 */}
-                    <UserReviewList reviews={reviews} hasMore={(reviewsData.page || 0) < (reviewsData.totalPages || 0) - 1} />
+                    <MyReviewList reviews={reviews} hasMore={currentPage < totalPages - 1} />
                 </div>
             </div>
         </div>
     );
-}
+} 

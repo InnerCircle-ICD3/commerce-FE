@@ -1,13 +1,14 @@
 "use client";
 
-import ReviewCard, { type Review } from "./ReviewCard";
+import ProductReviewCard from "./ProductReviewCard";
+import type { Review } from "@/src/shared/entities/review/types";
 
-interface ReviewListProps {
+interface ProductReviewListProps {
     reviews: Review[];
     hasMore?: boolean;
 }
 
-export default function ReviewList({ reviews, hasMore = true }: ReviewListProps) {
+export default function ProductReviewList({ reviews, hasMore = true }: ProductReviewListProps) {
     const handleLoadMore = () => {
         console.log("더보기 클릭");
         // TODO: 추가 리뷰 로딩 로직 구현
@@ -18,7 +19,7 @@ export default function ReviewList({ reviews, hasMore = true }: ReviewListProps)
             {/* 리뷰 목록 */}
             <div className="space-y-6">
                 {reviews.map(review => (
-                    <ReviewCard key={review.id} review={review} />
+                    <ProductReviewCard key={review.id} review={review} />
                 ))}
             </div>
 

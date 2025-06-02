@@ -2,15 +2,15 @@
 
 import Image from "next/image";
 import { Star, Edit, Trash2 } from "lucide-react";
-import type { UserReview } from "@/src/features/userReview/types";
+import type { UserReview } from "@/src/features/myReviews/types";
 
-interface UserReviewCardProps {
+interface MyReviewCardProps {
     review: UserReview;
     onEdit?: (reviewId: number) => void;
     onDelete?: (reviewId: number) => void;
 }
 
-export default function UserReviewCard({ review, onEdit, onDelete }: UserReviewCardProps) {
+export default function MyReviewCard({ review, onEdit, onDelete }: MyReviewCardProps) {
     const formatDate = (dateString?: string) => {
         if (!dateString) return "";
         return new Date(dateString).toLocaleDateString("ko-KR", {

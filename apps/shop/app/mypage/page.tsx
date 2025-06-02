@@ -13,7 +13,7 @@ export type ShippingProduct = {
 const menuInfos = [
     { title: "주문내역", href: "/order" },
     { title: "취소/교환/반품 내역", href: "/order" },
-    { title: "리뷰 관리", href: "/review" },
+    { title: "리뷰 관리", href: "/review/my" },
     { title: "배송지 관리", href: "/address" },
 ];
 

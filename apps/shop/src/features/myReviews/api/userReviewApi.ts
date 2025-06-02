@@ -1,6 +1,6 @@
 import { fetchData } from "@/src/shared/utils/api";
-import { getMockUserReviews } from "@/src/features/userReview/mocks/userReviewMock";
-import type { UserReviewListResponse } from "@/src/features/userReview/types";
+import { getMockUserReviews } from "@/src/features/myReviews/mocks/userReviewMock";
+import type { UserReviewListResponse } from "@/src/features/myReviews/types";
 
 /**
  * 사용자가 작성한 리뷰 목록을 가져오는 API 함수

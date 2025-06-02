@@ -47,7 +47,7 @@ export function ProductReviews({ productId, reviews, totalRating, ratingCounts }
             <div className="max-w-6xl mx-auto">
                 <div className="flex items-center justify-between mb-8">
                     <h2 className="text-2xl font-bold">리뷰</h2>
-                    <Link href={`/reviews/${productId}`}>
+                    <Link href={`/review/products/${productId}`} aria-label="모든 리뷰 보기">
                         <svg width="32" height="32" viewBox="0 0 32 32" fill="none" xmlns="http://www.w3.org/2000/svg" aria-hidden="true">
                             <path d="M12 8L20 16L12 24" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round" />
                         </svg>

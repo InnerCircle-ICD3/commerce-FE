@@ -1,4 +1,4 @@
-import type { UserReviewListResponse } from "@/src/features/userReview/types";
+import type { UserReviewListResponse } from "@/src/features/myReviews/types";
 
 /**
  * 사용자 리뷰 목 데이터를 반환하는 함수
@@ -7,6 +7,7 @@ export function getMockUserReviews(page = 0, size = 10): UserReviewListResponse 
     return {
         content: [
             {
+                id: "1",
                 reviewId: 1,
                 productId: 1,
                 productName: "스페셜 리저브 하와이 코나",
@@ -22,6 +23,7 @@ export function getMockUserReviews(page = 0, size = 10): UserReviewListResponse 
                 },
             },
             {
+                id: "2",
                 reviewId: 2,
                 productId: 2,
                 productName: "에어로치노4",
@@ -32,6 +34,7 @@ export function getMockUserReviews(page = 0, size = 10): UserReviewListResponse 
                 adminReply: null,
             },
             {
+                id: "3",
                 reviewId: 3,
                 productId: 3,
                 productName: "버츄오 머그 컵 세트 스몰",
@@ -47,6 +50,7 @@ export function getMockUserReviews(page = 0, size = 10): UserReviewListResponse 
                 },
             },
             {
+                id: "4",
                 reviewId: 4,
                 productId: 4,
                 productName: "바리스타 카푸치노 컵 세트",
@@ -57,6 +61,7 @@ export function getMockUserReviews(page = 0, size = 10): UserReviewListResponse 
                 adminReply: null,
             },
             {
+                id: "5",
                 reviewId: 5,
                 productId: 5,
                 productName: "라이브스톡 브라질 원두",

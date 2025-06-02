@@ -2,22 +2,13 @@
 
 import { useState } from "react";
 import StarRating from "@/src/shared/components/ui/StarRating";
+import type { Review } from "@/src/shared/entities/review/types";
 
-export interface Review {
-    id: string;
-    reviewer: string;
-    rating: number;
-    date: string;
-    content: string;
-    profileImage: string;
-    images?: string[];
-}
-
-interface ReviewCardProps {
+interface ProductReviewCardProps {
     review: Review;
 }
 
-export default function ReviewCard({ review }: ReviewCardProps) {
+export default function ProductReviewCard({ review }: ProductReviewCardProps) {
     const [showMenu, setShowMenu] = useState(false);
 
     const handleEdit = () => {

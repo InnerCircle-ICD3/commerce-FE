@@ -1,3 +1,6 @@
+// 공통 ReviewType을 shared/entities에서 가져옴
+export type { ReviewType } from "@/src/shared/entities/review/types";
+
 export interface ProductType {
     id: number;
     title: string;
@@ -26,15 +29,6 @@ export interface ProductType {
 
 export interface ProductDetails {
     detailText: string;
-}
-
-export interface ReviewType {
-    id: number;
-    userName: string;
-    rating: number;
-    date: string;
-    content: string;
-    images?: string[];
 }
 
 export interface RecommendedProductType {

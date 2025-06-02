@@ -1,15 +1,15 @@
 "use client";
 
 import { useState } from "react";
-import UserReviewCard from "./UserReviewCard";
-import type { UserReview } from "@/src/features/userReview/types";
+import MyReviewCard from "./MyReviewCard";
+import type { UserReview } from "@/src/features/myReviews/types";
 
-interface UserReviewListProps {
+interface MyReviewListProps {
     reviews: UserReview[];
     hasMore?: boolean;
 }
 
-export default function UserReviewList({ reviews, hasMore = false }: UserReviewListProps) {
+export default function MyReviewList({ reviews, hasMore = false }: MyReviewListProps) {
     const [reviewList, setReviewList] = useState(reviews);
 
     const handleEdit = (reviewId: number) => {
@@ -40,7 +40,7 @@ export default function UserReviewList({ reviews, hasMore = false }: UserReviewL
             {/* 리뷰 목록 */}
             <div className="space-y-4">
                 {reviewList.map(review => (
-                    <UserReviewCard key={`review-${review.reviewId}`} review={review} onEdit={handleEdit} onDelete={handleDelete} />
+                    <MyReviewCard key={`review-${review.reviewId}`} review={review} onEdit={handleEdit} onDelete={handleDelete} />
                 ))}
             </div>
 

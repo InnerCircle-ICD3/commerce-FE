@@ -28,10 +28,35 @@ pnpm install
 
 # 쇼핑몰 프로젝트 실행
 pnpm --filter shop dev
+# 또는
+pnpm dev:shop
 
 # 백오피스 프로젝트 실행
 pnpm --filter admin dev
+# 또는
+pnpm dev:admin
+
+# 쇼핑몰 애플리케이션 빌드
+pnpm build:shop
+
+# 백오피스 애플리케이션 빌드
+pnpm build:admin
+
+# 모든 애플리케이션 빌드
+pnpm build:all
 ```
+
+### 간소화된 명령어
+
+개발 및 빌드 과정에서 자주 사용하는 명령어를 package.json의 scripts에 등록했습니다. 이를 통해 보다 간편하게 프로젝트를 개발하고 빌드할 수 있습니다. pnpm에서는 `run` 키워드를 생략하여 더 간결하게 사용할 수 있습니다.
+
+| 명령어 | 설명 |
+| --- | --- |
+| `pnpm dev:shop` | 쇼핑몰 앱 개발 서버 실행 (`run` 키워드 생략) |
+| `pnpm dev:admin` | 백오피스 앱 개발 서버 실행 (`run` 키워드 생략) |
+| `pnpm build:shop` | 쇼핑몰 앱 빌드 (`run` 키워드 생략) |
+| `pnpm build:admin` | 백오피스 앱 빌드 (`run` 키워드 생략) |
+| `pnpm build:all` | 모든 앱 빌드 (`run` 키워드 생략) |
 
 <br><br>
 ## 쇼핑몰 앱 API 요청 방법

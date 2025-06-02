@@ -86,7 +86,7 @@ export type OrderItemType = {
 
 export type AddressType = {
     id: number;
-    name: string;
+    alias: string;
     address1: string;
     address2: string;
     zipCode: string;

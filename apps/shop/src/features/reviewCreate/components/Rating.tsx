@@ -26,7 +26,7 @@ export default function Rating({ rating, onChange, disabled = false }: RatingPro
     return (
         <>
             {Array.from({ length: 5 }).map((_, index) => (
-                <div key={`rating-${index}`}>
+                <div key={`star-${index + 1}`}>
                     <svg
                         width="21"
                         height="20"
