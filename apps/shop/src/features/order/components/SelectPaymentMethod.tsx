@@ -1,34 +1,20 @@
 "use client";
 
-import { useEffect, useState } from "react";
+import type { PaymentMethod } from "../../payment/types/payment";
 
-type SelectPaymentMethodProps = {};
+type SelectPaymentMethodProps = {
+    paymentMethods: PaymentMethod[];
+};
 
-export default function SelectPaymentMethod({}: SelectPaymentMethodProps) {
-    const [paymentMethod, setPaymentMethod] = useState<string>("toss");
-
-    const handlePaymentMethodChange = (e: React.ChangeEvent<HTMLInputElement>) => {
-        setPaymentMethod(e.target.value);
-    };
-
-    // useEffect(() => {
-    // onChange(paymentMethod);
-    // }, [paymentMethod, onChange]);
-
+export default function SelectPaymentMethod({ paymentMethods }: SelectPaymentMethodProps) {
     return (
         <div>
-            <div className="flex items-center gap-2">
-                <input type="radio" name="payment-method" id="toss" onChange={handlePaymentMethodChange} />
-                <label htmlFor="toss">토스페이</label>
-            </div>
-            <div className="flex items-center gap-2">
-                <input type="radio" name="payment-method" id="credit-card" onChange={handlePaymentMethodChange} />
-                <label htmlFor="credit-card">신용카드 결제</label>
-            </div>
-            <div className="flex items-center gap-2">
-                <input type="radio" name="payment-method" id="bank-transfer" onChange={handlePaymentMethodChange} />
-                <label htmlFor="bank-transfer">계좌이체</label>
-            </div>
+            {paymentMethods.map(({ code, label }) => (
+                <div key={code} className="flex items-center gap-2">
+                    <input type="radio" name="paymentMethod" id={code} value={code} />
+                    <label htmlFor={code}>{label}</label>
+                </div>
+            ))}
         </div>
     );
 }

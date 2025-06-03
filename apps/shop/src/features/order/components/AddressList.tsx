@@ -10,7 +10,7 @@ import EditAddress from "./EditAddress";
 interface AddressListProps {
     addresses: AddressType[];
     onSelect: (address: AddressType) => void;
-    currentAddress?: AddressType;
+    currentAddress?: AddressType | null;
 }
 
 export default function AddressList({ addresses, onSelect, currentAddress }: AddressListProps) {
@@ -33,7 +33,6 @@ export default function AddressList({ addresses, onSelect, currentAddress }: Add
     return (
         <div>
             <div className="mb-4">
-                {/* TODO: 배송지 추가 버튼 클릭 시 모달 추가 or 이동 */}
                 <Button
                     variant="outline"
                     size="full"
