@@ -1,5 +1,5 @@
 import { createRootRoute, createRoute, createRouter } from "@tanstack/react-router";
-import RootLayout from "@/layouts/RootLayout";
+import RootLayout from "@/components/layout/RootLayout";
 import DashboardPage from "@/pages/dashboard/Dashboard";
 import ProductsPage from "@/pages/products/Products";
 
@@ -23,6 +23,7 @@ const routeTree = rootRoute.addChildren([indexRoute, productsRoute]);
 
 export const router = createRouter({
     routeTree,
+    
     defaultPreload: "intent",
 });
 
