@@ -21,7 +21,6 @@ const emptyProduct: ProductType = {
     images: [],
     tags: [],
     badges: [],
-    inStock: false,
     coffeeSize: "",
     aromaFeatures: [],
     bodyLevel: 0,

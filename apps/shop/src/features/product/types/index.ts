@@ -14,7 +14,6 @@ export interface ProductType {
         bgColor: string;
         textColor?: string;
     }>;
-    inStock: boolean;
     coffeeSize?: string;
     aromaFeatures?: string[];
     bodyLevel?: number;
