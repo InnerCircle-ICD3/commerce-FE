@@ -9,7 +9,7 @@ export const sidebarData = {
                     title: "대시보드",
                     href: "/",
                     icon: LayoutDashboard,
-                    variant: "default",
+                    variant: "ghost",
                 },
                 {
                     title: "상품 관리",
