@@ -9,17 +9,19 @@
     },
     "dependencies": {
         "@commerce-fe/stores": "workspace:*",
+        "@commerce-fe/types": "workspace:*",
         "@commerce-fe/utils": "workspace:*",
-		"@commerce-fe/types": "workspace:*",
-		"@radix-ui/react-select": "^2.2.5",
+        "@radix-ui/react-select": "^2.2.5",
         "@radix-ui/react-slot": "^1.2.0",
         "class-variance-authority": "^0.7.1",
         "clsx": "^2.1.1",
         "lucide-react": "^0.503.0",
         "next": "15.3.1",
         "react": "^19.0.0",
+        "react-daum-postcode": "^3.2.0",
         "react-dom": "^19.0.0",
-        "tailwind-merge": "^3.2.0"
+        "tailwind-merge": "^3.2.0",
+        "zod": "^3.25.32"
     },
     "devDependencies": {
         "@types/node": "^20",

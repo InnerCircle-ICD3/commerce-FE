@@ -3,16 +3,53 @@
 import { useState } from "react";
 import ChatDialog from "./ChatDialog";
 
-const ChatButton = () => {
-    const [isChatOpen, setIsChatOpen] = useState(false);
-
-    const toggleChat = () => {
-        setIsChatOpen(!isChatOpen);
+interface ChatButtonProps {
+    productInfo?: {
+        id: string;
+        title: string;
+        price: number;
+        image: string;
     };
+    isFloating?: boolean;
+}
 
+const ChatButton = ({ productInfo, isFloating = false }: ChatButtonProps) => {
+    const [isOpen, setIsOpen] = useState(false);
+
+    const handleOpen = () => setIsOpen(true);
+    const handleClose = () => setIsOpen(false);
+
+    if (isFloating) {
+        // 플로팅 버튼 스타일 (화면 우하단)
+        return (
+            <>
+                <button
+                    type="button"
+                    onClick={handleOpen}
+                    className="fixed bottom-6 right-6 w-14 h-14 bg-[#257A57] rounded-full flex items-center justify-center text-white shadow-lg hover:bg-[#1f6347] transition-colors z-40"
+                    aria-label="채팅 열기"
+                >
+                    <svg width="24" height="24" viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg">
+                        <title>채팅 아이콘</title>
+                        <path
+                            d="M20 2H4C2.9 2 2 2.9 2 4V22L6 18H20C21.1 18 22 17.1 22 16V4C22 2.9 21.1 2 20 2ZM20 16H5.17L4 17.17V4H20V16Z"
+                            fill="currentColor"
+                        />
+                        <circle cx="12" cy="10" r="1" fill="currentColor" />
+                        <circle cx="8" cy="10" r="1" fill="currentColor" />
+                        <circle cx="16" cy="10" r="1" fill="currentColor" />
+                    </svg>
+                </button>
+
+                {isOpen && <ChatDialog onClose={handleClose} productInfo={productInfo} />}
+            </>
+        );
+    }
+
+    // Header용 일반 버튼 스타일
     return (
         <>
-            <button onClick={toggleChat} aria-label="채팅 상담" className="cursor-pointer" type="button">
+            <button onClick={handleOpen} aria-label="채팅 상담" className="cursor-pointer" type="button">
                 <div className="w-8 h-8 flex items-center justify-center">
                     <svg
                         width="24"
@@ -32,7 +69,7 @@ const ChatButton = () => {
                 </div>
             </button>
 
-            {isChatOpen && <ChatDialog onClose={() => setIsChatOpen(false)} />}
+            {isOpen && <ChatDialog onClose={handleClose} productInfo={productInfo} />}
         </>
     );
 };

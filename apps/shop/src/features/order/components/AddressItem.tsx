@@ -14,8 +14,8 @@ export default function AddressItem({ address, onClick, checked }: AddressItemPr
             <div className="flex justify-between items-center mb-5">
                 <div className="flex items-center gap-2">
                     <div className="flex items-center gap-2">
-                        <input type="radio" name={address.name} id={address.name} checked={checked} readOnly />
-                        <label htmlFor={address.name}>{address.name}</label>
+                        <input type="radio" name={address.alias} id={address.alias} checked={checked} readOnly />
+                        <label htmlFor={address.alias}>{address.alias}</label>
                     </div>
                     {address.isDefault && <span className="text-sm text-gray-500 bg-gray-100 rounded-sm px-2 py-1">기본 배송지</span>}
                 </div>

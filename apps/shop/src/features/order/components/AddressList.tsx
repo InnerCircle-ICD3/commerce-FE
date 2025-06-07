@@ -4,6 +4,8 @@ import { useCallback, useState } from "react";
 import type { AddressType } from "@/src/features/order/types";
 import AddressItem from "./AddressItem";
 import { Button } from "@/src/shared/components/shared/button";
+import { useModal } from "@/src/shared/hooks/useModal";
+import EditAddress from "./EditAddress";
 
 interface AddressListProps {
     addresses: AddressType[];
@@ -26,11 +28,19 @@ export default function AddressList({ addresses, onSelect, currentAddress }: Add
         onSelect(selectedAddress);
     }, [onSelect, selectedAddress]);
 
+    const { openModal: openEditAddressModal, closeModal: closeEditAddressModal, Modal } = useModal();
+
     return (
         <div>
             <div className="mb-4">
                 {/* TODO: 배송지 추가 버튼 클릭 시 모달 추가 or 이동 */}
-                <Button variant="outline" size="full">
+                <Button
+                    variant="outline"
+                    size="full"
+                    onClick={() => {
+                        openEditAddressModal();
+                    }}
+                >
                     배송지 추가하기
                 </Button>
             </div>
@@ -46,6 +56,9 @@ export default function AddressList({ addresses, onSelect, currentAddress }: Add
                     변경하기
                 </Button>
             </div>
+            <Modal title="배송지 추가" onClickClose={closeEditAddressModal}>
+                <EditAddress onComplete={closeEditAddressModal} />
+            </Modal>
         </div>
     );
 }

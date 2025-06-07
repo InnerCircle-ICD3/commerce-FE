@@ -9,12 +9,11 @@ export default async function ProductDetailPage({ params }: ProductDetailPagePro
     const resolvedParams = await params;
     const id = resolvedParams.id;
 
-    const [product, reviews, reviewStats, recommendedProducts] = await Promise.all([
+    const [product, review, reviewStats] = await Promise.all([
         getProduct(id),
-        getProductReviews(id),
+        getProductReviews(id, 0), // 페이지는 0으로 고정
         getProductReviewStats(id),
-        getRecommendedProducts(id),
     ]);
 
-    return <ProductPage product={product} reviews={reviews} reviewStats={reviewStats} recommendedProducts={recommendedProducts} />;
+    return <ProductPage product={product} reviews={review.content} reviewStats={reviewStats} />;
 }

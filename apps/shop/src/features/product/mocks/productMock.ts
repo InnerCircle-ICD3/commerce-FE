@@ -1,4 +1,5 @@
 import type { ProductType, ReviewType, RecommendedProductType } from "@/src/features/product/types";
+import type { ReviewResponse } from "@/src/shared/entities/review/types";
 
 /**
  * 제품 상세 정보 목 데이터를 반환하는 함수
@@ -65,44 +66,56 @@ export function getMockProduct(id?: string): ProductType {
 /**
  * 제품 리뷰 목 데이터를 반환하는 함수
  */
-export function getMockReviews(productId?: string): ReviewType[] {
+export function getMockReviews(page = 0, size = 20): ReviewResponse {
     // productId를 활용하여 다른 리뷰 반환 로직을 추가할 수 있음
-    return [
-        {
-            id: 1,
-            userName: "커피러버",
-            rating: 4,
-            date: "2023-01-24",
-            content: "향이 정말 좋고 산미가 적절해요. 아침에 마시기 좋은 커피입니다.",
-        },
-        {
-            id: 2,
-            userName: "카페인중독자",
-            rating: 5,
-            date: "2023-02-15",
-            content: "시즌 한정이라 아쉽지만 매번 구매하는 제품입니다. 열대과일향이 특히 좋아요!",
-        },
-        {
-            id: 3,
-            userName: "홈카페장인",
-            rating: 4,
-            date: "2023-03-02",
-            content: "하와이 코나는 처음 마셔봤는데 기대 이상이네요. 부드러운 맛이 일품입니다.",
-            images: ["https://cdn.builder.io/api/v1/image/assets/TEMP/4c7bfa7b14aca451340208bfc07390f055298c80"],
-        },
-        {
-            id: 4,
-            userName: "커피매니아",
-            rating: 3,
-            date: "2023-03-15",
-            content: "품질은 좋지만 가격이 조금 비싼 편입니다. 특별한 날에 마시기 좋아요.",
-        },
-    ];
+    return {
+        content: [
+            {
+                id: 1,
+                userName: "커피러버",
+                rating: 4,
+                date: "2023-01-24",
+                content: "향이 정말 좋고 산미가 적절해요. 아침에 마시기 좋은 커피입니다.",
+            },
+            {
+                id: 2,
+                userName: "카페인중독자",
+                rating: 5,
+                date: "2023-02-15",
+                content: "시즌 한정이라 아쉽지만 매번 구매하는 제품입니다. 열대과일향이 특히 좋아요!",
+            },
+            {
+                id: 3,
+                userName: "홈카페장인",
+                rating: 4,
+                date: "2023-03-02",
+                content: "하와이 코나는 처음 마셔봤는데 기대 이상이네요. 부드러운 맛이 일품입니다.",
+                images: ["https://cdn.builder.io/api/v1/image/assets/TEMP/4c7bfa7b14aca451340208bfc07390f055298c80"],
+            },
+            {
+                id: 4,
+                userName: "커피매니아",
+                rating: 3,
+                date: "2023-03-15",
+                content: "품질은 좋지만 가격이 조금 비싼 편입니다. 특별한 날에 마시기 좋아요.",
+            },
+        ],
+        page: page,
+        size: size,
+        totalPages: 1,
+        totalElements: 4,
+    };
 }
 
-type ReviewStats = {
-    totalRating: number;
-    ratingCounts: number[];
+export type ReviewStats = {
+    averageRating: number;
+    ratingDistribution: {
+        oneStarCount: number;
+        twoStarsCount: number;
+        threeStarsCount: number;
+        fourStarsCount: number;
+        fiveStarsCount: number;
+    };
 };
 
 /**
@@ -111,8 +124,14 @@ type ReviewStats = {
 export function getMockReviewStats(productId?: string): ReviewStats {
     // productId를 활용하여 다른 통계 반환 로직을 추가할 수 있음
     return {
-        totalRating: 4.8,
-        ratingCounts: [100, 11, 3, 8, 1], // 5점, 4점, 3점, 2점, 1점 순서
+        averageRating: 4.6,
+        ratingDistribution: {
+            oneStarCount: 1,
+            twoStarsCount: 3,
+            threeStarsCount: 11,
+            fourStarsCount: 33,
+            fiveStarsCount: 100,
+        },
     };
 }
 

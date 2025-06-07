@@ -5,6 +5,7 @@ import AddressList from "./AddressList";
 import type { AddressType } from "@/src/features/order/types";
 import { useState } from "react";
 import SelectDeliveryMessage from "./SelectDeliveryMessage";
+import EditAddress from "./EditAddress";
 
 export default function SelectShippingInfo() {
     const { openModal, closeModal, Modal } = useModal();
@@ -19,7 +20,7 @@ export default function SelectShippingInfo() {
     const addressList: AddressType[] = [
         {
             id: 1,
-            name: "집",
+            alias: "집",
             address1: "서울특별시 강남구 테헤란로 14길 6",
             address2: "남도빌딩 2층 201호",
             recipientPhone: "010-1111-1111",
@@ -29,7 +30,7 @@ export default function SelectShippingInfo() {
         },
         {
             id: 2,
-            name: "회사",
+            alias: "회사",
             address1: "경기도 성남시 분당구 판교로 245  ",
             address2: "판교래미안포레스트 111동 101호",
             recipientPhone: "010-1111-1111",
@@ -56,7 +57,7 @@ export default function SelectShippingInfo() {
             <h4 className="text-lg font-bold">배송지</h4>
             <div className="flex justify-between items-center mb-5">
                 <div className="flex items-center gap-2">
-                    <h3 className="font-bold">{address?.name}</h3>
+                    <h3 className="font-bold text-base">{address?.alias}</h3>
                     {address?.isDefault && <span className="text-sm text-gray-500 bg-gray-100 rounded-sm px-2 py-1">기본 배송지</span>}
                 </div>
                 <Button variant="outline" onClick={openModal}>
