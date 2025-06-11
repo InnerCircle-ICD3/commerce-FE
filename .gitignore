@@ -6,3 +6,5 @@ node_modules
 
 .turbo
 /.windsurf
+apps/admin/.env
+/.cursor

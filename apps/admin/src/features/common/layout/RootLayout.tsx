@@ -11,9 +11,7 @@ export default function RootLayout({ children }: RootLayoutProps) {
         <div className="min-h-screen bg-gray-50">
             <div className="flex">
                 <Sidebar />
-                <MainContent>
-                    {children}
-                </MainContent>
+                <MainContent>{children}</MainContent>
             </div>
 
             {import.meta.env.DEV && <TanStackRouterDevtools position="bottom-right" />}
