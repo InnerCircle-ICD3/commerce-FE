@@ -1,4 +1,5 @@
 import { useState } from "react";
+import { Link } from '@tanstack/react-router';
 import ProductList from "@/features/product/components/ProductList";
 import ProductFilters from "@/features/product/components/ProductFilters";
 import type { Product } from "@/features/product/types";
@@ -149,12 +150,12 @@ export default function ProductsPage() {
                     <h1 className="text-h2 font-bold text-gray-900">상품 관리</h1>
                     <p className="mt-2 text-gray-600">상품 목록을 확인하고 관리하세요.</p>
                 </div>
-                <button
-                    type="button"
+                <Link
+                    to="/products/new"
                     className="rounded-md bg-blue-600 px-4 py-2 text-sm font-medium text-white shadow-sm hover:bg-blue-700 focus:outline-none focus:ring-2 focus:ring-blue-500 focus:ring-offset-2"
                 >
                     + 상품 추가
-                </button>
+                </Link>
             </div>
 
             {/* 필터링 UI */}
