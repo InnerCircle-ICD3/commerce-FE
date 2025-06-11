@@ -11,9 +11,9 @@
         "prefix": ""
     },
     "aliases": {
-        "components": "@commerce-fe/utils/components",
+        "components": "src/shared/components",
         "utils": "@commerce-fe/utils/lib/utils",
-        "ui": "@commerce-fe/utils/components/ui",
+        "ui": "src/shared/components/ui",
         "lib": "@commerce-fe/utils/lib",
         "hooks": "@commerce-fe/utils/hooks"
     },
