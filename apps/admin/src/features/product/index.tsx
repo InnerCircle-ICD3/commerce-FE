@@ -1,194 +1,123 @@
-import { useState } from "react";
+import { useState, useEffect, useCallback } from "react";
 import { Link } from '@tanstack/react-router';
 import ProductList from "@/features/product/components/ProductList";
 import ProductFilters from "@/features/product/components/ProductFilters";
+import { Button } from "@/components/ui/button";
 import type { Product } from "@/features/product/types";
+import { api, fetcher } from "@/shared/kyInstance"; // Import both api and fetcher
+import type { PagedResponse } from "@/types/api";
+
+// 백엔드 API 응답 타입 (임시)
+interface ProductApiResponse {
+    id: number;
+    name: string;
+    price: number;
+    quantity: number;
+    thumbnail: string;
+    detailImage: string;
+    intensity: string;
+    cupSize: string;
+    isSoldOut: boolean;
+}
+
+const mapApiResponseToProduct = (apiProduct: ProductApiResponse): Product => ({
+    id: apiProduct.id.toString(),
+    name: apiProduct.name,
+    price: apiProduct.price,
+    quantity: apiProduct.quantity,
+    thumbnail: apiProduct.thumbnail,
+    detailImage: apiProduct.detailImage,
+    intensity: apiProduct.intensity,
+    cupSize: apiProduct.cupSize,
+    status: apiProduct.isSoldOut ? 'inactive' : 'active',
+    updatedAt: new Date().toISOString(), // 백엔드에 없으므로 임시로 현재 시간 사용
+});
 
 export default function ProductsPage() {
-    // 가상의 상품 데이터
-    const [products, setProducts] = useState<Product[]>([
-        {
-            id: "PROD-001",
-            name: "에티오피아 예가체프",
-            price: 3900,
-            quantity: 48,
-            thumbnail: "https://images.unsplash.com/photo-1511920170033-f8396924c348?q=80&w=100&auto=format&fit=crop",
-            detailImage: "https://images.unsplash.com/photo-1511920170033-f8396924c348?q=80&w=600&auto=format&fit=crop",
-            intensity: "중강배전",
-            cupSize: "L",
-            status: "active",
-            updatedAt: "2025-05-28"
-        },
-        {
-            id: "PROD-002",
-            name: "브라질 산토스",
-            price: 12800,
-            quantity: 22,
-            thumbnail: "https://images.unsplash.com/photo-1559496417-e7f25cb247f3?q=80&w=100&auto=format&fit=crop",
-            detailImage: "https://images.unsplash.com/photo-1559496417-e7f25cb247f3?q=80&w=600&auto=format&fit=crop",
-            intensity: "강배전",
-            cupSize: "L",
-            status: "active",
-            updatedAt: "2025-05-29"
-        },
-        {
-            id: "PROD-003",
-            name: "과테말라 스위스워터 디카페인",
-            price: 32000,
-            quantity: 5,
-            thumbnail: "https://images.unsplash.com/photo-1587734195503-904fca47e0e9?q=80&w=100&auto=format&fit=crop",
-            detailImage: "https://images.unsplash.com/photo-1587734195503-904fca47e0e9?q=80&w=600&auto=format&fit=crop",
-            intensity: "강배전",
-            cupSize: "S",
-            status: "active",
-            updatedAt: "2025-05-30"
-        },
-        {
-            id: "PROD-004",
-            name: "코스타리카 타라주",
-            price: 4500,
-            quantity: 120,
-            thumbnail: "https://images.unsplash.com/photo-1511920170033-f8396924c348?q=80&w=100&auto=format&fit=crop",
-            detailImage: "https://images.unsplash.com/photo-1511920170033-f8396924c348?q=80&w=600&auto=format&fit=crop",
-            intensity: "중배전",
-            cupSize: "50ML",
-            status: "active",
-            updatedAt: "2025-05-30"
-        },
-        {
-            id: "PROD-005",
-            name: "브라질 빈할 퍼먼티드",
-            price: 5800,
-            quantity: 35,
-            thumbnail: "https://images.unsplash.com/photo-1447933601403-0c6688de566e?q=80&w=100&auto=format&fit=crop",
-            detailImage: "https://images.unsplash.com/photo-1447933601403-0c6688de566e?q=80&w=600&auto=format&fit=crop",
-            intensity: "중강배전",
-            cupSize: "M",
-            status: "active",
-            updatedAt: "2025-05-30"
-        },
-        {
-            id: "PROD-006",
-            name: "케냐 AA",
-            price: 4200,
-            quantity: 42,
-            thumbnail: "https://images.unsplash.com/photo-1596078841242-35518c8a30d6?q=80&w=100&auto=format&fit=crop",
-            detailImage: "https://images.unsplash.com/photo-1596078841242-35518c8a30d6?q=80&w=600&auto=format&fit=crop",
-            intensity: "경배전",
-            cupSize: "L",
-            status: "active",
-            updatedAt: "2025-05-31"
-        },
-        {
-            id: "PROD-007",
-            name: "콜롬비아 수프리모",
-            price: 18500,
-            quantity: 12,
-            thumbnail: "https://images.unsplash.com/photo-1495474472287-4d71bcdd2085?q=80&w=100&auto=format&fit=crop",
-            detailImage: "https://images.unsplash.com/photo-1495474472287-4d71bcdd2085?q=80&w=600&auto=format&fit=crop",
-            intensity: "강배전",
-            cupSize: "L",
-            status: "active",
-            updatedAt: "2025-05-31"
-        },
-        {
-            id: "PROD-008",
-            name: "콜롬비아 리치피치 디카페인",
-            price: 25000,
-            quantity: 8,
-            thumbnail: "https://images.unsplash.com/photo-1514432324607-a09d9b4aefdd?q=80&w=100&auto=format&fit=crop",
-            detailImage: "https://images.unsplash.com/photo-1514432324607-a09d9b4aefdd?q=80&w=600&auto=format&fit=crop",
-            intensity: "약배전",
-            cupSize: "M",
-            status: "active",
-            updatedAt: "2025-06-01"
-        },
-        {
-            id: "PROD-009",
-            name: "콜롬비아 아바야 게이샤",
-            price: 12000,
-            quantity: 18,
-            thumbnail: "https://images.unsplash.com/photo-1559525839-b184a4d698c7?q=80&w=100&auto=format&fit=crop",
-            detailImage: "https://images.unsplash.com/photo-1559525839-b184a4d698c7?q=80&w=600&auto=format&fit=crop",
-            intensity: "중배전",
-            cupSize: "S",
-            status: "active",
-            updatedAt: "2025-05-30"
-        },
-        {
-            id: "PROD-010",
-            name: "예멘 모카 마타리",
-            price: 7200,
-            quantity: 0,
-            thumbnail: "https://images.unsplash.com/photo-1497515114629-f71d768fd07c?q=80&w=100&auto=format&fit=crop",
-            detailImage: "https://images.unsplash.com/photo-1497515114629-f71d768fd07c?q=80&w=600&auto=format&fit=crop",
-            intensity: "중배전",
-            cupSize: "M",
-            status: "active",
-            updatedAt: "2025-06-01"
-        },
-    ]);
+    const [products, setProducts] = useState<Product[]>([]);
+    const [isLoading, setIsLoading] = useState(true);
+    const [error, setError] = useState<Error | null>(null);
 
-    // 상품 삭제 기능
-    const handleDeleteProduct = (productId: string) => {
-        setProducts(products.filter(product => product.id !== productId));
+    const fetchProducts = useCallback(async () => {
+        setIsLoading(true);
+        setError(null); // Clear previous errors
+        try {
+            const pagedData = await fetcher<PagedResponse<ProductApiResponse>>("products");
+
+            if (pagedData && Array.isArray(pagedData.content)) {
+                const mappedProducts = pagedData.content.map(mapApiResponseToProduct);
+                setProducts(mappedProducts);
+            } else {
+                console.warn("No products content found or API response data is null/invalid:", pagedData);
+                setProducts([]); // Default to empty list if content is not as expected
+                // Optionally set an error for the user if this state is unexpected
+                // setError(new Error("Failed to load product data: unexpected response format."));
+            }
+        } catch (err) {
+            console.error("Failed to fetch products:", err);
+            setError(err as Error);
+            setProducts([]); // Clear products on error
+        } finally {
+            setIsLoading(false);
+        }
+    }, []);
+
+    useEffect(() => {
+        fetchProducts();
+    }, [fetchProducts]);
+
+    const handleDelete = async (id: string) => {
+        if (window.confirm(`${id} 상품을 삭제하시겠습니까?`)) {
+            try {
+                const productId = Number.parseInt(id, 10);
+                await api.delete(`admin/products/${productId}`);
+                alert("상품이 삭제되었습니다.");
+                fetchProducts(); // 목록 새로고침
+            } catch (err) {
+                alert(`삭제 중 오류가 발생했습니다: ${(err as Error).message}`);
+            }
+        }
     };
 
-    // 상품 상태 변경 기능
-    const handleToggleStatus = (productId: string) => {
-        setProducts(
-            products.map(product =>
-                product.id === productId ? { ...product, status: product.status === "active" ? "inactive" : "active" } : product,
-            ),
-        );
+    const handleToggleStatus = async (id: string) => {
+        const product = products.find(p => p.id === id);
+        if (!product) return;
+
+        // 현재는 상태 변경 API가 없으므로, 낙관적 업데이트만 수행합니다.
+        // 백엔드 API가 준비되면 실제 호출 로직을 추가해야 합니다.
+        const newStatus = product.status === 'active' ? 'inactive' : 'active';
+        setProducts(products.map(p => (p.id === id ? { ...p, status: newStatus } : p)));
+
+        // 예시: API 호출
+        // try {
+        //     const productId = Number.parseInt(id.replace('PROD-', ''), 10);
+        //     await api.put(`admin/products/${productId}/status`, { json: { status: newStatus } });
+        //     fetchProducts(); // 또는 로컬에서 상태만 변경
+        // } catch (err) {
+        //     alert(`상태 변경 중 오류가 발생했습니다: ${(err as Error).message}`);
+        //     // 원래 상태로 롤백
+        //     setProducts(products.map(p => (p.id === id ? { ...p, status: product.status } : p)));
+        // }
     };
+
+    if (isLoading) return <div>Loading...</div>;
+    if (error) return <div>Error: {error.message}</div>;
 
     return (
-        <div className="space-y-6">
-            <div className="flex items-center justify-between">
-                <div>
-                    <h1 className="text-h2 font-bold text-gray-900">상품 관리</h1>
-                    <p className="mt-2 text-gray-600">상품 목록을 확인하고 관리하세요.</p>
-                </div>
-                <Link
-                    to="/products/new"
-                    className="rounded-md bg-blue-600 px-4 py-2 text-sm font-medium text-white shadow-sm hover:bg-blue-700 focus:outline-none focus:ring-2 focus:ring-blue-500 focus:ring-offset-2"
-                >
-                    + 상품 추가
+        <div className="flex flex-col gap-4 p-4 md:p-6">
+            <div className="flex justify-between items-center">
+                <h1 className="text-2xl font-bold">상품 목록</h1>
+                <Link to="/products/new">
+                    <Button>신규 상품 등록</Button>
                 </Link>
             </div>
-
-            {/* 필터링 UI */}
             <ProductFilters />
-            
-            {/* 상품 테이블 */}
-            <ProductList 
-                products={products} 
-                onDelete={handleDeleteProduct} 
-                onToggleStatus={handleToggleStatus} 
+            <ProductList
+                products={products}
+                onDelete={handleDelete}
+                onToggleStatus={handleToggleStatus}
             />
-            
-            {/* 페이지네이션 */}
-            <div className="flex justify-between items-center">
-                <div className="text-sm text-gray-500">10개 항목 중 1-10 표시</div>
-                <nav className="flex space-x-1">
-                    <button type="button" className="px-2 py-1 text-sm rounded-md border border-gray-300 bg-white text-gray-500 hover:bg-gray-50">
-                        이전
-                    </button>
-                    <button type="button" className="px-3 py-1 text-sm rounded-md border border-gray-300 bg-blue-600 text-white">
-                        1
-                    </button>
-                    <button type="button" className="px-3 py-1 text-sm rounded-md border border-gray-300 bg-white text-gray-500 hover:bg-gray-50">
-                        2
-                    </button>
-                    <button type="button" className="px-3 py-1 text-sm rounded-md border border-gray-300 bg-white text-gray-500 hover:bg-gray-50">
-                        3
-                    </button>
-                    <button type="button" className="px-2 py-1 text-sm rounded-md border border-gray-300 bg-white text-gray-500 hover:bg-gray-50">
-                        다음
-                    </button>
-                </nav>
-            </div>
+            {/* TODO: 페이지네이션 UI 구현 */}
         </div>
     );
 }
