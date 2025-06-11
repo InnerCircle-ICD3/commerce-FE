@@ -6,18 +6,19 @@ import AddressItem from "./AddressItem";
 import { Button } from "@/src/shared/components/shared/button";
 import { useModal } from "@/src/shared/hooks/useModal";
 import EditAddress from "./EditAddress";
+import { useAddressQuery } from "../hooks/useAddressesQuery";
 
 interface AddressListProps {
-    addresses: AddressType[];
-    onSelect: (address: AddressType) => void;
-    currentAddress?: AddressType | null;
+    onSelect?: (address: AddressType) => void;
+    selectMode?: boolean;
 }
 
-export default function AddressList({ addresses, onSelect, currentAddress }: AddressListProps) {
+export default function AddressList({ onSelect, selectMode = false }: AddressListProps) {
+    const { addresses } = useAddressQuery();
     // 현재 선택된 목록 표시를 위한 상태값
-    const [selectedAddress, setSelectedAddress] = useState<AddressType>(currentAddress || addresses[0]);
+    const [selectedAddress, setSelectedAddress] = useState<AddressType>(addresses[0]);
     const onClick = (id: number) => {
-        const address = addresses.find(address => address.id === id);
+        const address = addresses.find(address => address.addressId === id);
         if (address) {
             setSelectedAddress(address);
         }
@@ -25,7 +26,7 @@ export default function AddressList({ addresses, onSelect, currentAddress }: Add
 
     // 변경하기 버튼 클릭 시 부모 컴포넌트에 onSelect 함수 호출
     const handleSumit = useCallback(() => {
-        onSelect(selectedAddress);
+        onSelect?.(selectedAddress);
     }, [onSelect, selectedAddress]);
 
     const { openModal: openEditAddressModal, closeModal: closeEditAddressModal, Modal } = useModal();
@@ -45,16 +46,24 @@ export default function AddressList({ addresses, onSelect, currentAddress }: Add
             </div>
             <ul className="flex flex-col gap-5">
                 {addresses.map(address => (
-                    <li key={address.id}>
-                        <AddressItem key={address.id} address={address} onClick={onClick} checked={selectedAddress.id === address.id} />
+                    <li key={address.addressId}>
+                        <AddressItem
+                            key={address.addressId}
+                            address={address}
+                            onClick={onClick}
+                            checked={selectedAddress.addressId === address.addressId}
+                            selectMode={selectMode}
+                        />
                     </li>
                 ))}
             </ul>
-            <div className="py-5">
-                <Button size="full" onClick={handleSumit}>
-                    변경하기
-                </Button>
-            </div>
+            {selectMode && (
+                <div className="py-5">
+                    <Button size="full" onClick={handleSumit}>
+                        변경하기
+                    </Button>
+                </div>
+            )}
             <Modal title="배송지 추가" onClickClose={closeEditAddressModal}>
                 <EditAddress onComplete={closeEditAddressModal} />
             </Modal>
