@@ -5,7 +5,7 @@ import { useScramble } from "use-scramble";
 function HeroBanner() {
     const { ref } = useScramble({
         text: "바코드 브루잉",
-        range: [65, 125],
+        range: [44032, 55203],
         speed: 1,
         tick: 1,
         step: 10,
