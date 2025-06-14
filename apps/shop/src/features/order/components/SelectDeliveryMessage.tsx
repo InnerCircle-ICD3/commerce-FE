@@ -31,7 +31,7 @@ export default function SelectDeliveryMessage() {
         <div>
             <select
                 className="w-full p-2 outline-none border border-gray-200 rounded-md"
-                defaultValue={deliveryMessages[0]}
+                value={selectedDeliveryMessage}
                 onChange={e => setSelectedDeliveryMessage(e.target.value)}
             >
                 {deliveryMessages.map(message => (
