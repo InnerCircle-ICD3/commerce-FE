@@ -1,13 +1,9 @@
 import { Button } from "@/src/shared/components/shared/button";
-import Image from "next/image";
-import type { OrderHistoryItem } from "@/src/features/order/types/orderHistory";
 import { ArrowIcon } from "@/src/shared/components/shared/Icon";
 import { formatCurrency } from "@/src/shared/utils/formatUtils";
 import Link from "next/link";
-
-interface OrderHistoryListProps {
-    orders: OrderHistoryItem[];
-}
+import { useState } from "react";
+import { useOrderList } from "./hooks/useOrderList";
 
 interface ButtonConfig {
     text: string;
@@ -15,7 +11,10 @@ interface ButtonConfig {
     isGreen?: boolean;
 }
 
-export const OrderHistoryList = ({ orders }: OrderHistoryListProps) => {
+export const OrderHistoryList = () => {
+    const [page, setPage] = useState(1);
+    const { data: orders, totalPages } = useOrderList(page);
+
     // 주문 상태별 버튼 구성 정의
     const getButtonsByStatus = (status: string): ButtonConfig[] => {
         switch (status) {
@@ -50,12 +49,12 @@ export const OrderHistoryList = ({ orders }: OrderHistoryListProps) => {
 
     return (
         <div className="flex flex-col w-full gap-4">
-            {orders.map(order => (
-                <div key={order.id} className="w-full p-6 border border-gray-300/30 rounded-xl">
+            {orders?.map(order => (
+                <div key={order.orderNumber} className="w-full p-6 border border-gray-300/30 rounded-xl">
                     <div className="flex justify-between items-center mb-4">
                         <div className="flex items-center gap-2">
-                            <span className="font-bold text-base">{order.status}</span>
-                            {order.statusDate && <span className="text-emerald-700 text-sm">{order.statusDate}</span>}
+                            <span className="font-bold text-base">{order.orderStatus}</span>
+                            {order?.orderedAt && <span className="text-emerald-700 text-sm">{order.orderedAt}</span>}
                         </div>
                         <Link href="/order/123456456789">
                             <button type="button" className="p-1.5">
@@ -66,17 +65,17 @@ export const OrderHistoryList = ({ orders }: OrderHistoryListProps) => {
 
                     <div className="flex gap-4 mb-4">
                         <div className="w-20 h-20 bg-gray-100 rounded-md overflow-hidden relative">
-                            <Image src={order.imageSrc} alt={`${order.productName} 이미지`} fill sizes="5rem" className="object-cover" />
+                            {/* <Image src={order.mainProductThumbnail} alt={`${order.orderName} 이미지`} fill sizes="5rem" className="object-cover" /> */}
                         </div>
                         <div className="flex flex-col justify-between">
-                            <h3 className="font-bold text-sm">{order.productName}</h3>
-                            <div className="text-emerald-700 font-bold text-sm">{formatCurrency(order.price)}</div>
+                            <h3 className="font-bold text-sm">{order.orderName}</h3>
+                            <div className="text-emerald-700 font-bold text-sm">{formatCurrency(order.finalTotalPrice)}</div>
                         </div>
                     </div>
 
                     <div className="flex gap-4">
-                        {getButtonsByStatus(order.status).map(button => (
-                            <Link key={`${order.id}-${button.text}`} href="/order/123456456789" className="flex-1">
+                        {getButtonsByStatus(order.orderStatus).map(button => (
+                            <Link key={`${order.orderName}-${button.text}`} href={`/order/${order.orderNumber}`} className="flex-1">
                                 <Button variant={button.variant} className={`${baseButtonClass} ${button.isGreen ? greenButtonClass : ""} w-full`}>
                                     {button.text}
                                 </Button>
@@ -86,7 +85,12 @@ export const OrderHistoryList = ({ orders }: OrderHistoryListProps) => {
                 </div>
             ))}
 
-            <Button variant="outline" className="w-48 h-12 mx-auto flex items-center justify-center gap-1 text-sm font-semibold">
+            <Button
+                variant="outline"
+                className="w-48 h-12 mx-auto flex items-center justify-center gap-1 text-sm font-semibold"
+                onClick={() => setPage(page + 1)}
+                disabled={orders?.length === 0 || totalPages <= page}
+            >
                 더보기
                 <ArrowIcon direction="down" size="sm" strokeWidth={1.5} title="더 많은 주문 내역 보기" />
             </Button>

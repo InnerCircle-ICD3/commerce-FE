@@ -3,7 +3,11 @@
 import { Input } from "@/src/shared/components/shared/input";
 import { useEffect, useState } from "react";
 
-export default function SelectDeliveryMessage() {
+interface SelectDeliveryMessageProps {
+    onChange: (message: string) => void;
+}
+
+export default function SelectDeliveryMessage({ onChange }: SelectDeliveryMessageProps) {
     const [deliveryMessage, setDeliveryMessage] = useState("");
     const [isCustom, setIsCustom] = useState(false);
     const deliveryMessages = ["문앞에 두고가주세요", "직접 받아가주세요", "현재 자리에 두고가주세요"];
@@ -26,6 +30,10 @@ export default function SelectDeliveryMessage() {
                 break;
         }
     }, [selectedDeliveryMessage]);
+
+    useEffect(() => {
+        onChange(deliveryMessage);
+    }, [deliveryMessage, onChange]);
 
     return (
         <div>
