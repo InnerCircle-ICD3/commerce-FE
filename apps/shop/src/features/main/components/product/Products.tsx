@@ -1,4 +1,3 @@
-import { FilterBar } from "./FilterBar";
 import { ProductGrid } from "./ProductGrid";
 import { getProducts } from "@/src/features/main/api/productApi";
 
@@ -7,7 +6,7 @@ const Products = async () => {
 
     return (
         <main className="flex flex-col items-start w-full py-16 px-6">
-            <FilterBar />
+            {/* <FilterBar /> */}
             <section className="mt-10 w-full">
                 <ProductGrid products={products} />
             </section>

@@ -288,10 +288,25 @@ input[type="checkbox"] {
 
 button {
     cursor: pointer;
+    transition: opacity 0.3s ease;
 }
 
 button:disabled {
     cursor: not-allowed;
+}
+
+button:hover {
+    opacity: 0.6;
+}
+
+a * {
+    transition: opacity 0.3s ease;
+}
+
+button:hover img,
+a:hover img,
+a:hover h1 {
+    opacity: 0.6;
 }
 
 /* 스크롤바를 숨기는 유틸리티 클래스 */
@@ -305,4 +320,33 @@ button:disabled {
 /* Webkit 기반 브라우저(Chrome, Safari, Opera 등)용 */
 .hide-scrollbar::-webkit-scrollbar {
     display: none;
+}
+
+/* 스크롤 애니메이션 */
+@keyframes fadeIn {
+    from {
+        opacity: 0;
+    }
+    to {
+        opacity: 1;
+    }
+}
+
+@keyframes slideUp {
+    from {
+        transform: translateY(30px);
+        opacity: 0;
+    }
+    to {
+        transform: translateY(0);
+        opacity: 1;
+    }
+}
+
+.animate-fade-in {
+    animation: fadeIn 0.8s ease-out forwards;
+}
+
+.animate-slide-up {
+    animation: slideUp 0.8s ease-out forwards;
 }

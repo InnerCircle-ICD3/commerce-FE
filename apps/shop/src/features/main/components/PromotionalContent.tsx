@@ -1,6 +1,42 @@
+"use client";
+
+import { useEffect, useRef, useState } from "react";
+
 export default function CoffeeLetter() {
+    const [isVisible, setIsVisible] = useState(false);
+    const ref = useRef<HTMLElement>(null);
+
+    useEffect(() => {
+        const observer = new IntersectionObserver(
+            ([entry]) => {
+                if (entry.isIntersecting) {
+                    setIsVisible(true);
+                }
+            },
+            {
+                threshold: 0.1,
+                rootMargin: "0px 0px -50px 0px",
+            },
+        );
+
+        if (ref.current) {
+            observer.observe(ref.current);
+        }
+
+        return () => {
+            if (ref.current) {
+                observer.unobserve(ref.current);
+            }
+        };
+    }, []);
+
     return (
-        <article className="flex flex-col md:flex-row items-center gap-10 py-10 px-6">
+        <article
+            ref={ref}
+            className={`flex flex-col md:flex-row items-center gap-10 py-16 px-6 transition-all duration-300 ${
+                isVisible ? "animate-fade-in animate-slide-up opacity-100" : "opacity-0 translate-y-8"
+            }`}
+        >
             <section className="overflow-hidden grow shrink self-stretch my-auto leading-snug text-black whitespace-nowrap rounded-xl min-w-60 w-[35rem] max-md:max-w-full">
                 <div className="flex relative flex-col items-start px-14 py-24 w-full min-h-[23rem] max-md:px-5 max-md:pt-24 max-md:max-w-full">
                     <img
@@ -8,24 +44,6 @@ export default function CoffeeLetter() {
                         alt="Background pattern"
                         className="object-cover absolute inset-0 size-full"
                     />
-                    <div className="flex overflow-hidden relative gap-6 items-center p-4 bg-white rounded">
-                        <div className="flex gap-3 items-center self-stretch my-auto">
-                            <img
-                                src="https://cdn.builder.io/api/v1/image/assets/TEMP/ebd7bc5ad020284f520fbe10b3c02ad5224ecb81"
-                                alt="Coffee product"
-                                className="object-contain shrink-0 self-stretch my-auto rounded-sm aspect-square w-14"
-                            />
-                            <div className="self-stretch my-auto w-16">
-                                <p className="text-sm tracking-tight">에티오피아</p>
-                                <p className="text-base font-bold tracking-tight">1,000</p>
-                            </div>
-                        </div>
-                        <img
-                            src="https://cdn.builder.io/api/v1/image/assets/TEMP/c3389f8171eec06884ac09c240888fc650ef88dc"
-                            alt="Arrow icon"
-                            className="object-contain shrink-0 self-stretch my-auto w-8 aspect-square"
-                        />
-                    </div>
                     <img
                         src="https://cdn.builder.io/api/v1/image/assets/TEMP/f7390e55305441f67617e97da935194d032e660d"
                         alt="Decorative element 1"

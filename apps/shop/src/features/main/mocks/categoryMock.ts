@@ -6,28 +6,28 @@ import type { Category } from "@/src/features/main/types/category";
 export function getMockCategories(): Category[] {
     return [
         {
-            id: "virtuo-capsules",
-            title: "버츄오 캡슐 커피",
-            description: "다양한 크기와 풍부한 맛으로 즐기는 프리미엄 커피",
-            imageUrl: "https://cdn.builder.io/api/v1/image/assets/TEMP/4c7bfa7b14aca451340208bfc07390f055298c80",
+            id: "espresso-capsules",
+            title: "에스프레소 캡슐",
+            description: "진한 크레마와 깊은 맛의 정통 이탈리안 에스프레소 캡슐",
+            imageUrl: "https://images.unsplash.com/photo-1610889556528-9a770e32642f?w=400&h=300&fit=crop&crop=center",
         },
         {
-            id: "original-capsules",
-            title: "오리지널 캡슐 커피",
-            description: "진하고 깊은 에스프레소 풍미를 담은 정통 캡슐",
-            imageUrl: "https://cdn.builder.io/api/v1/image/assets/TEMP/4c7bfa7b14aca451340208bfc07390f055298c80",
+            id: "lungo-capsules",
+            title: "룽고 캡슐",
+            description: "부드럽고 향긋한 긴 추출 방식의 룽고 커피 캡슐",
+            imageUrl: "https://images.unsplash.com/photo-1447933601403-0c6688de566e?w=400&h=300&fit=crop&crop=center",
         },
         {
-            id: "machines",
-            title: "머신",
-            description: "혁신적인 디자인과 최신 기술이 적용된 801 커피 머신",
-            imageUrl: "https://cdn.builder.io/api/v1/image/assets/TEMP/4c7bfa7b14aca451340208bfc07390f055298c80",
+            id: "flavored-capsules",
+            title: "플레이버 캡슐",
+            description: "바닐라, 카라멜, 헤이즐넛 등 다양한 향이 가미된 특별한 캡슐",
+            imageUrl: "https://images.unsplash.com/photo-1495474472287-4d71bcdd2085?w=400&h=300&fit=crop&crop=center",
         },
         {
-            id: "accessories",
-            title: "액세서리",
-            description: "커피 경험을 완성하는 다양한 고품질 액세서리",
-            imageUrl: "https://cdn.builder.io/api/v1/image/assets/TEMP/4c7bfa7b14aca451340208bfc07390f055298c80",
+            id: "decaf-capsules",
+            title: "디카페인 캡슐",
+            description: "카페인을 제거하고도 풍부한 맛을 유지한 디카페인 캡슐",
+            imageUrl: "https://images.unsplash.com/photo-1461023058943-07fcbe16d735?w=400&h=300&fit=crop&crop=center",
         },
     ];
 }
