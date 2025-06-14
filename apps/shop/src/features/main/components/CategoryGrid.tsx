@@ -1,6 +1,6 @@
 import { CategoryItem } from "./CategoryItem";
 import { CategoryNav } from "./CategoryNav";
-import { getCategories } from "@/src/features/main/api/categoryApi";
+import { getCategories } from "@/features/main/api/categoryApi";
 
 export default async function CategoryGrid() {
     const categories = await getCategories();

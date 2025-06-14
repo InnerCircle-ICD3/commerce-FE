@@ -1,4 +1,4 @@
-import { Button } from "@/src/shared/components/shared/button";
+import { Button } from "@/shared/components/shared/button";
 import Link from "next/link";
 
 export default function Page() {

@@ -1,6 +1,9 @@
 "use client";
 
 import { useState, useRef, useEffect, useCallback } from "react";
+import { v4 as uuidv4 } from 'uuid';
+import { supabase } from "@/lib/supabase";
+import type { ChatMessage, ChatRoom, ProductInfo } from "@/lib/supabase";
 
 interface ChatDialogProps {
     onClose: () => void;
@@ -12,102 +15,225 @@ interface ChatDialogProps {
     };
 }
 
-interface Message {
+export interface Message {
     id: string;
-    sender: string;
+    sender: string; 
     message: string;
     timestamp: string;
-    type: "user" | "system";
+    type: 'user' | 'system' | 'received'; 
 }
 
 const ChatDialog = ({ onClose, productInfo }: ChatDialogProps) => {
     const [message, setMessage] = useState("");
     const [messages, setMessages] = useState<Message[]>([]);
     const [isConnected, setIsConnected] = useState(false);
-    const wsRef = useRef<WebSocket | null>(null);
     const messagesEndRef = useRef<HTMLDivElement>(null);
-    const reconnectTimerRef = useRef<ReturnType<typeof setTimeout> | null>(null);
+    const [roomId, setRoomId] = useState<string | null>(null);
+    const [userId, setUserId] = useState<string>(uuidv4()); // 임시 사용자 ID (전체 UUID 사용)
+    const cleanupRef = useRef<(() => void) | null>(null); // 정리 함수를 저장할 ref
 
-    const connectWebSocket = useCallback(() => {
-        if (wsRef.current?.readyState === WebSocket.OPEN) {
-            return;
-        }
+    // Supabase를 통한 채팅방 생성 또는 참여
+    const initChatRoom = useCallback(async (): Promise<() => void> => {
+        try {
+            let existingRoom: ChatRoom | null = null;
+            const productData = productInfo ? {
+                id: productInfo.id,
+                title: productInfo.title,
+                price: productInfo.price,
+                image: productInfo.image
+            } : null;
 
-        wsRef.current = new WebSocket("ws://localhost:8080");
-
-        wsRef.current.onopen = () => {
-            console.log("WebSocket 연결됨");
-            setIsConnected(true);
-
-            // 연결되면 자동으로 채팅 시작
-            wsRef.current?.send(
-                JSON.stringify({
-                    type: "join",
-                    data: { userName: "고객", userType: "customer" },
-                }),
-            );
-        };
-
-        wsRef.current.onclose = event => {
-            console.log("WebSocket 연결 해제됨", event);
-            setIsConnected(false);
-
-            // 기존 타이머 제거
-            if (reconnectTimerRef.current) {
-                clearTimeout(reconnectTimerRef.current);
+            // 1. Check for existing room
+            if (productInfo?.id) {
+                const { data, error: fetchError } = await supabase
+                    .from('chat_rooms')
+                    .select('*')
+                    .eq('user_id', userId)
+                    .eq('product_info->>id', productInfo.id) // Compare text value of product_info.id
+                    .maybeSingle();
+                if (fetchError) {
+                    console.warn('Error fetching existing room for product:', fetchError.message);
+                }
+                existingRoom = data;
+            } else if (!productInfo) { // General inquiry, productInfo is null
+                const { data, error: fetchError } = await supabase
+                    .from('chat_rooms')
+                    .select('*')
+                    .eq('user_id', userId)
+                    .is('product_info', null)
+                    .maybeSingle();
+                if (fetchError) {
+                    console.warn('Error fetching existing general room:', fetchError.message);
+                }
+                existingRoom = data;
             }
 
-            // 3초 후 재연결 시도
-            reconnectTimerRef.current = setTimeout(() => {
-                if (!wsRef.current || wsRef.current.readyState === WebSocket.CLOSED) {
-                    console.log("재연결 시도 중...");
-                    connectWebSocket();
+            let currentRoomIdToUse: string;
+            let initialMessages: Message[] = [];
+
+            if (existingRoom) {
+                currentRoomIdToUse = existingRoom.id;
+                setRoomId(currentRoomIdToUse); 
+                // console.log(`Found existing room: ${currentRoomIdToUse}`);
+                const { data: existingMessagesData, error: messagesError } = await supabase
+                    .from('chat_messages')
+                    .select('*')
+                    .eq('room_id', currentRoomIdToUse)
+                    .order('created_at', { ascending: true });
+
+                if (messagesError) {
+                    console.error('Error fetching existing messages:', messagesError);
+                } else if (existingMessagesData) {
+                    initialMessages = existingMessagesData.map(msg => ({
+                        id: msg.id,
+                        sender: msg.sender_id,
+                        message: msg.message,
+                        timestamp: msg.created_at,
+                        type: msg.is_admin ? 'system' : (msg.sender_id === userId ? 'user' : 'system')
+                    }));
                 }
-            }, 3000);
-        };
-
-        wsRef.current.onerror = error => {
-            console.error("WebSocket 오류:", error);
-            setIsConnected(false);
-        };
-
-        wsRef.current.onmessage = event => {
-            try {
-                const response = JSON.parse(event.data);
-                console.log("서버 응답:", response);
-
-                if (response.type === "message") {
-                    const messageData = response.data;
-                    const newMessage: Message = {
-                        id: messageData.id,
-                        sender: messageData.sender,
-                        message: messageData.message,
-                        timestamp: messageData.timestamp,
-                        type: messageData.type,
+                if (initialMessages.length === 0) { 
+                     const welcomeMessage: Message = {
+                        id: uuidv4(),
+                        sender: '시스템',
+                        message: '다시 오신 것을 환영합니다! 무엇을 도와드릴까요?',
+                        timestamp: new Date().toISOString(),
+                        type: 'system'
                     };
-
-                    setMessages(prev => [...prev, newMessage]);
-                    scrollToBottom();
+                    initialMessages.push(welcomeMessage);
                 }
-            } catch (error) {
-                console.error("메시지 파싱 오류:", error);
+            } else {
+                // console.log('No existing room found, creating a new one.');
+                const { data: newRoom, error: insertError } = await supabase
+                    .from('chat_rooms')
+                    .insert({ user_id: userId, product_info: productData })
+                    .select()
+                    .single();
+
+                if (insertError) {
+                    console.error('Error inserting new chat room:', insertError);
+                    setIsConnected(false);
+                    throw insertError;
+                }
+                currentRoomIdToUse = newRoom.id;
+                setRoomId(currentRoomIdToUse);
+
+                const welcomeMessage: Message = {
+                    id: uuidv4(),
+                    sender: '시스템',
+                    message: '안녕하세요! 무엇을 도와드릴까요?',
+                    timestamp: new Date().toISOString(),
+                    type: 'system'
+                };
+                initialMessages = [welcomeMessage];
             }
-        };
-    }, []);
+            
+            setMessages(initialMessages);
+            setIsConnected(true);
+            
+            // Supabase Realtime 구독 설정
+            const channel = supabase.channel(`room:${currentRoomIdToUse}`);
+            const subscription = channel
+                .on('postgres_changes', {
+                    event: 'INSERT',
+                    schema: 'public',
+                    table: 'chat_messages',
+                    filter: `room_id=eq.${currentRoomIdToUse}`
+                }, (payload) => {
+                    const newChatMessage = payload.new as ChatMessage;
+                    console.log('[Shop ChatDialog] Realtime: Received raw message:', JSON.stringify(newChatMessage, null, 2));
+                    console.log(`[Shop ChatDialog] Realtime: newMsg.sender_id=${newChatMessage.sender_id}, current userId=${userId}, newMsg.is_admin=${newChatMessage.is_admin}`);
+
+                    // 내가 보낸 메시지는 Optimistic Update로 이미 처리되었으므로, 여기서는 타인이 보낸 메시지만 처리
+                    // 또는 is_admin 플래그가 true인 경우 (관리자가 보낸 메시지)
+                    if (newChatMessage.sender_id !== userId) {
+                        // is_admin이 true이면 'system' (관리자 메시지)
+                        // sender_id가 userId와 다르고 is_admin이 false이면 'received' (다른 사용자 메시지 - 현재는 해당 없음)
+                        const messageType: Message['type'] = newChatMessage.is_admin ? 'system' : 'received';
+
+                        const newMessage: Message = {
+                            id: newChatMessage.id,
+                            sender: newChatMessage.sender_id, // 관리자 ID 또는 다른 사용자 ID
+                            message: newChatMessage.message,
+                            timestamp: newChatMessage.created_at,
+                            type: messageType
+                        };
+                        console.log('[Shop ChatDialog] Realtime: newMessage object to add:', JSON.stringify(newMessage, null, 2));
+                        
+                        setMessages(prevMessages => {
+                            // 중복 방지: 이미 메시지 목록에 같은 ID의 메시지가 있는지 확인
+                            if (prevMessages.some(msg => msg.id === newMessage.id)) {
+                                console.log(`[Shop ChatDialog] Realtime: Duplicate message ID ${newMessage.id} detected. Not adding.`);
+                                return prevMessages;
+                            }
+                            const updatedMessages = [...prevMessages, newMessage];
+                            console.log('[Shop ChatDialog] Realtime: Messages updated. Count:', updatedMessages.length);
+                            return updatedMessages;
+                        });
+                        scrollToBottom();
+                    } else {
+                        console.log('[Shop ChatDialog] Realtime: Message from self, already handled by optimistic update or not applicable.');
+                    }
+                })
+                .subscribe((status, err) => {
+                    if (status === 'SUBSCRIBED') {
+                        console.log(`Successfully subscribed to room channel! Room ID: ${currentRoomIdToUse}`);
+                    }
+                    if (status === 'CHANNEL_ERROR') {
+                        console.error(`Subscription failed! Channel error for room ID: ${currentRoomIdToUse}`, err);
+                    }
+                    if (status === 'TIMED_OUT') {
+                        console.error(`Subscription timed out for room ID: ${currentRoomIdToUse}`);
+                    }
+                    if (err) {
+                        console.error(`Subscription error for room ID: ${currentRoomIdToUse}`, err);
+                    }
+                });
+                            
+            return () => {
+                console.log(`Unsubscribing from room channel. Room ID: ${currentRoomIdToUse}`);
+                if (subscription) channel.unsubscribe(); // Use channel.unsubscribe()
+            };
+            
+        } catch (error) {
+            console.error('Error in initChatRoom:', error);
+            setIsConnected(false);
+            return () => {}; // Return an empty cleanup function on error
+        }
+    }, [userId, productInfo]);
 
     // 메시지 전송
-    const sendMessage = () => {
-        if (!message.trim() || !isConnected) return;
+    const sendMessage = async () => {
+        if (!message.trim() || !isConnected || !roomId) return;
 
-        // 서버로 전송만 하고, 즉시 화면에 표시하지 않음 (서버로부터 받은 후 표시)
-        wsRef.current?.send(
-            JSON.stringify({
-                type: "sendMessage",
-                data: { message: message.trim() },
-            }),
-        );
+        // 화면에 즉시 메시지 표시
+        const msgId = uuidv4();
+        const newMessage: Message = {
+            id: msgId,
+            sender: userId,
+            message: message.trim(),
+            timestamp: new Date().toISOString(),
+            type: 'user'
+        };
 
+        setMessages(prev => [...prev, newMessage]);
         setMessage("");
+        scrollToBottom();
+
+        try {
+            // Supabase에 메시지 저장
+            await supabase
+                .from('chat_messages')
+                .insert({
+                    id: msgId,
+                    room_id: roomId,
+                    sender_id: userId,
+                    message: message.trim(),
+                    is_admin: false
+                });
+        } catch (error) {
+            console.error('메시지 전송 오류:', error);
+        }
     };
 
     // 스크롤을 최하단으로
@@ -125,20 +251,23 @@ const ChatDialog = ({ onClose, productInfo }: ChatDialogProps) => {
         }
     };
 
-    // 컴포넌트 마운트 시 WebSocket 연결
+    // 컴포넌트 마운트 시 Supabase 연결 초기화
     useEffect(() => {
-        connectWebSocket();
-
-        // cleanup 함수
-        return () => {
-            if (wsRef.current) {
-                wsRef.current.close();
-            }
-            if (reconnectTimerRef.current) {
-                clearTimeout(reconnectTimerRef.current);
+        const initialize = async () => {
+            const cleanupFunction = await initChatRoom();
+            if (typeof cleanupFunction === 'function') {
+                cleanupRef.current = cleanupFunction;
             }
         };
-    }, [connectWebSocket]);
+
+        initialize();
+
+        return () => {
+            if (cleanupRef.current) {
+                cleanupRef.current();
+            }
+        };
+    }, [initChatRoom]);
 
     return (
         <div className="fixed top-0 right-0 z-50 flex items-end justify-end p-4 sm:p-6 md:p-8" onClick={e => e.stopPropagation()}>

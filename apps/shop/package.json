@@ -13,6 +13,7 @@
         "@commerce-fe/utils": "workspace:*",
         "@radix-ui/react-select": "^2.2.5",
         "@radix-ui/react-slot": "^1.2.0",
+        "@supabase/supabase-js": "^2.50.0",
         "class-variance-authority": "^0.7.1",
         "clsx": "^2.1.1",
         "lucide-react": "^0.503.0",
@@ -23,6 +24,7 @@
         "react-dom": "^19.0.0",
         "tailwind-merge": "^3.2.0",
         "use-scramble": "^2.2.15",
+        "uuid": "^11.1.0",
         "zod": "^3.25.32"
     },
     "devDependencies": {

@@ -1,8 +1,8 @@
-import SearchProduct from "@/src/features/product/components/SearchProduct";
+import SearchProduct from "@/features/product/components/SearchProduct";
 import Tags from "./Tags";
 import { SubNav } from "./SubNav";
 import Link from "next/link";
-import ChatButton from "@/src/features/chat/components/ChatButton";
+import ChatButton from "@/features/chat/components/ChatButton";
 
 function Header() {
     return (

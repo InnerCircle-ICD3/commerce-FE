@@ -1,7 +1,7 @@
-import HeroBanner from "@/src/features/main/components/HeroBanner";
-import CategoryGrid from "@/src/features/main/components/CategoryGrid";
-import CoffeeLetter from "@/src/features/main/components/PromotionalContent";
-import Products from "@/src/features/main/components/product/Products";
+import HeroBanner from "@/features/main/components/HeroBanner";
+import CategoryGrid from "@/features/main/components/CategoryGrid";
+import CoffeeLetter from "@/features/main/components/PromotionalContent";
+import Products from "@/features/main/components/product/Products";
 
 export default function TempMainPage() {
     return (
