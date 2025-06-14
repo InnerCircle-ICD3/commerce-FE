@@ -5,7 +5,7 @@ import SelectShippingInfo from "@/src/features/order/components/SelectShippingIn
 import useCreateOrder from "../hooks/useCreateOrder";
 import { useToast } from "@/src/shared/hooks/useToast";
 import { useCreatePayment } from "../../payment/hooks/useCreatePayment";
-import { useEffect, useState } from "react";
+import { Suspense, useEffect, useState } from "react";
 import type { AddressType } from "../types";
 import { useOrderPrepare } from "../hooks/useOrderPrepare";
 import { createUUID } from "@/src/shared/utils/uuid";
