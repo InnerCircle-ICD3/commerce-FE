@@ -7,7 +7,7 @@ export const metadata = {
 };
 
 export default async function OrderPage() {
-    const { data } = await getOrderList();
+    // const { data } = await getOrderList()
 
-    return <OrderHistoryPage initialOrders={data?.content ?? []} />;
+    return <OrderHistoryPage initialOrders={[]} />;
 }
