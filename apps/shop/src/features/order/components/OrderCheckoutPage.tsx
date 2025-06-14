@@ -5,7 +5,7 @@ import SelectShippingInfo from "@/src/features/order/components/SelectShippingIn
 import useCreateOrder from "../hooks/useCreateOrder";
 import { useToast } from "@/src/shared/hooks/useToast";
 import { useCreatePayment } from "../../payment/hooks/useCreatePayment";
-import { useEffect, useState } from "react";
+import { Suspense, useEffect, useState } from "react";
 import type { AddressType } from "../types";
 import { useOrderPrepare } from "../hooks/useOrderPrepare";
 import { createUUID } from "@/src/shared/utils/uuid";
@@ -77,7 +77,7 @@ export default function OrderCheckoutPage() {
     }, [orderPrepareData]);
 
     return (
-        <>
+        <Suspense>
             <form onSubmit={handlePayment}>
                 <div className="py-16 px-40 max-lg:px-10 max-lg:py-8">
                     <h2 className="text-2xl font-bold mb-10">주문서</h2>
@@ -130,6 +130,6 @@ export default function OrderCheckoutPage() {
                 </div>
             </form>
             {ToastUI}
-        </>
+        </Suspense>
     );
 }
