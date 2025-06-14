@@ -47,12 +47,46 @@ export async function updateProductStatus(id: number, isSoldOut: boolean): Promi
   });
 }
 
+// 상품 생성을 위한 인터페이스
+export interface CreateProductDto {
+  name: string;
+  price: number;
+  quantity: number;
+  thumbnail: string;
+  detailImage: string;
+  intensityId: number;
+  cupSizeId: number;
+}
+
 // 상품 생성
-export async function createProduct(product: Omit<Product, 'id'>): Promise<Product> {
-  return authPost<Product>('admin/products', product);
+export async function createProduct(productData: CreateProductDto): Promise<{ productId: number }> {
+  const response = await authPost<{ data: { productId: number } }>('admin/products', productData);
+  return response.data;
 }
 
 // 상품 정보 업데이트
 export async function updateProduct(id: number, productData: Partial<Product>): Promise<Product> {
   return authPut<Product>(`admin/products/${id}`, productData);
+}
+
+// 커피 강도 카테고리 타입
+export interface Intensity {
+  id: number;
+  name: string;
+}
+
+// 컵 사이즈 카테고리 타입
+export interface CupSize {
+  id: number;
+  name: string;
+}
+
+// 강도 카테고리 목록 조회
+export async function getIntensities(): Promise<Intensity[]> {
+  return get<Intensity[]>('admin/categories/intensities');
+}
+
+// 컵 사이즈 카테고리 목록 조회
+export async function getCupSizes(): Promise<CupSize[]> {
+  return get<CupSize[]>('admin/categories/cup-sizes');
 }
