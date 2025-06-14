@@ -31,10 +31,10 @@ export default function AddressItem({ address, onClick, checked, selectMode = fa
                     {address.isDefault && <span className="text-sm text-gray-500 bg-gray-100 rounded-sm px-2 py-1">기본 배송지</span>}
                 </div>
                 <div className="flex items-center gap-2">
-                    <Button variant="outline" type="button" onClick={openModal}>
+                    <Button variant="outline" type="button" onClick={(e) => { e.stopPropagation(); openModal(); }}>
                         수정
                     </Button>
-                    <Button variant="outline" type="button" onClick={() => mutate(address.addressId)} disabled={isPending}>
+                    <Button variant="outline" type="button" onClick={(e) => { e.stopPropagation(); mutate(address.addressId); }} disabled={isPending}>
                         삭제
                     </Button>
                 </div>
