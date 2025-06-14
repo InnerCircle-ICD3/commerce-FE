@@ -101,7 +101,7 @@ export default function ProductsPage() {
 
   // 상품 등록 페이지 이동 핸들러
   const handleRegisterClick = () => {
-    navigate({ to: '/products' }); // todo 'products/new'로 변경
+    navigate({ to: '/products/new' });
   };
 
   // 상품 편집 페이지 이동 핸들러

@@ -17,6 +17,7 @@ import { Route as AuthenticatedIndexImport } from './routes/_authenticated/index
 import { Route as AuthenticatedReviewsImport } from './routes/_authenticated/reviews'
 import { Route as authLoginImport } from './routes/(auth)/login'
 import { Route as AuthenticatedProductsIndexImport } from './routes/_authenticated/products/index'
+import { Route as AuthenticatedProductsNewImport } from './routes/_authenticated/products/new'
 
 // Create/Update Routes
 
@@ -55,6 +56,12 @@ const AuthenticatedProductsIndexRoute = AuthenticatedProductsIndexImport.update(
     getParentRoute: () => AuthenticatedRouteRoute,
   } as any,
 )
+
+const AuthenticatedProductsNewRoute = AuthenticatedProductsNewImport.update({
+  id: '/products/new',
+  path: '/products/new',
+  getParentRoute: () => AuthenticatedRouteRoute,
+} as any)
 
 // Populate the FileRoutesByPath interface
 
@@ -95,6 +102,13 @@ declare module '@tanstack/react-router' {
       preLoaderRoute: typeof AuthenticatedIndexImport
       parentRoute: typeof AuthenticatedRouteImport
     }
+    '/_authenticated/products/new': {
+      id: '/_authenticated/products/new'
+      path: '/products/new'
+      fullPath: '/products/new'
+      preLoaderRoute: typeof AuthenticatedProductsNewImport
+      parentRoute: typeof AuthenticatedRouteImport
+    }
     '/_authenticated/products/': {
       id: '/_authenticated/products/'
       path: '/products'
@@ -122,12 +136,14 @@ const authRouteRouteWithChildren = authRouteRoute._addFileChildren(
 interface AuthenticatedRouteRouteChildren {
   AuthenticatedReviewsRoute: typeof AuthenticatedReviewsRoute
   AuthenticatedIndexRoute: typeof AuthenticatedIndexRoute
+  AuthenticatedProductsNewRoute: typeof AuthenticatedProductsNewRoute
   AuthenticatedProductsIndexRoute: typeof AuthenticatedProductsIndexRoute
 }
 
 const AuthenticatedRouteRouteChildren: AuthenticatedRouteRouteChildren = {
   AuthenticatedReviewsRoute: AuthenticatedReviewsRoute,
   AuthenticatedIndexRoute: AuthenticatedIndexRoute,
+  AuthenticatedProductsNewRoute: AuthenticatedProductsNewRoute,
   AuthenticatedProductsIndexRoute: AuthenticatedProductsIndexRoute,
 }
 
@@ -139,6 +155,7 @@ export interface FileRoutesByFullPath {
   '': typeof AuthenticatedRouteRouteWithChildren
   '/login': typeof authLoginRoute
   '/reviews': typeof AuthenticatedReviewsRoute
+  '/products/new': typeof AuthenticatedProductsNewRoute
   '/products': typeof AuthenticatedProductsIndexRoute
 }
 
@@ -146,6 +163,7 @@ export interface FileRoutesByTo {
   '/': typeof AuthenticatedIndexRoute
   '/login': typeof authLoginRoute
   '/reviews': typeof AuthenticatedReviewsRoute
+  '/products/new': typeof AuthenticatedProductsNewRoute
   '/products': typeof AuthenticatedProductsIndexRoute
 }
 
@@ -156,14 +174,15 @@ export interface FileRoutesById {
   '/(auth)/login': typeof authLoginRoute
   '/_authenticated/reviews': typeof AuthenticatedReviewsRoute
   '/_authenticated/': typeof AuthenticatedIndexRoute
+  '/_authenticated/products/new': typeof AuthenticatedProductsNewRoute
   '/_authenticated/products/': typeof AuthenticatedProductsIndexRoute
 }
 
 export interface FileRouteTypes {
   fileRoutesByFullPath: FileRoutesByFullPath
-  fullPaths: '/' | '' | '/login' | '/reviews' | '/products'
+  fullPaths: '/' | '' | '/login' | '/reviews' | '/products/new' | '/products'
   fileRoutesByTo: FileRoutesByTo
-  to: '/' | '/login' | '/reviews' | '/products'
+  to: '/' | '/login' | '/reviews' | '/products/new' | '/products'
   id:
     | '__root__'
     | '/(auth)'
@@ -171,6 +190,7 @@ export interface FileRouteTypes {
     | '/(auth)/login'
     | '/_authenticated/reviews'
     | '/_authenticated/'
+    | '/_authenticated/products/new'
     | '/_authenticated/products/'
   fileRoutesById: FileRoutesById
 }
@@ -210,6 +230,7 @@ export const routeTree = rootRoute
       "children": [
         "/_authenticated/reviews",
         "/_authenticated/",
+        "/_authenticated/products/new",
         "/_authenticated/products/"
       ]
     },
@@ -223,6 +244,10 @@ export const routeTree = rootRoute
     },
     "/_authenticated/": {
       "filePath": "_authenticated/index.tsx",
+      "parent": "/_authenticated"
+    },
+    "/_authenticated/products/new": {
+      "filePath": "_authenticated/products/new.tsx",
       "parent": "/_authenticated"
     },
     "/_authenticated/products/": {
