@@ -9,7 +9,7 @@ import EditAddress from "./EditAddress";
 import { useAddressQuery } from "../hooks/useAddressesQuery";
 
 interface AddressListProps {
-    onSelect: (address: AddressType) => void;
+    onSelect?: (address: AddressType) => void;
     selectMode?: boolean;
 }
 
