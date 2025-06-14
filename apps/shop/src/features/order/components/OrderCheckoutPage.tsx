@@ -41,10 +41,10 @@ export default function OrderCheckoutPage() {
       });
     },
     onSuccess: (data) => {
-      if (data && paymentMethod) {
+      if (data.data && paymentMethod) {
         // TODO: 생성된 주문 번호와 함께 결제 sdk 호출
         createPaymentMutate({
-          orderNumber: data.orderNumber,
+          orderNumber: data.data.orderNumber,
           transactionId: `payment-${createUUID()}`,
           paymentMethod,
         });
