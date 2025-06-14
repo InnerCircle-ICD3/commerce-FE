@@ -6,7 +6,8 @@ export async function DELETE(req: NextRequest, { params }: { params: Promise<{ a
         const response = await fetch(`http://3.39.233.3:8080/users/addresses/${addressId}`, {
             method: "DELETE",
         });
-        return NextResponse.json(response);
+        const data = await response.json();
+        return NextResponse.json(data);
     } catch (error) {
         console.log(error);
         return NextResponse.json({ message: "Invalid request" }, { status: 400 });
