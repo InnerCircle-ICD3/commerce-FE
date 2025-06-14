@@ -1,4 +1,4 @@
-import { LayoutDashboard, ShoppingBag, FileText, Settings, Users } from "lucide-react";
+import { LayoutDashboard, ShoppingBag, FileText, Settings, Users, MessagesSquare } from "lucide-react";
 
 export const sidebarData = {
     navGroups: [
@@ -21,6 +21,12 @@ export const sidebarData = {
                     title: "주문 관리",
                     href: "/orders",
                     icon: FileText,
+                    variant: "ghost",
+                },
+                {
+                    title: "채팅 관리",
+                    href: "/chats",
+                    icon: MessagesSquare,
                     variant: "ghost",
                 },
                 {

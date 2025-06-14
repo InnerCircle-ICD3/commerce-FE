@@ -10,162 +10,170 @@
 
 // Import Routes
 
-import { Route as rootRoute } from './routes/__root'
-import { Route as AuthenticatedRouteImport } from './routes/_authenticated/route'
-import { Route as authRouteImport } from './routes/(auth)/route'
-import { Route as AuthenticatedIndexImport } from './routes/_authenticated/index'
-import { Route as AuthenticatedProductsImport } from './routes/_authenticated/products'
-import { Route as authLoginImport } from './routes/(auth)/login'
+import { Route as rootRoute } from "./routes/__root";
+import { Route as AuthenticatedRouteImport } from "./routes/_authenticated/route";
+import { Route as authRouteImport } from "./routes/(auth)/route";
+import { Route as AuthenticatedIndexImport } from "./routes/_authenticated/index";
+import { Route as AuthenticatedProductsImport } from "./routes/_authenticated/products";
+import { Route as AuthenticatedChatsImport } from "./routes/_authenticated/chats";
+import { Route as authLoginImport } from "./routes/(auth)/login";
 
 // Create/Update Routes
 
 const AuthenticatedRouteRoute = AuthenticatedRouteImport.update({
-  id: '/_authenticated',
-  getParentRoute: () => rootRoute,
-} as any)
+    id: "/_authenticated",
+    getParentRoute: () => rootRoute,
+} as any);
 
 const authRouteRoute = authRouteImport.update({
-  id: '/(auth)',
-  getParentRoute: () => rootRoute,
-} as any)
+    id: "/(auth)",
+    getParentRoute: () => rootRoute,
+} as any);
 
 const AuthenticatedIndexRoute = AuthenticatedIndexImport.update({
-  id: '/',
-  path: '/',
-  getParentRoute: () => AuthenticatedRouteRoute,
-} as any)
+    id: "/",
+    path: "/",
+    getParentRoute: () => AuthenticatedRouteRoute,
+} as any);
 
 const AuthenticatedProductsRoute = AuthenticatedProductsImport.update({
-  id: '/products',
-  path: '/products',
-  getParentRoute: () => AuthenticatedRouteRoute,
-} as any)
+    id: "/products",
+    path: "/products",
+    getParentRoute: () => AuthenticatedRouteRoute,
+} as any);
+
+const AuthenticatedChatsRoute = AuthenticatedChatsImport.update({
+    id: "/chats",
+    path: "/chats",
+    getParentRoute: () => AuthenticatedRouteRoute,
+} as any);
 
 const authLoginRoute = authLoginImport.update({
-  id: '/login',
-  path: '/login',
-  getParentRoute: () => authRouteRoute,
-} as any)
+    id: "/login",
+    path: "/login",
+    getParentRoute: () => authRouteRoute,
+} as any);
 
 // Populate the FileRoutesByPath interface
 
-declare module '@tanstack/react-router' {
-  interface FileRoutesByPath {
-    '/(auth)': {
-      id: '/(auth)'
-      path: '/'
-      fullPath: '/'
-      preLoaderRoute: typeof authRouteImport
-      parentRoute: typeof rootRoute
+declare module "@tanstack/react-router" {
+    interface FileRoutesByPath {
+        "/(auth)": {
+            id: "/(auth)";
+            path: "/";
+            fullPath: "/";
+            preLoaderRoute: typeof authRouteImport;
+            parentRoute: typeof rootRoute;
+        };
+        "/_authenticated": {
+            id: "/_authenticated";
+            path: "";
+            fullPath: "";
+            preLoaderRoute: typeof AuthenticatedRouteImport;
+            parentRoute: typeof rootRoute;
+        };
+        "/(auth)/login": {
+            id: "/(auth)/login";
+            path: "/login";
+            fullPath: "/login";
+            preLoaderRoute: typeof authLoginImport;
+            parentRoute: typeof authRouteImport;
+        };
+        "/_authenticated/chats": {
+            id: "/_authenticated/chats";
+            path: "/chats";
+            fullPath: "/chats";
+            preLoaderRoute: typeof AuthenticatedChatsImport;
+            parentRoute: typeof AuthenticatedRouteImport;
+        };
+        "/_authenticated/products": {
+            id: "/_authenticated/products";
+            path: "/products";
+            fullPath: "/products";
+            preLoaderRoute: typeof AuthenticatedProductsImport;
+            parentRoute: typeof AuthenticatedRouteImport;
+        };
+        "/_authenticated/": {
+            id: "/_authenticated/";
+            path: "/";
+            fullPath: "/";
+            preLoaderRoute: typeof AuthenticatedIndexImport;
+            parentRoute: typeof AuthenticatedRouteImport;
+        };
     }
-    '/_authenticated': {
-      id: '/_authenticated'
-      path: ''
-      fullPath: ''
-      preLoaderRoute: typeof AuthenticatedRouteImport
-      parentRoute: typeof rootRoute
-    }
-    '/(auth)/login': {
-      id: '/(auth)/login'
-      path: '/login'
-      fullPath: '/login'
-      preLoaderRoute: typeof authLoginImport
-      parentRoute: typeof authRouteImport
-    }
-    '/_authenticated/products': {
-      id: '/_authenticated/products'
-      path: '/products'
-      fullPath: '/products'
-      preLoaderRoute: typeof AuthenticatedProductsImport
-      parentRoute: typeof AuthenticatedRouteImport
-    }
-    '/_authenticated/': {
-      id: '/_authenticated/'
-      path: '/'
-      fullPath: '/'
-      preLoaderRoute: typeof AuthenticatedIndexImport
-      parentRoute: typeof AuthenticatedRouteImport
-    }
-  }
 }
 
 // Create and export the route tree
 
 interface authRouteRouteChildren {
-  authLoginRoute: typeof authLoginRoute
+    authLoginRoute: typeof authLoginRoute;
 }
 
 const authRouteRouteChildren: authRouteRouteChildren = {
-  authLoginRoute: authLoginRoute,
-}
+    authLoginRoute: authLoginRoute,
+};
 
-const authRouteRouteWithChildren = authRouteRoute._addFileChildren(
-  authRouteRouteChildren,
-)
+const authRouteRouteWithChildren = authRouteRoute._addFileChildren(authRouteRouteChildren);
 
 interface AuthenticatedRouteRouteChildren {
-  AuthenticatedProductsRoute: typeof AuthenticatedProductsRoute
-  AuthenticatedIndexRoute: typeof AuthenticatedIndexRoute
+    AuthenticatedChatsRoute: typeof AuthenticatedChatsRoute;
+    AuthenticatedProductsRoute: typeof AuthenticatedProductsRoute;
+    AuthenticatedIndexRoute: typeof AuthenticatedIndexRoute;
 }
 
 const AuthenticatedRouteRouteChildren: AuthenticatedRouteRouteChildren = {
-  AuthenticatedProductsRoute: AuthenticatedProductsRoute,
-  AuthenticatedIndexRoute: AuthenticatedIndexRoute,
-}
+    AuthenticatedChatsRoute: AuthenticatedChatsRoute,
+    AuthenticatedProductsRoute: AuthenticatedProductsRoute,
+    AuthenticatedIndexRoute: AuthenticatedIndexRoute,
+};
 
-const AuthenticatedRouteRouteWithChildren =
-  AuthenticatedRouteRoute._addFileChildren(AuthenticatedRouteRouteChildren)
+const AuthenticatedRouteRouteWithChildren = AuthenticatedRouteRoute._addFileChildren(AuthenticatedRouteRouteChildren);
 
 export interface FileRoutesByFullPath {
-  '/': typeof AuthenticatedIndexRoute
-  '': typeof AuthenticatedRouteRouteWithChildren
-  '/login': typeof authLoginRoute
-  '/products': typeof AuthenticatedProductsRoute
+    "/": typeof AuthenticatedIndexRoute;
+    "": typeof AuthenticatedRouteRouteWithChildren;
+    "/login": typeof authLoginRoute;
+    "/chats": typeof AuthenticatedChatsRoute;
+    "/products": typeof AuthenticatedProductsRoute;
 }
 
 export interface FileRoutesByTo {
-  '/': typeof AuthenticatedIndexRoute
-  '/login': typeof authLoginRoute
-  '/products': typeof AuthenticatedProductsRoute
+    "/": typeof AuthenticatedIndexRoute;
+    "/login": typeof authLoginRoute;
+    "/chats": typeof AuthenticatedChatsRoute;
+    "/products": typeof AuthenticatedProductsRoute;
 }
 
 export interface FileRoutesById {
-  __root__: typeof rootRoute
-  '/(auth)': typeof authRouteRouteWithChildren
-  '/_authenticated': typeof AuthenticatedRouteRouteWithChildren
-  '/(auth)/login': typeof authLoginRoute
-  '/_authenticated/products': typeof AuthenticatedProductsRoute
-  '/_authenticated/': typeof AuthenticatedIndexRoute
+    __root__: typeof rootRoute;
+    "/(auth)": typeof authRouteRouteWithChildren;
+    "/_authenticated": typeof AuthenticatedRouteRouteWithChildren;
+    "/(auth)/login": typeof authLoginRoute;
+    "/_authenticated/chats": typeof AuthenticatedChatsRoute;
+    "/_authenticated/products": typeof AuthenticatedProductsRoute;
+    "/_authenticated/": typeof AuthenticatedIndexRoute;
 }
 
 export interface FileRouteTypes {
-  fileRoutesByFullPath: FileRoutesByFullPath
-  fullPaths: '/' | '' | '/login' | '/products'
-  fileRoutesByTo: FileRoutesByTo
-  to: '/' | '/login' | '/products'
-  id:
-    | '__root__'
-    | '/(auth)'
-    | '/_authenticated'
-    | '/(auth)/login'
-    | '/_authenticated/products'
-    | '/_authenticated/'
-  fileRoutesById: FileRoutesById
+    fileRoutesByFullPath: FileRoutesByFullPath;
+    fullPaths: "/" | "" | "/login" | "/chats" | "/products";
+    fileRoutesByTo: FileRoutesByTo;
+    to: "/" | "/login" | "/chats" | "/products";
+    id: "__root__" | "/(auth)" | "/_authenticated" | "/(auth)/login" | "/_authenticated/chats" | "/_authenticated/products" | "/_authenticated/";
+    fileRoutesById: FileRoutesById;
 }
 
 export interface RootRouteChildren {
-  authRouteRoute: typeof authRouteRouteWithChildren
-  AuthenticatedRouteRoute: typeof AuthenticatedRouteRouteWithChildren
+    authRouteRoute: typeof authRouteRouteWithChildren;
+    AuthenticatedRouteRoute: typeof AuthenticatedRouteRouteWithChildren;
 }
 
 const rootRouteChildren: RootRouteChildren = {
-  authRouteRoute: authRouteRouteWithChildren,
-  AuthenticatedRouteRoute: AuthenticatedRouteRouteWithChildren,
-}
+    authRouteRoute: authRouteRouteWithChildren,
+    AuthenticatedRouteRoute: AuthenticatedRouteRouteWithChildren,
+};
 
-export const routeTree = rootRoute
-  ._addFileChildren(rootRouteChildren)
-  ._addFileTypes<FileRouteTypes>()
+export const routeTree = rootRoute._addFileChildren(rootRouteChildren)._addFileTypes<FileRouteTypes>();
 
 /* ROUTE_MANIFEST_START
 {
@@ -186,6 +194,7 @@ export const routeTree = rootRoute
     "/_authenticated": {
       "filePath": "_authenticated/route.tsx",
       "children": [
+        "/_authenticated/chats",
         "/_authenticated/products",
         "/_authenticated/"
       ]
@@ -193,6 +202,10 @@ export const routeTree = rootRoute
     "/(auth)/login": {
       "filePath": "(auth)/login.tsx",
       "parent": "/(auth)"
+    },
+    "/_authenticated/chats": {
+      "filePath": "_authenticated/chats.tsx",
+      "parent": "/_authenticated"
     },
     "/_authenticated/products": {
       "filePath": "_authenticated/products.tsx",
