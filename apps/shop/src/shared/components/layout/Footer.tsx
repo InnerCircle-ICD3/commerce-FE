@@ -15,7 +15,6 @@ function Footer() {
                         </p>
                     </section>
                 </div>
-                <nav className="flex gap-9 justify-between items-start mt-6 max-w-full w-44" />
             </div>
         </footer>
     );
