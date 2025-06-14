@@ -12,12 +12,6 @@ import { createUUID } from "@/src/shared/utils/uuid";
 import { useSearchParams } from "next/navigation";
 import PaymentSummary from "./PaymentSummary";
 
-type OrderData = {
-    shippingInfo: Omit<AddressType, "addressId">;
-    cartItemIds: number[];
-    deliveryMessage: string;
-} | null;
-
 export default function OrderCheckoutPage() {
     const { toast, ToastUI } = useToast();
     const params = useSearchParams();
@@ -36,10 +30,10 @@ export default function OrderCheckoutPage() {
             });
         },
         onSuccess: data => {
-            if (data && paymentMethod) {
+            if (data.data && paymentMethod) {
                 // TODO: 생성된 주문 번호와 함께 결제 sdk 호출
                 createPaymentMutate({
-                    orderNumber: data.orderNumber,
+                    orderNumber: data.data.orderNumber,
                     transactionId: `payment-${createUUID()}`,
                     paymentMethod,
                 });

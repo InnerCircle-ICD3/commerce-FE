@@ -1,9 +1,7 @@
 import { fetchClient } from "@/src/shared/fetcher";
 import { useMutation } from "@tanstack/react-query";
 import { z } from "zod";
-import { useCreatePayment } from "../../payment/hooks/useCreatePayment";
 import type { AddressType } from "../types";
-import { createUUID } from "@/src/shared/utils/uuid";
 
 interface CreateOrderParams {
     deliveryMessage: string | null;
@@ -12,7 +10,7 @@ interface CreateOrderParams {
 }
 
 interface UseCreateOrderProps {
-    onSuccess?: (data: CreateOrderResponse | null) => void;
+    onSuccess?: (data: { data: CreateOrderResponse | null; error: Error | null }) => void;
     onError?: (error: CreateOrderError) => void;
 }
 
@@ -58,8 +56,6 @@ const createOrder = async (params: CreateOrderParams): Promise<{ data: CreateOrd
 };
 
 export default function useCreateOrder(props?: UseCreateOrderProps) {
-    const { mutate: createPaymentMutate } = useCreatePayment();
-
     const { mutate: createOrderMutate, isPending } = useMutation<
         {
             data: CreateOrderResponse | null;
@@ -69,14 +65,7 @@ export default function useCreateOrder(props?: UseCreateOrderProps) {
         CreateOrderParams
     >({
         mutationFn: (params: CreateOrderParams) => createOrder(params),
-        onSuccess: data => {
-            if (data.data) {
-                createPaymentMutate({
-                    orderNumber: data.data.orderNumber,
-                    transactionId: `payment-${createUUID()}`,
-                });
-            }
-        },
+        onSuccess: props?.onSuccess,
         onError: props?.onError,
     });
 
