@@ -47,7 +47,7 @@ export default function EditAddress({ address, onComplete }: EditAddressProps) {
     const handleSubmit = (e: React.FormEvent<HTMLFormElement>) => {
         e.preventDefault();
         // validate();
-        mutate({ address: { ...inputs, isDefault: false, addressId: address?.addressId } });
+        mutate({ address: { ...inputs, isDefault: inputs.isDefault ?? address?.isDefault, addressId: address?.addressId } });
     };
 
     const handleComplete = (data: { address: string; zonecode: string }) => {
