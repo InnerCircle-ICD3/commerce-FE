@@ -2,12 +2,19 @@
 
 import { Button } from "@/src/shared/components/shared/button";
 import { useToast } from "@/src/shared/hooks/useToast";
-import type { CartItem } from "@/src/features/cart/types/cart";
+import { formatNumber } from "@/src/shared/utils/formatUtils";
 
 interface PaymentSummaryProps {
-    cartItems: CartItem[];
+    items: {
+        productId: number;
+        productName: string;
+        unitPrice: number;
+        quantity: number;
+    }[];
+    totalPrice: number;
+    shippingFee: number;
 }
-export default function PaymentSummary({ cartItems }: PaymentSummaryProps) {
+export default function PaymentSummary({ items, totalPrice, shippingFee }: PaymentSummaryProps) {
     const { toast, ToastUI } = useToast();
 
     return (
@@ -16,18 +23,24 @@ export default function PaymentSummary({ cartItems }: PaymentSummaryProps) {
 
             <div>
                 <ul>
-                    {cartItems.map(item => (
-                        <li key={item.cartItemId} className="flex justify-between items-center mb-4">
-                            <span>{item.name}</span>
-                            <span>₩ {item.price}</span>
+                    {items.map(item => (
+                        <li key={item.productId} className="flex justify-between items-center mb-4">
+                            <span>
+                                {item.productName}(x{item.quantity})
+                            </span>
+                            <span>₩ {formatNumber(item.unitPrice * item.quantity)}</span>
                         </li>
                     ))}
                 </ul>
             </div>
+            <div className="flex justify-between items-center mb-4">
+                <span>배송비</span>
+                <span>₩ {formatNumber(shippingFee)}</span>
+            </div>
             <div className="h-[1px] bg-gray-200 my-4" />
             <div className="flex justify-between text-lg font-bold mb-10">
                 <span>Total</span>
-                <span>₩ 35,000</span>
+                <span>₩ {formatNumber(totalPrice)}</span>
             </div>
             <Button className="w-full" type="submit">
                 결제하기

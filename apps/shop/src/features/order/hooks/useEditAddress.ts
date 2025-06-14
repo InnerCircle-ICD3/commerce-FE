@@ -3,7 +3,7 @@ import { useMutation } from "@tanstack/react-query";
 import type { AddressType } from "../types";
 
 type EditAddressDto = {
-    address: Omit<AddressType, "id"> & Partial<Pick<AddressType, "id">>;
+    address: Omit<AddressType, "addressId"> & Partial<Pick<AddressType, "addressId">>;
 };
 
 type UseEditAddressOption = {
@@ -12,15 +12,24 @@ type UseEditAddressOption = {
 };
 
 export const useEditAddress = (options?: UseEditAddressOption) => {
-    const fetch = fetchClient();
-
     const editAddress = async ({ address }: EditAddressDto) => {
-        const url = address.id ? `/address/${address.id}` : "/address";
-        const response = await fetch(url, {
-            method: address.id ? "PUT" : "POST",
-            body: JSON.stringify(address),
-        });
-        return response.data;
+        try {
+            const url = address.addressId
+                ? `http://localhost:3000/api/users/addresses/${address.addressId}`
+                : "http://localhost:3000/api/users/addresses";
+            const response = await fetch(url, {
+                method: address.addressId ? "PUT" : "POST",
+                body: JSON.stringify(address),
+                headers: {
+                    "Content-Type": "application/json",
+                    Authorization: "Bearer Simeple-Token",
+                },
+            });
+            return response.json();
+        } catch (e) {
+            console.log(e);
+            throw e;
+        }
     };
 
     const { mutate, isPending } = useMutation({

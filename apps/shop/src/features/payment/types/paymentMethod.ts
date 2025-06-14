@@ -1,4 +1,4 @@
-export type PaymentMethod = {
+export interface PaymentMethod {
     code: string;
     label: string;
-};
+}

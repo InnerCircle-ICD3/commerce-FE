@@ -1,11 +1,14 @@
 import { fetchClient } from "@/src/shared/fetcher";
 import { useMutation } from "@tanstack/react-query";
 import { z } from "zod";
+import { useCreatePayment } from "../../payment/hooks/useCreatePayment";
+import type { AddressType } from "../types";
+import { createUUID } from "@/src/shared/utils/uuid";
 
 interface CreateOrderParams {
-    addressId: number | null;
     deliveryMessage: string | null;
-    cartItemIds: number[];
+    cartItemIds: string;
+    shippingInfo: Omit<AddressType, "addressId">;
 }
 
 interface UseCreateOrderProps {
@@ -23,20 +26,29 @@ interface CreateOrderError {
 }
 
 const createOrderSchema = z.object({
-    addressId: z.number({ message: "주소를 선택해주세요." }),
+    shippingInfo: z.object({
+        alias: z.string().optional(),
+        address1: z.string().min(1, "주소를 입력해주세요."),
+        address2: z.string().min(1, "상세주소를 입력해주세요."),
+        zipCode: z.string().min(1, "우편번호를 입력해주세요."),
+        recipientName: z.string().min(1, "받는 사람 이름을 입력해주세요."),
+        recipientPhone: z.string().min(1, "받는 사람 전화번호를 입력해주세요."),
+        isDefault: z.boolean().optional(),
+    }),
     deliveryMessage: z.string().optional(),
-    cartItemIds: z.array(z.number({ message: "상품을 선택해주세요." })).min(1, { message: "상품을 선택해주세요." }),
+    cartItemIds: z.string().min(1, "상품을 선택해주세요."),
 });
 
-const createOrder = async (params: CreateOrderParams): Promise<CreateOrderResponse | null> => {
+const createOrder = async (params: CreateOrderParams): Promise<{ data: CreateOrderResponse | null; error: Error | null }> => {
+    console.log(params);
     try {
         const validatedParams = createOrderSchema.parse(params);
-        const fetch = fetchClient();
-        const response = await fetch<CreateOrderResponse>("/api/orders", {
+        // const fetch = fetchClient();
+        const response = await fetch("http://localhost:3000/api/orders", {
             method: "POST",
             body: JSON.stringify(validatedParams),
         });
-        return response.data;
+        return response.json();
     } catch (e) {
         if (e instanceof z.ZodError) {
             throw new Error(e.errors[0].message);
@@ -46,9 +58,25 @@ const createOrder = async (params: CreateOrderParams): Promise<CreateOrderRespon
 };
 
 export default function useCreateOrder(props?: UseCreateOrderProps) {
-    const { mutate: createOrderMutate, isPending } = useMutation<CreateOrderResponse | null, CreateOrderError, CreateOrderParams>({
+    const { mutate: createPaymentMutate } = useCreatePayment();
+
+    const { mutate: createOrderMutate, isPending } = useMutation<
+        {
+            data: CreateOrderResponse | null;
+            error: Error | null;
+        },
+        CreateOrderError,
+        CreateOrderParams
+    >({
         mutationFn: (params: CreateOrderParams) => createOrder(params),
-        onSuccess: props?.onSuccess,
+        onSuccess: data => {
+            if (data.data) {
+                createPaymentMutate({
+                    orderNumber: data.data.orderNumber,
+                    transactionId: `payment-${createUUID()}`,
+                });
+            }
+        },
         onError: props?.onError,
     });
 

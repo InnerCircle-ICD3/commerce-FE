@@ -1,64 +1,34 @@
 "use client";
 import OrderCheckoutList from "@/src/features/order/components/OrderCheckoutList";
-import PaymentSummary from "@/src/features/order/components/PaymentSummary";
 import SelectPaymentMethod from "@/src/features/order/components/SelectPaymentMethod";
 import SelectShippingInfo from "@/src/features/order/components/SelectShippingInfo";
-import type { AddressType } from "../types";
 import useCreateOrder from "../hooks/useCreateOrder";
 import { useToast } from "@/src/shared/hooks/useToast";
-import type { CartItem } from "@/src/features/cart/types/cart";
+import { useCreatePayment } from "../../payment/hooks/useCreatePayment";
+import { useEffect, useState } from "react";
+import type { AddressType } from "../types";
+import { useOrderPrepare } from "../hooks/useOrderPrepare";
+import { createUUID } from "@/src/shared/utils/uuid";
+import { useSearchParams } from "next/navigation";
+import PaymentSummary from "./PaymentSummary";
+
+type OrderData = {
+    shippingInfo: Omit<AddressType, "addressId">;
+    cartItemIds: number[];
+    deliveryMessage: string;
+} | null;
 
 export default function OrderCheckoutPage() {
-    const cartItems: CartItem[] = [
-        {
-            cartItemId: 1,
-            productId: 1,
-            name: "상품 1",
-            price: 10000,
-            quantity: 2,
-            stockQuantity: 5,
-            thumbnail: "/images/product/product-1.png",
-            isAvailable: true,
-        },
-        {
-            cartItemId: 2,
-            productId: 2,
-            name: "상품 2",
-            price: 20000,
-            quantity: 1,
-            stockQuantity: 3,
-            thumbnail: "/images/product/product-2.png",
-            isAvailable: true,
-        },
-    ];
-    const paymentMethods: { code: string; label: string }[] = [
-        { code: "TOSS", label: "토스" },
-        { code: "ACCOUNT", label: "계좌이체" },
-    ];
-
-    const addresses: AddressType[] = [
-        {
-            id: 1,
-            alias: "주소 1",
-            address1: "서울특별시 강남구 테헤란로 14길 6 남도빌딩 2층",
-            address2: "서울특별시 강남구 테헤란로 14길 6 남도빌딩 2층",
-            zipCode: "12345",
-            isDefault: true,
-            recipientName: "홍길동",
-            recipientPhone: "01012345678",
-        },
-        {
-            id: 2,
-            alias: "주소 2",
-            address1: "서울특별시 강남구 테헤란로 14길 6 남도빌딩 2층",
-            address2: "서울특별시 강남구 테헤란로 14길 6 남도빌딩 2층",
-            zipCode: "12345",
-            isDefault: false,
-            recipientName: "홍길동",
-            recipientPhone: "01012345678",
-        },
-    ];
     const { toast, ToastUI } = useToast();
+    const params = useSearchParams();
+    const cartItemIds = params.get("cartItemIds") as string;
+    const [shippingInfo, setShippingInfo] = useState<Omit<AddressType, "addressId"> | null>(null);
+    const { data: orderPrepareData } = useOrderPrepare({ cartItemIds: cartItemIds });
+    const [deliveryMessage, setDeliveryMessage] = useState<string>("");
+    const [paymentMethod, setPaymentMethod] = useState<string | null>(null);
+
+    const { mutate: createPaymentMutate } = useCreatePayment();
+
     const { createOrderMutate } = useCreateOrder({
         onError: error => {
             toast({
@@ -66,68 +36,100 @@ export default function OrderCheckoutPage() {
             });
         },
         onSuccess: data => {
-            if (data) {
+            if (data && paymentMethod) {
                 // TODO: 생성된 주문 번호와 함께 결제 sdk 호출
+                createPaymentMutate({
+                    orderNumber: data.orderNumber,
+                    transactionId: `payment-${createUUID()}`,
+                    paymentMethod,
+                });
             }
         },
     });
-    const handleSubmit = (e: React.FormEvent<HTMLFormElement>) => {
+
+    const handlePayment = (e: React.FormEvent<HTMLFormElement>) => {
         e.preventDefault();
 
-        const formData = new FormData(e.target as HTMLFormElement);
-
-        const addressId = formData.get("addressId");
-        const deliveryMessage = formData.get("deliveryMessage") as string;
-        const paymentMethod = formData.get("paymentMethod") as string;
-
-        // 주문생성과 별개지만, UI상 결제 수단 미선택시 toast
-        if (!paymentMethod) {
+        if (!shippingInfo) {
             toast({
-                message: "결제 방법을 선택해주세요.",
+                message: "배송지를 선택해주세요.",
             });
             return;
         }
-
         createOrderMutate({
-            addressId: Number(addressId),
+            shippingInfo,
+            cartItemIds,
             deliveryMessage,
-            cartItemIds: cartItems.map(item => item.cartItemId),
         });
     };
+
+    const handleShippingInfo = (address: AddressType) => {
+        setShippingInfo({
+            address1: address.address1,
+            address2: address.address2,
+            isDefault: address.isDefault,
+            recipientName: address.recipientName,
+            recipientPhone: address.recipientPhone,
+            zipCode: address.zipCode,
+            alias: address.alias,
+        });
+    };
+
+    useEffect(() => {
+        if (orderPrepareData?.data) {
+            setShippingInfo(orderPrepareData.data.shippingInfo);
+            setPaymentMethod(orderPrepareData.data.paymentMethod[0].code);
+        }
+    }, [orderPrepareData]);
+
     return (
         <>
-            <form onSubmit={handleSubmit}>
-                <div className="py-16 px-40">
+            <form onSubmit={handlePayment}>
+                <div className="py-16 px-40 max-lg:px-10 max-lg:py-8">
                     <h2 className="text-2xl font-bold mb-10">주문서</h2>
-                    <div className="grid grid-cols-2 gap-10">
+                    <div className="grid grid-cols-2 gap-10 max-md:grid-cols-1">
                         <div>
                             <section className="mb-10">
                                 <h4 className="text-lg font-bold mb-4">배송지선택</h4>
-                                <SelectShippingInfo addresses={addresses} />
+                                {shippingInfo && (
+                                    <SelectShippingInfo
+                                        shipingInfo={shippingInfo}
+                                        onChangeAddress={handleShippingInfo}
+                                        onChangeDeliveryMessage={setDeliveryMessage}
+                                    />
+                                )}
                             </section>
 
                             <section className="mb-10">
                                 <h4 className="text-lg font-bold">주문 상품</h4>
                                 <div className="p-4 rounded-2xl border border-gray-200">
-                                    <OrderCheckoutList
-                                        items={cartItems.map(item => ({
-                                            id: item.cartItemId,
-                                            name: item.name,
-                                            price: item.price,
-                                            quantity: item.quantity,
-                                            image: item.thumbnail,
-                                        }))}
-                                    />
+                                    <OrderCheckoutList items={orderPrepareData?.data?.items || []} />
                                 </div>
                             </section>
                             <section>
                                 <h4 className="text-lg font-bold">결제 수단</h4>
-                                <SelectPaymentMethod paymentMethods={paymentMethods} />
+                                <SelectPaymentMethod
+                                    paymentMethods={orderPrepareData?.data?.paymentMethod || []}
+                                    onChangePaymentMethod={paymentMethod => {
+                                        setPaymentMethod(paymentMethod);
+                                    }}
+                                />
                             </section>
                         </div>
                         <div>
                             <section className="px-14 py-15 border border-gray-200 rounded-2xl">
-                                <PaymentSummary cartItems={cartItems} />
+                                <PaymentSummary
+                                    items={
+                                        orderPrepareData?.data?.items.map(item => ({
+                                            productId: item.productId,
+                                            productName: item.name,
+                                            unitPrice: item.unitPrice,
+                                            quantity: item.quantity,
+                                        })) || []
+                                    }
+                                    shippingFee={orderPrepareData?.data?.shippingFee || 0}
+                                    totalPrice={orderPrepareData?.data?.finalTotalPrice || 0}
+                                />
                             </section>
                         </div>
                     </div>
