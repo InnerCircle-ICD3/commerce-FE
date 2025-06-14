@@ -1,21 +1,24 @@
+"use client";
+
 import { OrderHistoryList } from "./OrderHistoryList";
-import type { OrderHistoryItem } from "@/src/features/order/types/orderHistory";
 import { ArrowIcon, FilterIcon, SearchIcon } from "@/src/shared/components/shared/Icon";
+import type { OrderListItem } from "./types/orderListItem";
+import { useRouter } from "next/navigation";
 
 interface OrderHistoryPageProps {
-    initialOrders: OrderHistoryItem[];
+    initialOrders: OrderListItem[];
 }
 
 export const OrderHistoryPage = ({ initialOrders }: OrderHistoryPageProps) => {
+    const router = useRouter();
     return (
         <div className="w-full max-w-7xl mx-auto px-4 py-8">
             <div className="flex items-center gap-2 mb-6">
-                <button type="button" className="p-1">
+                <button type="button" className="p-1" onClick={() => router.back()}>
                     <ArrowIcon direction="left" size="lg" strokeWidth={2} title="뒤로 가기" />
                 </button>
                 <h1 className="text-2xl font-bold">주문내역</h1>
             </div>
-
             <div className="mb-6">
                 <div className="relative mb-4">
                     <div className="absolute inset-y-0 left-4 flex items-center pointer-events-none">
@@ -35,8 +38,7 @@ export const OrderHistoryPage = ({ initialOrders }: OrderHistoryPageProps) => {
                     </button>
                 </div>
             </div>
-
-            <OrderHistoryList orders={initialOrders} />
+            <OrderHistoryList />
         </div>
     );
 };

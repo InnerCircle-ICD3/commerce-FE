@@ -4,33 +4,32 @@ import { useModal } from "@/src/shared/hooks/useModal";
 import AddressList from "./AddressList";
 import type { AddressType } from "@/src/features/order/types";
 import SelectDeliveryMessage from "./SelectDeliveryMessage";
-import { useState } from "react";
+import { useEffect, useState } from "react";
+import { useAddressQuery } from "../hooks/useAddressesQuery";
 
 interface SelectShippingInfoProps {
-    addresses: AddressType[];
+    shipingInfo: Omit<AddressType, "addressId">;
+    onChangeAddress: (address: AddressType) => void;
+    onChangeDeliveryMessage: (message: string) => void;
 }
-export default function SelectShippingInfo({ addresses }: SelectShippingInfoProps) {
+export default function SelectShippingInfo({ shipingInfo, onChangeDeliveryMessage, onChangeAddress }: SelectShippingInfoProps) {
     const { openModal, closeModal, Modal } = useModal();
-
-    const [selectedAddress, setSelectedAddress] = useState<AddressType | null>(addresses.find(address => address.isDefault) || null);
+    const { addresses } = useAddressQuery();
 
     const handleChangeAddress = (address: AddressType) => {
-        setSelectedAddress(address);
+        onChangeAddress(address);
         closeModal();
     };
 
     return (
         <div className="p-4 border border-gray-200 rounded-2xl">
-            <input type="text" name="addressId" value={selectedAddress?.id} className="hidden" readOnly />
             <h4 className="text-lg font-bold">배송지</h4>
             {addresses.length > 0 ? (
                 <>
                     <div className="flex justify-between items-center mb-5">
                         <div className="flex items-center gap-2">
-                            <h3 className="font-bold text-base">{selectedAddress?.alias}</h3>
-                            {selectedAddress?.isDefault && (
-                                <span className="text-sm text-gray-500 bg-gray-100 rounded-sm px-2 py-1">기본 배송지</span>
-                            )}
+                            <h3 className="font-bold text-base">{shipingInfo?.alias}</h3>
+                            {shipingInfo?.isDefault && <span className="text-sm text-gray-500 bg-gray-100 rounded-sm px-2 py-1">기본 배송지</span>}
                         </div>
                         <Button variant="outline" onClick={openModal}>
                             배송지 변경
@@ -38,12 +37,12 @@ export default function SelectShippingInfo({ addresses }: SelectShippingInfoProp
                     </div>
                     <div className="text-sm">
                         <p>
-                            <span>{selectedAddress?.recipientName}</span> | {selectedAddress?.address1} {selectedAddress?.address2}
+                            <span>{shipingInfo?.recipientName}</span> | {shipingInfo?.address1} {shipingInfo?.address2}
                         </p>
-                        <p>{selectedAddress?.recipientPhone}</p>
+                        <p>{shipingInfo?.recipientPhone}</p>
                     </div>
                     <div className="mt-4">
-                        <SelectDeliveryMessage />
+                        <SelectDeliveryMessage onChange={onChangeDeliveryMessage} />
                     </div>
                 </>
             ) : (
@@ -52,7 +51,7 @@ export default function SelectShippingInfo({ addresses }: SelectShippingInfoProp
                 </div>
             )}
             <Modal title="배송지 변경" onClickClose={closeModal}>
-                <AddressList addresses={addresses} onSelect={handleChangeAddress} currentAddress={selectedAddress} />
+                <AddressList onSelect={handleChangeAddress} selectMode={true} />
             </Modal>
         </div>
     );

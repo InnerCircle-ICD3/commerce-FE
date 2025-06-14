@@ -3,11 +3,11 @@ import OrderCheckoutItem from "./OrderCheckoutItem";
 
 interface OrderCheckListProps {
     items: {
-        id: number;
+        productId: number;
         name: string;
-        price: number;
+        unitPrice: number;
         quantity: number;
-        image: string;
+        thumbnail: string;
     }[];
 }
 
@@ -22,7 +22,7 @@ export default function OrderCheckoutList({ items }: OrderCheckListProps) {
     return (
         <div>
             {items.map((item, index) => (
-                <div key={item.id} className={itemContainer({ isLast: index === items.length - 1 })}>
+                <div key={item.productId} className={itemContainer({ isLast: index === items.length - 1 })}>
                     <OrderCheckoutItem key={item.name} {...item} />
                 </div>
             ))}

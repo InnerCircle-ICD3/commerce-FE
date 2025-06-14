@@ -85,7 +85,7 @@ export type OrderItemType = {
 };
 
 export type AddressType = {
-    id: number;
+    addressId: number;
     alias: string;
     address1: string;
     address2: string;
