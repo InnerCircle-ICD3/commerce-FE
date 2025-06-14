@@ -13,7 +13,7 @@ export default async function CategoryGrid() {
                     <CategoryNav />
                 </div>
 
-                <div className="grid grid-cols-2 md:grid-cols-4 gap-3 w-full">
+                <div className="grid grid-cols-2 sm:grid-cols-4 gap-5 w-full">
                     {categories.map(category => (
                         <CategoryItem key={category.id} title={category.title} description={category.description} imageUrl={category.imageUrl} />
                     ))}
