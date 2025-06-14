@@ -16,6 +16,8 @@ import { Route as authRouteImport } from './routes/(auth)/route'
 import { Route as AuthenticatedIndexImport } from './routes/_authenticated/index'
 import { Route as AuthenticatedProductsImport } from './routes/_authenticated/products'
 import { Route as authLoginImport } from './routes/(auth)/login'
+import { Route as AuthenticatedOrdersIndexImport } from './routes/_authenticated/orders/index'
+import { Route as AuthenticatedOrdersOrderNumberImport } from './routes/_authenticated/orders/$orderNumber'
 
 // Create/Update Routes
 
@@ -46,6 +48,19 @@ const authLoginRoute = authLoginImport.update({
   path: '/login',
   getParentRoute: () => authRouteRoute,
 } as any)
+
+const AuthenticatedOrdersIndexRoute = AuthenticatedOrdersIndexImport.update({
+  id: '/orders/',
+  path: '/orders/',
+  getParentRoute: () => AuthenticatedRouteRoute,
+} as any)
+
+const AuthenticatedOrdersOrderNumberRoute =
+  AuthenticatedOrdersOrderNumberImport.update({
+    id: '/orders/$orderNumber',
+    path: '/orders/$orderNumber',
+    getParentRoute: () => AuthenticatedRouteRoute,
+  } as any)
 
 // Populate the FileRoutesByPath interface
 
@@ -86,6 +101,20 @@ declare module '@tanstack/react-router' {
       preLoaderRoute: typeof AuthenticatedIndexImport
       parentRoute: typeof AuthenticatedRouteImport
     }
+    '/_authenticated/orders/$orderNumber': {
+      id: '/_authenticated/orders/$orderNumber'
+      path: '/orders/$orderNumber'
+      fullPath: '/orders/$orderNumber'
+      preLoaderRoute: typeof AuthenticatedOrdersOrderNumberImport
+      parentRoute: typeof AuthenticatedRouteImport
+    }
+    '/_authenticated/orders/': {
+      id: '/_authenticated/orders/'
+      path: '/orders'
+      fullPath: '/orders'
+      preLoaderRoute: typeof AuthenticatedOrdersIndexImport
+      parentRoute: typeof AuthenticatedRouteImport
+    }
   }
 }
 
@@ -106,11 +135,15 @@ const authRouteRouteWithChildren = authRouteRoute._addFileChildren(
 interface AuthenticatedRouteRouteChildren {
   AuthenticatedProductsRoute: typeof AuthenticatedProductsRoute
   AuthenticatedIndexRoute: typeof AuthenticatedIndexRoute
+  AuthenticatedOrdersOrderNumberRoute: typeof AuthenticatedOrdersOrderNumberRoute
+  AuthenticatedOrdersIndexRoute: typeof AuthenticatedOrdersIndexRoute
 }
 
 const AuthenticatedRouteRouteChildren: AuthenticatedRouteRouteChildren = {
   AuthenticatedProductsRoute: AuthenticatedProductsRoute,
   AuthenticatedIndexRoute: AuthenticatedIndexRoute,
+  AuthenticatedOrdersOrderNumberRoute: AuthenticatedOrdersOrderNumberRoute,
+  AuthenticatedOrdersIndexRoute: AuthenticatedOrdersIndexRoute,
 }
 
 const AuthenticatedRouteRouteWithChildren =
@@ -121,12 +154,16 @@ export interface FileRoutesByFullPath {
   '': typeof AuthenticatedRouteRouteWithChildren
   '/login': typeof authLoginRoute
   '/products': typeof AuthenticatedProductsRoute
+  '/orders/$orderNumber': typeof AuthenticatedOrdersOrderNumberRoute
+  '/orders': typeof AuthenticatedOrdersIndexRoute
 }
 
 export interface FileRoutesByTo {
   '/': typeof AuthenticatedIndexRoute
   '/login': typeof authLoginRoute
   '/products': typeof AuthenticatedProductsRoute
+  '/orders/$orderNumber': typeof AuthenticatedOrdersOrderNumberRoute
+  '/orders': typeof AuthenticatedOrdersIndexRoute
 }
 
 export interface FileRoutesById {
@@ -136,13 +173,21 @@ export interface FileRoutesById {
   '/(auth)/login': typeof authLoginRoute
   '/_authenticated/products': typeof AuthenticatedProductsRoute
   '/_authenticated/': typeof AuthenticatedIndexRoute
+  '/_authenticated/orders/$orderNumber': typeof AuthenticatedOrdersOrderNumberRoute
+  '/_authenticated/orders/': typeof AuthenticatedOrdersIndexRoute
 }
 
 export interface FileRouteTypes {
   fileRoutesByFullPath: FileRoutesByFullPath
-  fullPaths: '/' | '' | '/login' | '/products'
+  fullPaths:
+    | '/'
+    | ''
+    | '/login'
+    | '/products'
+    | '/orders/$orderNumber'
+    | '/orders'
   fileRoutesByTo: FileRoutesByTo
-  to: '/' | '/login' | '/products'
+  to: '/' | '/login' | '/products' | '/orders/$orderNumber' | '/orders'
   id:
     | '__root__'
     | '/(auth)'
@@ -150,6 +195,8 @@ export interface FileRouteTypes {
     | '/(auth)/login'
     | '/_authenticated/products'
     | '/_authenticated/'
+    | '/_authenticated/orders/$orderNumber'
+    | '/_authenticated/orders/'
   fileRoutesById: FileRoutesById
 }
 
@@ -187,7 +234,9 @@ export const routeTree = rootRoute
       "filePath": "_authenticated/route.tsx",
       "children": [
         "/_authenticated/products",
-        "/_authenticated/"
+        "/_authenticated/",
+        "/_authenticated/orders/$orderNumber",
+        "/_authenticated/orders/"
       ]
     },
     "/(auth)/login": {
@@ -200,6 +249,14 @@ export const routeTree = rootRoute
     },
     "/_authenticated/": {
       "filePath": "_authenticated/index.tsx",
+      "parent": "/_authenticated"
+    },
+    "/_authenticated/orders/$orderNumber": {
+      "filePath": "_authenticated/orders/$orderNumber.tsx",
+      "parent": "/_authenticated"
+    },
+    "/_authenticated/orders/": {
+      "filePath": "_authenticated/orders/index.tsx",
       "parent": "/_authenticated"
     }
   }
