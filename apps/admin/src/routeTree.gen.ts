@@ -10,262 +10,324 @@
 
 // Import Routes
 
-import { Route as rootRoute } from "./routes/__root";
-import { Route as LoginImport } from "./routes/login";
-import { Route as ChatImport } from "./routes/chat";
-import { Route as AuthenticatedRouteImport } from "./routes/_authenticated/route";
-import { Route as AuthenticatedIndexImport } from "./routes/_authenticated/index";
-import { Route as AuthCallbackImport } from "./routes/auth/callback";
-import { Route as AuthenticatedReviewsImport } from "./routes/_authenticated/reviews";
-import { Route as AuthenticatedChatManagementImport } from "./routes/_authenticated/chat-management";
-import { Route as AuthenticatedProductsIndexImport } from "./routes/_authenticated/products/index";
-import { Route as AuthenticatedProductsNewImport } from "./routes/_authenticated/products/new";
-import { Route as AuthenticatedProductsProductIdEditImport } from "./routes/_authenticated/products/$productId.edit";
+import { Route as rootRoute } from './routes/__root'
+import { Route as LoginImport } from './routes/login'
+import { Route as ChatImport } from './routes/chat'
+import { Route as AuthenticatedRouteImport } from './routes/_authenticated/route'
+import { Route as AuthenticatedIndexImport } from './routes/_authenticated/index'
+import { Route as AuthCallbackImport } from './routes/auth/callback'
+import { Route as AuthenticatedReviewsImport } from './routes/_authenticated/reviews'
+import { Route as AuthenticatedChatManagementImport } from './routes/_authenticated/chat-management'
+import { Route as AuthenticatedProductsIndexImport } from './routes/_authenticated/products/index'
+import { Route as AuthenticatedOrdersIndexImport } from './routes/_authenticated/orders/index'
+import { Route as AuthenticatedProductsNewImport } from './routes/_authenticated/products/new'
+import { Route as AuthenticatedOrdersOrderNumberImport } from './routes/_authenticated/orders/$orderNumber'
+import { Route as AuthenticatedProductsProductIdEditImport } from './routes/_authenticated/products/$productId.edit'
 
 // Create/Update Routes
 
 const LoginRoute = LoginImport.update({
-    id: "/login",
-    path: "/login",
-    getParentRoute: () => rootRoute,
-} as any);
+  id: '/login',
+  path: '/login',
+  getParentRoute: () => rootRoute,
+} as any)
 
 const ChatRoute = ChatImport.update({
-    id: "/chat",
-    path: "/chat",
-    getParentRoute: () => rootRoute,
-} as any);
+  id: '/chat',
+  path: '/chat',
+  getParentRoute: () => rootRoute,
+} as any)
 
 const AuthenticatedRouteRoute = AuthenticatedRouteImport.update({
-    id: "/_authenticated",
-    getParentRoute: () => rootRoute,
-} as any);
+  id: '/_authenticated',
+  getParentRoute: () => rootRoute,
+} as any)
 
 const AuthenticatedIndexRoute = AuthenticatedIndexImport.update({
-    id: "/",
-    path: "/",
-    getParentRoute: () => AuthenticatedRouteRoute,
-} as any);
+  id: '/',
+  path: '/',
+  getParentRoute: () => AuthenticatedRouteRoute,
+} as any)
 
 const AuthCallbackRoute = AuthCallbackImport.update({
-    id: "/auth/callback",
-    path: "/auth/callback",
-    getParentRoute: () => rootRoute,
-} as any);
+  id: '/auth/callback',
+  path: '/auth/callback',
+  getParentRoute: () => rootRoute,
+} as any)
 
 const AuthenticatedReviewsRoute = AuthenticatedReviewsImport.update({
-    id: "/reviews",
-    path: "/reviews",
-    getParentRoute: () => AuthenticatedRouteRoute,
-} as any);
+  id: '/reviews',
+  path: '/reviews',
+  getParentRoute: () => AuthenticatedRouteRoute,
+} as any)
 
-const AuthenticatedChatManagementRoute = AuthenticatedChatManagementImport.update({
-    id: "/chat-management",
-    path: "/chat-management",
+const AuthenticatedChatManagementRoute =
+  AuthenticatedChatManagementImport.update({
+    id: '/chat-management',
+    path: '/chat-management',
     getParentRoute: () => AuthenticatedRouteRoute,
-} as any);
+  } as any)
 
-const AuthenticatedProductsIndexRoute = AuthenticatedProductsIndexImport.update({
-    id: "/products/",
-    path: "/products/",
+const AuthenticatedProductsIndexRoute = AuthenticatedProductsIndexImport.update(
+  {
+    id: '/products/',
+    path: '/products/',
     getParentRoute: () => AuthenticatedRouteRoute,
-} as any);
+  } as any,
+)
+
+const AuthenticatedOrdersIndexRoute = AuthenticatedOrdersIndexImport.update({
+  id: '/orders/',
+  path: '/orders/',
+  getParentRoute: () => AuthenticatedRouteRoute,
+} as any)
 
 const AuthenticatedProductsNewRoute = AuthenticatedProductsNewImport.update({
-    id: "/products/new",
-    path: "/products/new",
-    getParentRoute: () => AuthenticatedRouteRoute,
-} as any);
+  id: '/products/new',
+  path: '/products/new',
+  getParentRoute: () => AuthenticatedRouteRoute,
+} as any)
 
-const AuthenticatedProductsProductIdEditRoute = AuthenticatedProductsProductIdEditImport.update({
-    id: "/products/$productId/edit",
-    path: "/products/$productId/edit",
+const AuthenticatedOrdersOrderNumberRoute =
+  AuthenticatedOrdersOrderNumberImport.update({
+    id: '/orders/$orderNumber',
+    path: '/orders/$orderNumber',
     getParentRoute: () => AuthenticatedRouteRoute,
-} as any);
+  } as any)
+
+const AuthenticatedProductsProductIdEditRoute =
+  AuthenticatedProductsProductIdEditImport.update({
+    id: '/products/$productId/edit',
+    path: '/products/$productId/edit',
+    getParentRoute: () => AuthenticatedRouteRoute,
+  } as any)
 
 // Populate the FileRoutesByPath interface
 
-declare module "@tanstack/react-router" {
-    interface FileRoutesByPath {
-        "/_authenticated": {
-            id: "/_authenticated";
-            path: "";
-            fullPath: "";
-            preLoaderRoute: typeof AuthenticatedRouteImport;
-            parentRoute: typeof rootRoute;
-        };
-        "/chat": {
-            id: "/chat";
-            path: "/chat";
-            fullPath: "/chat";
-            preLoaderRoute: typeof ChatImport;
-            parentRoute: typeof rootRoute;
-        };
-        "/login": {
-            id: "/login";
-            path: "/login";
-            fullPath: "/login";
-            preLoaderRoute: typeof LoginImport;
-            parentRoute: typeof rootRoute;
-        };
-        "/_authenticated/chat-management": {
-            id: "/_authenticated/chat-management";
-            path: "/chat-management";
-            fullPath: "/chat-management";
-            preLoaderRoute: typeof AuthenticatedChatManagementImport;
-            parentRoute: typeof AuthenticatedRouteImport;
-        };
-        "/_authenticated/reviews": {
-            id: "/_authenticated/reviews";
-            path: "/reviews";
-            fullPath: "/reviews";
-            preLoaderRoute: typeof AuthenticatedReviewsImport;
-            parentRoute: typeof AuthenticatedRouteImport;
-        };
-        "/auth/callback": {
-            id: "/auth/callback";
-            path: "/auth/callback";
-            fullPath: "/auth/callback";
-            preLoaderRoute: typeof AuthCallbackImport;
-            parentRoute: typeof rootRoute;
-        };
-        "/_authenticated/": {
-            id: "/_authenticated/";
-            path: "/";
-            fullPath: "/";
-            preLoaderRoute: typeof AuthenticatedIndexImport;
-            parentRoute: typeof AuthenticatedRouteImport;
-        };
-        "/_authenticated/products/new": {
-            id: "/_authenticated/products/new";
-            path: "/products/new";
-            fullPath: "/products/new";
-            preLoaderRoute: typeof AuthenticatedProductsNewImport;
-            parentRoute: typeof AuthenticatedRouteImport;
-        };
-        "/_authenticated/products/": {
-            id: "/_authenticated/products/";
-            path: "/products";
-            fullPath: "/products";
-            preLoaderRoute: typeof AuthenticatedProductsIndexImport;
-            parentRoute: typeof AuthenticatedRouteImport;
-        };
-        "/_authenticated/products/$productId/edit": {
-            id: "/_authenticated/products/$productId/edit";
-            path: "/products/$productId/edit";
-            fullPath: "/products/$productId/edit";
-            preLoaderRoute: typeof AuthenticatedProductsProductIdEditImport;
-            parentRoute: typeof AuthenticatedRouteImport;
-        };
+declare module '@tanstack/react-router' {
+  interface FileRoutesByPath {
+    '/_authenticated': {
+      id: '/_authenticated'
+      path: ''
+      fullPath: ''
+      preLoaderRoute: typeof AuthenticatedRouteImport
+      parentRoute: typeof rootRoute
     }
+    '/chat': {
+      id: '/chat'
+      path: '/chat'
+      fullPath: '/chat'
+      preLoaderRoute: typeof ChatImport
+      parentRoute: typeof rootRoute
+    }
+    '/login': {
+      id: '/login'
+      path: '/login'
+      fullPath: '/login'
+      preLoaderRoute: typeof LoginImport
+      parentRoute: typeof rootRoute
+    }
+    '/_authenticated/chat-management': {
+      id: '/_authenticated/chat-management'
+      path: '/chat-management'
+      fullPath: '/chat-management'
+      preLoaderRoute: typeof AuthenticatedChatManagementImport
+      parentRoute: typeof AuthenticatedRouteImport
+    }
+    '/_authenticated/reviews': {
+      id: '/_authenticated/reviews'
+      path: '/reviews'
+      fullPath: '/reviews'
+      preLoaderRoute: typeof AuthenticatedReviewsImport
+      parentRoute: typeof AuthenticatedRouteImport
+    }
+    '/auth/callback': {
+      id: '/auth/callback'
+      path: '/auth/callback'
+      fullPath: '/auth/callback'
+      preLoaderRoute: typeof AuthCallbackImport
+      parentRoute: typeof rootRoute
+    }
+    '/_authenticated/': {
+      id: '/_authenticated/'
+      path: '/'
+      fullPath: '/'
+      preLoaderRoute: typeof AuthenticatedIndexImport
+      parentRoute: typeof AuthenticatedRouteImport
+    }
+    '/_authenticated/orders/$orderNumber': {
+      id: '/_authenticated/orders/$orderNumber'
+      path: '/orders/$orderNumber'
+      fullPath: '/orders/$orderNumber'
+      preLoaderRoute: typeof AuthenticatedOrdersOrderNumberImport
+      parentRoute: typeof AuthenticatedRouteImport
+    }
+    '/_authenticated/products/new': {
+      id: '/_authenticated/products/new'
+      path: '/products/new'
+      fullPath: '/products/new'
+      preLoaderRoute: typeof AuthenticatedProductsNewImport
+      parentRoute: typeof AuthenticatedRouteImport
+    }
+    '/_authenticated/orders/': {
+      id: '/_authenticated/orders/'
+      path: '/orders'
+      fullPath: '/orders'
+      preLoaderRoute: typeof AuthenticatedOrdersIndexImport
+      parentRoute: typeof AuthenticatedRouteImport
+    }
+    '/_authenticated/products/': {
+      id: '/_authenticated/products/'
+      path: '/products'
+      fullPath: '/products'
+      preLoaderRoute: typeof AuthenticatedProductsIndexImport
+      parentRoute: typeof AuthenticatedRouteImport
+    }
+    '/_authenticated/products/$productId/edit': {
+      id: '/_authenticated/products/$productId/edit'
+      path: '/products/$productId/edit'
+      fullPath: '/products/$productId/edit'
+      preLoaderRoute: typeof AuthenticatedProductsProductIdEditImport
+      parentRoute: typeof AuthenticatedRouteImport
+    }
+  }
 }
 
 // Create and export the route tree
 
 interface AuthenticatedRouteRouteChildren {
-    AuthenticatedChatManagementRoute: typeof AuthenticatedChatManagementRoute;
-    AuthenticatedReviewsRoute: typeof AuthenticatedReviewsRoute;
-    AuthenticatedIndexRoute: typeof AuthenticatedIndexRoute;
-    AuthenticatedProductsNewRoute: typeof AuthenticatedProductsNewRoute;
-    AuthenticatedProductsIndexRoute: typeof AuthenticatedProductsIndexRoute;
-    AuthenticatedProductsProductIdEditRoute: typeof AuthenticatedProductsProductIdEditRoute;
+  AuthenticatedChatManagementRoute: typeof AuthenticatedChatManagementRoute
+  AuthenticatedReviewsRoute: typeof AuthenticatedReviewsRoute
+  AuthenticatedIndexRoute: typeof AuthenticatedIndexRoute
+  AuthenticatedOrdersOrderNumberRoute: typeof AuthenticatedOrdersOrderNumberRoute
+  AuthenticatedProductsNewRoute: typeof AuthenticatedProductsNewRoute
+  AuthenticatedOrdersIndexRoute: typeof AuthenticatedOrdersIndexRoute
+  AuthenticatedProductsIndexRoute: typeof AuthenticatedProductsIndexRoute
+  AuthenticatedProductsProductIdEditRoute: typeof AuthenticatedProductsProductIdEditRoute
 }
 
 const AuthenticatedRouteRouteChildren: AuthenticatedRouteRouteChildren = {
-    AuthenticatedChatManagementRoute: AuthenticatedChatManagementRoute,
-    AuthenticatedReviewsRoute: AuthenticatedReviewsRoute,
-    AuthenticatedIndexRoute: AuthenticatedIndexRoute,
-    AuthenticatedProductsNewRoute: AuthenticatedProductsNewRoute,
-    AuthenticatedProductsIndexRoute: AuthenticatedProductsIndexRoute,
-    AuthenticatedProductsProductIdEditRoute: AuthenticatedProductsProductIdEditRoute,
-};
+  AuthenticatedChatManagementRoute: AuthenticatedChatManagementRoute,
+  AuthenticatedReviewsRoute: AuthenticatedReviewsRoute,
+  AuthenticatedIndexRoute: AuthenticatedIndexRoute,
+  AuthenticatedOrdersOrderNumberRoute: AuthenticatedOrdersOrderNumberRoute,
+  AuthenticatedProductsNewRoute: AuthenticatedProductsNewRoute,
+  AuthenticatedOrdersIndexRoute: AuthenticatedOrdersIndexRoute,
+  AuthenticatedProductsIndexRoute: AuthenticatedProductsIndexRoute,
+  AuthenticatedProductsProductIdEditRoute:
+    AuthenticatedProductsProductIdEditRoute,
+}
 
-const AuthenticatedRouteRouteWithChildren = AuthenticatedRouteRoute._addFileChildren(AuthenticatedRouteRouteChildren);
+const AuthenticatedRouteRouteWithChildren =
+  AuthenticatedRouteRoute._addFileChildren(AuthenticatedRouteRouteChildren)
 
 export interface FileRoutesByFullPath {
-    "": typeof AuthenticatedRouteRouteWithChildren;
-    "/chat": typeof ChatRoute;
-    "/login": typeof LoginRoute;
-    "/chat-management": typeof AuthenticatedChatManagementRoute;
-    "/reviews": typeof AuthenticatedReviewsRoute;
-    "/auth/callback": typeof AuthCallbackRoute;
-    "/": typeof AuthenticatedIndexRoute;
-    "/products/new": typeof AuthenticatedProductsNewRoute;
-    "/products": typeof AuthenticatedProductsIndexRoute;
-    "/products/$productId/edit": typeof AuthenticatedProductsProductIdEditRoute;
+  '': typeof AuthenticatedRouteRouteWithChildren
+  '/chat': typeof ChatRoute
+  '/login': typeof LoginRoute
+  '/chat-management': typeof AuthenticatedChatManagementRoute
+  '/reviews': typeof AuthenticatedReviewsRoute
+  '/auth/callback': typeof AuthCallbackRoute
+  '/': typeof AuthenticatedIndexRoute
+  '/orders/$orderNumber': typeof AuthenticatedOrdersOrderNumberRoute
+  '/products/new': typeof AuthenticatedProductsNewRoute
+  '/orders': typeof AuthenticatedOrdersIndexRoute
+  '/products': typeof AuthenticatedProductsIndexRoute
+  '/products/$productId/edit': typeof AuthenticatedProductsProductIdEditRoute
 }
 
 export interface FileRoutesByTo {
-    "/chat": typeof ChatRoute;
-    "/login": typeof LoginRoute;
-    "/chat-management": typeof AuthenticatedChatManagementRoute;
-    "/reviews": typeof AuthenticatedReviewsRoute;
-    "/auth/callback": typeof AuthCallbackRoute;
-    "/": typeof AuthenticatedIndexRoute;
-    "/products/new": typeof AuthenticatedProductsNewRoute;
-    "/products": typeof AuthenticatedProductsIndexRoute;
-    "/products/$productId/edit": typeof AuthenticatedProductsProductIdEditRoute;
+  '/chat': typeof ChatRoute
+  '/login': typeof LoginRoute
+  '/chat-management': typeof AuthenticatedChatManagementRoute
+  '/reviews': typeof AuthenticatedReviewsRoute
+  '/auth/callback': typeof AuthCallbackRoute
+  '/': typeof AuthenticatedIndexRoute
+  '/orders/$orderNumber': typeof AuthenticatedOrdersOrderNumberRoute
+  '/products/new': typeof AuthenticatedProductsNewRoute
+  '/orders': typeof AuthenticatedOrdersIndexRoute
+  '/products': typeof AuthenticatedProductsIndexRoute
+  '/products/$productId/edit': typeof AuthenticatedProductsProductIdEditRoute
 }
 
 export interface FileRoutesById {
-    __root__: typeof rootRoute;
-    "/_authenticated": typeof AuthenticatedRouteRouteWithChildren;
-    "/chat": typeof ChatRoute;
-    "/login": typeof LoginRoute;
-    "/_authenticated/chat-management": typeof AuthenticatedChatManagementRoute;
-    "/_authenticated/reviews": typeof AuthenticatedReviewsRoute;
-    "/auth/callback": typeof AuthCallbackRoute;
-    "/_authenticated/": typeof AuthenticatedIndexRoute;
-    "/_authenticated/products/new": typeof AuthenticatedProductsNewRoute;
-    "/_authenticated/products/": typeof AuthenticatedProductsIndexRoute;
-    "/_authenticated/products/$productId/edit": typeof AuthenticatedProductsProductIdEditRoute;
+  __root__: typeof rootRoute
+  '/_authenticated': typeof AuthenticatedRouteRouteWithChildren
+  '/chat': typeof ChatRoute
+  '/login': typeof LoginRoute
+  '/_authenticated/chat-management': typeof AuthenticatedChatManagementRoute
+  '/_authenticated/reviews': typeof AuthenticatedReviewsRoute
+  '/auth/callback': typeof AuthCallbackRoute
+  '/_authenticated/': typeof AuthenticatedIndexRoute
+  '/_authenticated/orders/$orderNumber': typeof AuthenticatedOrdersOrderNumberRoute
+  '/_authenticated/products/new': typeof AuthenticatedProductsNewRoute
+  '/_authenticated/orders/': typeof AuthenticatedOrdersIndexRoute
+  '/_authenticated/products/': typeof AuthenticatedProductsIndexRoute
+  '/_authenticated/products/$productId/edit': typeof AuthenticatedProductsProductIdEditRoute
 }
 
 export interface FileRouteTypes {
-    fileRoutesByFullPath: FileRoutesByFullPath;
-    fullPaths:
-        | ""
-        | "/chat"
-        | "/login"
-        | "/chat-management"
-        | "/reviews"
-        | "/auth/callback"
-        | "/"
-        | "/products/new"
-        | "/products"
-        | "/products/$productId/edit";
-    fileRoutesByTo: FileRoutesByTo;
-    to: "/chat" | "/login" | "/chat-management" | "/reviews" | "/auth/callback" | "/" | "/products/new" | "/products" | "/products/$productId/edit";
-    id:
-        | "__root__"
-        | "/_authenticated"
-        | "/chat"
-        | "/login"
-        | "/_authenticated/chat-management"
-        | "/_authenticated/reviews"
-        | "/auth/callback"
-        | "/_authenticated/"
-        | "/_authenticated/products/new"
-        | "/_authenticated/products/"
-        | "/_authenticated/products/$productId/edit";
-    fileRoutesById: FileRoutesById;
+  fileRoutesByFullPath: FileRoutesByFullPath
+  fullPaths:
+    | ''
+    | '/chat'
+    | '/login'
+    | '/chat-management'
+    | '/reviews'
+    | '/auth/callback'
+    | '/'
+    | '/orders/$orderNumber'
+    | '/products/new'
+    | '/orders'
+    | '/products'
+    | '/products/$productId/edit'
+  fileRoutesByTo: FileRoutesByTo
+  to:
+    | '/chat'
+    | '/login'
+    | '/chat-management'
+    | '/reviews'
+    | '/auth/callback'
+    | '/'
+    | '/orders/$orderNumber'
+    | '/products/new'
+    | '/orders'
+    | '/products'
+    | '/products/$productId/edit'
+  id:
+    | '__root__'
+    | '/_authenticated'
+    | '/chat'
+    | '/login'
+    | '/_authenticated/chat-management'
+    | '/_authenticated/reviews'
+    | '/auth/callback'
+    | '/_authenticated/'
+    | '/_authenticated/orders/$orderNumber'
+    | '/_authenticated/products/new'
+    | '/_authenticated/orders/'
+    | '/_authenticated/products/'
+    | '/_authenticated/products/$productId/edit'
+  fileRoutesById: FileRoutesById
 }
 
 export interface RootRouteChildren {
-    AuthenticatedRouteRoute: typeof AuthenticatedRouteRouteWithChildren;
-    ChatRoute: typeof ChatRoute;
-    LoginRoute: typeof LoginRoute;
-    AuthCallbackRoute: typeof AuthCallbackRoute;
+  AuthenticatedRouteRoute: typeof AuthenticatedRouteRouteWithChildren
+  ChatRoute: typeof ChatRoute
+  LoginRoute: typeof LoginRoute
+  AuthCallbackRoute: typeof AuthCallbackRoute
 }
 
 const rootRouteChildren: RootRouteChildren = {
-    AuthenticatedRouteRoute: AuthenticatedRouteRouteWithChildren,
-    ChatRoute: ChatRoute,
-    LoginRoute: LoginRoute,
-    AuthCallbackRoute: AuthCallbackRoute,
-};
+  AuthenticatedRouteRoute: AuthenticatedRouteRouteWithChildren,
+  ChatRoute: ChatRoute,
+  LoginRoute: LoginRoute,
+  AuthCallbackRoute: AuthCallbackRoute,
+}
 
-export const routeTree = rootRoute._addFileChildren(rootRouteChildren)._addFileTypes<FileRouteTypes>();
+export const routeTree = rootRoute
+  ._addFileChildren(rootRouteChildren)
+  ._addFileTypes<FileRouteTypes>()
 
 /* ROUTE_MANIFEST_START
 {
@@ -285,7 +347,9 @@ export const routeTree = rootRoute._addFileChildren(rootRouteChildren)._addFileT
         "/_authenticated/chat-management",
         "/_authenticated/reviews",
         "/_authenticated/",
+        "/_authenticated/orders/$orderNumber",
         "/_authenticated/products/new",
+        "/_authenticated/orders/",
         "/_authenticated/products/",
         "/_authenticated/products/$productId/edit"
       ]
@@ -311,8 +375,16 @@ export const routeTree = rootRoute._addFileChildren(rootRouteChildren)._addFileT
       "filePath": "_authenticated/index.tsx",
       "parent": "/_authenticated"
     },
+    "/_authenticated/orders/$orderNumber": {
+      "filePath": "_authenticated/orders/$orderNumber.tsx",
+      "parent": "/_authenticated"
+    },
     "/_authenticated/products/new": {
       "filePath": "_authenticated/products/new.tsx",
+      "parent": "/_authenticated"
+    },
+    "/_authenticated/orders/": {
+      "filePath": "_authenticated/orders/index.tsx",
       "parent": "/_authenticated"
     },
     "/_authenticated/products/": {
