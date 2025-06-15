@@ -38,8 +38,11 @@ const pretendard = localFont({
 });
 
 export const metadata: Metadata = {
-    title: "801 COFFEE",
-    description: "801 COFFEE - 프리미엄 캡슐 커피 전문점",
+    title: {
+        default: "801 COFFEE",
+        template: "%s | 801 COFFEE",
+    },
+    description: "프리미엄 캡슐 커피 전문점",
     openGraph: {
         title: "801 COFFEE",
         description: "프리미엄 캡슐 커피 전문점",
