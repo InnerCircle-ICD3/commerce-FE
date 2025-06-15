@@ -48,7 +48,7 @@ export const metadata: Metadata = {
         description: "프리미엄 캡슐 커피 전문점",
         images: [
             {
-                url: "/images/og-image.png",
+                url: "https://commerce-fe-shop-delta.vercel.app/images/og-image.png",
                 width: 1200,
                 height: 630,
                 alt: "801 COFFEE OG Image",
