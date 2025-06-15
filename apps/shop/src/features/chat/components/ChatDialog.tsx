@@ -40,15 +40,19 @@ const ChatDialog = ({ onClose, productInfo: initialProductInfo }: ChatDialogProp
     const { addToHistory, markAsRead, openChatRoom, closeChatRoom } = useChatNotificationContext();
 
     const handleCloseClick = useCallback(() => {
+        console.log("[ChatDialog] 채팅창 닫기 시작, roomId:", roomId);
+
         // 채팅을 닫을 때 현재까지의 마지막 메시지를 읽음으로 표시
         if (roomId && messages.length > 0) {
             const lastMessage = messages[messages.length - 1];
             if (lastMessage.is_admin) {
+                console.log("[ChatDialog] 마지막 관리자 메시지 읽음 처리:", lastMessage.id);
                 markAsRead(roomId, lastMessage.id);
             }
         }
 
         // 전역 알림 시스템에 채팅방이 닫혔음을 알림
+        console.log("[ChatDialog] closeChatRoom 호출");
         closeChatRoom();
 
         // 개별 채팅방 구독 정리 (전역 알림 시스템으로 전환)
@@ -63,6 +67,8 @@ const ChatDialog = ({ onClose, productInfo: initialProductInfo }: ChatDialogProp
         // 채팅창 닫기
         dialogRef.current?.close();
         onClose(); // 부모 컴포넌트에 닫힘 상태 알림
+
+        console.log("[ChatDialog] 채팅창 닫기 완료");
     }, [roomId, messages, markAsRead, closeChatRoom, onClose]);
 
     useEffect(() => {
@@ -109,19 +115,26 @@ const ChatDialog = ({ onClose, productInfo: initialProductInfo }: ChatDialogProp
 
     // 개별 채팅방 실시간 구독 설정
     const setupRoomSubscription = useCallback(
-        (roomId: string) => {
+        async (roomId: string) => {
             console.log(`[ChatDialog] 채팅방 ${roomId} 실시간 구독 설정 중...`);
 
-            // 기존 구독이 있다면 정리
+            // 기존 구독이 있다면 완전히 정리
             if (channelRef.current) {
                 console.log("[ChatDialog] 기존 구독 정리 중...");
+                await channelRef.current.unsubscribe();
                 supabase.removeChannel(channelRef.current);
                 channelRef.current = null;
+                // 정리 완료까지 잠시 대기
+                await new Promise(resolve => setTimeout(resolve, 200));
             }
+
+            // 채널 이름을 고유하게 생성 (타임스탬프 포함)
+            const channelName = `chat_room_${roomId}_${Date.now()}`;
+            console.log(`[ChatDialog] 새 구독 설정: ${channelName}`);
 
             // 새로운 구독 설정
             const channel = supabase
-                .channel(`chat_room_${roomId}`)
+                .channel(channelName)
                 .on(
                     "postgres_changes",
                     {
@@ -307,8 +320,10 @@ const ChatDialog = ({ onClose, productInfo: initialProductInfo }: ChatDialogProp
                 // 전역 알림 시스템에 채팅방이 열렸음을 알림
                 openChatRoom(currentRoomId);
 
-                // 개별 채팅방 실시간 구독 설정
-                setupRoomSubscription(currentRoomId);
+                // 개별 채팅방 실시간 구독 설정 (비동기 호출)
+                setupRoomSubscription(currentRoomId).catch(error => {
+                    console.error("구독 설정 오류:", error);
+                });
             } catch (error) {
                 console.error("Error initializing chat:", error);
                 setMessages([
@@ -335,6 +350,7 @@ const ChatDialog = ({ onClose, productInfo: initialProductInfo }: ChatDialogProp
         return () => {
             if (channelRef.current) {
                 console.log("[ChatDialog] 컴포넌트 언마운트 - 구독 정리");
+                channelRef.current.unsubscribe();
                 supabase.removeChannel(channelRef.current);
                 channelRef.current = null;
             }
