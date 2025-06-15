@@ -5,6 +5,8 @@ import "./globals.css";
 import TanstackQueryProviders from "@/src/shared/TanstackQueryProviders";
 import Footer from "@/src/shared/components/layout/Footer";
 import Header from "@/src/shared/components/layout/Header";
+import UserIdInitializer from "@/src/shared/components/UserIdInitializer";
+import { ChatNotificationProvider } from "@/src/features/chat/components/ChatNotificationProvider";
 
 const geistSans = Geist({
     variable: "--font-geist-sans",
@@ -51,9 +53,12 @@ export default function RootLayout({
         <html lang="ko">
             <body className={`${geistSans.variable} ${geistMono.variable} ${pretendard.variable} antialiased`}>
                 <TanstackQueryProviders>
-                    <Header />
-                    <main>{children}</main>
-                    <Footer />
+                    <ChatNotificationProvider>
+                        <UserIdInitializer />
+                        <Header />
+                        <main>{children}</main>
+                        <Footer />
+                    </ChatNotificationProvider>
                 </TanstackQueryProviders>
             </body>
         </html>

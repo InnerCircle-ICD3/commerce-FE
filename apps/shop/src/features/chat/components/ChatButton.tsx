@@ -1,6 +1,7 @@
 "use client";
 
-import { useState } from "react";
+import { useState, useEffect } from "react";
+import { useChatNotificationContext } from "./ChatNotificationProvider";
 import ChatDialog from "./ChatDialog";
 
 interface ChatButtonProps {
@@ -15,8 +16,29 @@ interface ChatButtonProps {
 
 const ChatButton = ({ productInfo, isFloating = false }: ChatButtonProps) => {
     const [isOpen, setIsOpen] = useState(false);
+    const { hasUnreadMessages, hasUnreadForProduct, checkUnreadMessages } = useChatNotificationContext();
 
-    const handleOpen = () => setIsOpen(true);
+    // 제품별로 읽지 않은 메시지 확인 (현재는 전역 상태 사용)
+    const currentHasUnread = productInfo?.id 
+        ? hasUnreadForProduct(productInfo.id) 
+        : hasUnreadMessages;
+
+    // 알림 상태 변화 감지
+    useEffect(() => {
+        console.log('ChatButton 알림 상태 변화:', {
+            hasUnreadMessages,
+            currentHasUnread,
+            productId: productInfo?.id,
+            isFloating
+        });
+    }, [hasUnreadMessages, currentHasUnread]);
+
+    const handleOpen = () => {
+        setIsOpen(true);
+        // 채팅창을 열면 즉시 알림 상태를 다시 확인하여 업데이트
+        setTimeout(() => checkUnreadMessages(), 100);
+    };
+    
     const handleClose = () => setIsOpen(false);
 
     if (isFloating) {
@@ -26,7 +48,7 @@ const ChatButton = ({ productInfo, isFloating = false }: ChatButtonProps) => {
                 <button
                     type="button"
                     onClick={handleOpen}
-                    className="fixed bottom-6 right-6 w-14 h-14 bg-[#257A57] rounded-full flex items-center justify-center text-white shadow-lg hover:bg-[#1f6347] transition-colors z-40"
+                    className="fixed bottom-6 right-6 w-14 h-14 bg-[#257A57] rounded-full flex items-center justify-center text-white shadow-lg hover:bg-[#1f6347] transition-colors z-40 relative"
                     aria-label="채팅 열기"
                 >
                     <svg width="24" height="24" viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg">
@@ -39,6 +61,13 @@ const ChatButton = ({ productInfo, isFloating = false }: ChatButtonProps) => {
                         <circle cx="8" cy="10" r="1" fill="currentColor" />
                         <circle cx="16" cy="10" r="1" fill="currentColor" />
                     </svg>
+                    
+                    {currentHasUnread && (
+                        <div className="absolute -top-1 -right-1">
+                            <div className="w-4 h-4 bg-red-500 rounded-full animate-ping"></div>
+                            <div className="w-4 h-4 bg-red-600 rounded-full absolute top-0 left-0"></div>
+                        </div>
+                    )}
                 </button>
 
                 {isOpen && <ChatDialog onClose={handleClose} productInfo={productInfo} />}
@@ -49,7 +78,7 @@ const ChatButton = ({ productInfo, isFloating = false }: ChatButtonProps) => {
     // Header용 일반 버튼 스타일
     return (
         <>
-            <button onClick={handleOpen} aria-label="채팅 상담" className="cursor-pointer" type="button">
+            <button onClick={handleOpen} aria-label="채팅 상담" className="cursor-pointer relative" type="button">
                 <div className="w-8 h-8 flex items-center justify-center">
                     <svg
                         width="24"
@@ -67,6 +96,13 @@ const ChatButton = ({ productInfo, isFloating = false }: ChatButtonProps) => {
                         />
                     </svg>
                 </div>
+                
+                {currentHasUnread && (
+                    <div className="absolute -top-1 -right-1">
+                        <div className="w-3 h-3 bg-red-500 rounded-full animate-ping"></div>
+                        <div className="w-3 h-3 bg-red-600 rounded-full absolute top-0 left-0"></div>
+                    </div>
+                )}
             </button>
 
             {isOpen && <ChatDialog onClose={handleClose} productInfo={productInfo} />}
