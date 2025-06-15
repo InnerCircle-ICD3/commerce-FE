@@ -1,6 +1,11 @@
 import { OrderHeader, OrderInfo, ShippingInfo, OrderProduct, PaymentInfo } from "@/src/features/order/components";
 import { getOrderDetail } from "@/src/features/order/api/orderApi";
 
+export const metadata = {
+    title: "주문 상세",
+    description: "주문 정보를 확인할 수 있습니다.",
+};
+
 interface OrderDetailPageParams {
     params: Promise<{ orderId: string }>;
 }

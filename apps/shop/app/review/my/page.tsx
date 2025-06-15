@@ -3,6 +3,11 @@ import ReviewFilter from "@/src/features/myReviews/components/ReviewFilter";
 import Loading from "@/src/shared/components/shared/Loading";
 import { Suspense } from "react";
 
+export const metadata = {
+    title: "리뷰 관리",
+    description: "작성한 리뷰를 확인하고 관리할 수 있습니다.",
+};
+
 export default function ReviewManagePage() {
     return (
         <div className="min-h-screen bg-white">

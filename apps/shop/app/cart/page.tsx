@@ -8,6 +8,11 @@ import { useCart } from "@/src/features/cart/hooks/useCart";
 import Loading from "@/src/shared/components/shared/Loading";
 import { ErrorBoundary } from "@/src/shared/components/shared/ErrorBoundary";
 
+export const metadata = {
+    title: "장바구니",
+    description: "선택한 상품들을 확인하고 결제할 수 있습니다.",
+};
+
 function CartPageClient() {
     const { data, isLoading, isError, error } = useCart();
 

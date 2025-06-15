@@ -3,6 +3,11 @@ import CategoryGrid from "@/src/features/main/components/CategoryGrid";
 import CoffeeLetter from "@/src/features/main/components/PromotionalContent";
 import Products from "@/src/features/main/components/product/Products";
 
+export const metadata = {
+    title: "메인 페이지",
+    description: "다양한 캡슐커피 제품을 만나보세요.",
+};
+
 export default function TempMainPage() {
     return (
         <main className="flex flex-col bg-white">

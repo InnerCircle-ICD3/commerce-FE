@@ -1,5 +1,10 @@
 import { ProductFilter } from "@/src/features/product/components/ProductFilter";
 
+export const metadata = {
+    title: "상품 검색",
+    description: "커피 제품을 검색하고 필터링할 수 있습니다.",
+};
+
 interface ProductPageProps {
     searchParams: Promise<{
         name: string;

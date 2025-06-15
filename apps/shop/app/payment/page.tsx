@@ -4,6 +4,11 @@ import { OrderItemList } from "@/src/features/payment/components/OrderItemList";
 import { PurchaseSummary } from "@/src/features/payment/components/PurchaseSummary";
 import SelectPaymentMethod from "@/src/features/order/components/SelectPaymentMethod";
 
+export const metadata = {
+    title: "주문서",
+    description: "주문 상품과 결제 정보를 입력합니다.",
+};
+
 export default function Page() {
     return (
         <div>

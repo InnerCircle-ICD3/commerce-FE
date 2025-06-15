@@ -1,6 +1,11 @@
 import { ProductPage } from "@/src/features/product/components/ProductPage";
 import { getProduct, getProductReviews, getProductReviewStats, getRecommendedProducts } from "@/src/features/product/api/productApi";
 
+export const metadata = {
+    title: "상품 상세 페이지",
+    description: "선택한 상품의 상세 정보와 리뷰를 확인할 수 있습니다.",
+};
+
 interface ProductDetailPageProps {
     params: Promise<{ id: string }>;
     searchParams: Promise<{ [key: string]: string | string[] | undefined }>;
