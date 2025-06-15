@@ -16,29 +16,41 @@ interface ChatButtonProps {
 
 const ChatButton = ({ productInfo, isFloating = false }: ChatButtonProps) => {
     const [isOpen, setIsOpen] = useState(false);
-    const { hasUnreadMessages, hasUnreadForProduct, checkUnreadMessages } = useChatNotificationContext();
+    const { hasUnreadMessages, hasUnreadForProduct, checkUnreadMessages, clearNotifications, currentOpenRoom } = useChatNotificationContext();
 
     // 제품별로 읽지 않은 메시지 확인 (현재는 전역 상태 사용)
-    const currentHasUnread = productInfo?.id 
-        ? hasUnreadForProduct(productInfo.id) 
-        : hasUnreadMessages;
+    const currentHasUnread = productInfo?.id ? hasUnreadForProduct(productInfo.id) : hasUnreadMessages;
 
     // 알림 상태 변화 감지
     useEffect(() => {
-        console.log('ChatButton 알림 상태 변화:', {
+        console.log("ChatButton 알림 상태 변화:", {
             hasUnreadMessages,
             currentHasUnread,
             productId: productInfo?.id,
-            isFloating
+            isFloating,
+            currentOpenRoom,
         });
-    }, [hasUnreadMessages, currentHasUnread]);
+
+        // 개발용: 알림 상태를 강제로 확인
+        if (isFloating) {
+            console.log("플로팅 버튼 알림 상태:", {
+                hasUnreadMessages,
+                currentHasUnread,
+                currentOpenRoom,
+                "Context가 제대로 로드됨": !!checkUnreadMessages,
+            });
+        }
+    }, [hasUnreadMessages, currentHasUnread, productInfo?.id, isFloating, checkUnreadMessages, currentOpenRoom]);
 
     const handleOpen = () => {
         setIsOpen(true);
-        // 채팅창을 열면 즉시 알림 상태를 다시 확인하여 업데이트
-        setTimeout(() => checkUnreadMessages(), 100);
+        // 채팅창을 열 때 즉시 알림 상태 해제
+        if (isFloating && currentHasUnread) {
+            console.log("플로팅 버튼 클릭 - 알림 상태 즉시 해제");
+            clearNotifications(); // 즉시 알림 해제
+        }
     };
-    
+
     const handleClose = () => setIsOpen(false);
 
     if (isFloating) {
@@ -48,10 +60,11 @@ const ChatButton = ({ productInfo, isFloating = false }: ChatButtonProps) => {
                 <button
                     type="button"
                     onClick={handleOpen}
-                    className="fixed bottom-6 right-6 w-14 h-14 bg-[#257A57] rounded-full flex items-center justify-center text-white shadow-lg hover:bg-[#1f6347] transition-colors z-40 relative"
+                    className="fixed bottom-8 right-8 w-16 h-16 bg-[#257A57] rounded-full flex items-center justify-center text-white shadow-2xl hover:bg-[#1f6347] transition-all duration-200 z-[9999] hover:scale-110"
                     aria-label="채팅 열기"
+                    style={{ position: "fixed", zIndex: 9999 }}
                 >
-                    <svg width="24" height="24" viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg">
+                    <svg width="28" height="28" viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg">
                         <title>채팅 아이콘</title>
                         <path
                             d="M20 2H4C2.9 2 2 2.9 2 4V22L6 18H20C21.1 18 22 17.1 22 16V4C22 2.9 21.1 2 20 2ZM20 16H5.17L4 17.17V4H20V16Z"
@@ -61,11 +74,12 @@ const ChatButton = ({ productInfo, isFloating = false }: ChatButtonProps) => {
                         <circle cx="8" cy="10" r="1" fill="currentColor" />
                         <circle cx="16" cy="10" r="1" fill="currentColor" />
                     </svg>
-                    
+
+                    {/* 테스트: 항상 알림 표시 */}
                     {currentHasUnread && (
                         <div className="absolute -top-1 -right-1">
-                            <div className="w-4 h-4 bg-red-500 rounded-full animate-ping"></div>
-                            <div className="w-4 h-4 bg-red-600 rounded-full absolute top-0 left-0"></div>
+                            <div className="w-5 h-5 bg-red-500 rounded-full animate-ping" />
+                            <div className="w-5 h-5 bg-red-600 rounded-full absolute top-0 left-0" />
                         </div>
                     )}
                 </button>
@@ -96,11 +110,11 @@ const ChatButton = ({ productInfo, isFloating = false }: ChatButtonProps) => {
                         />
                     </svg>
                 </div>
-                
+
                 {currentHasUnread && (
                     <div className="absolute -top-1 -right-1">
-                        <div className="w-3 h-3 bg-red-500 rounded-full animate-ping"></div>
-                        <div className="w-3 h-3 bg-red-600 rounded-full absolute top-0 left-0"></div>
+                        <div className="w-3 h-3 bg-red-500 rounded-full animate-ping" />
+                        <div className="w-3 h-3 bg-red-600 rounded-full absolute top-0 left-0" />
                     </div>
                 )}
             </button>

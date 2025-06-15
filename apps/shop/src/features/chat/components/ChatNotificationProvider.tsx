@@ -1,6 +1,6 @@
 "use client";
 
-import { createContext, useContext, type ReactNode } from "react";
+import { createContext, useContext, useMemo, type ReactNode } from "react";
 import { useChatNotifications } from "../hooks/useChatNotifications";
 
 // Context 타입 정의
@@ -10,6 +10,7 @@ interface ChatNotificationContextType {
     addToHistory: (roomId: string, productId?: string) => void;
     markAsRead: (roomId: string, messageId?: string) => void;
     checkUnreadMessages: () => Promise<void>;
+    clearNotifications: () => void;
     setupRealtimeSubscriptions: () => void;
     isInitialized: boolean;
     openChatRoom: (roomId: string) => void;
@@ -22,20 +23,19 @@ const ChatNotificationContext = createContext<ChatNotificationContextType | null
 
 // Provider 컴포넌트
 export function ChatNotificationProvider({ children }: { children: ReactNode }) {
-    console.log('ChatNotificationProvider 마운트됨');
-    
-    try {
-        console.log('useChatNotifications 호출 시도...');
-        const chatNotifications = useChatNotifications();
-        console.log('useChatNotifications 호출 성공:', chatNotifications);
+    console.log("ChatNotificationProvider 마운트됨");
 
-        return (
-            <ChatNotificationContext.Provider value={chatNotifications}>
-                {children}
-            </ChatNotificationContext.Provider>
-        );
+    try {
+        console.log("useChatNotifications 호출 시도...");
+        const chatNotifications = useChatNotifications();
+        console.log("useChatNotifications 호출 성공:", chatNotifications);
+
+        // 컨텍스트 값을 메모이제이션하여 불필요한 리렌더링 방지
+        const contextValue = useMemo(() => chatNotifications, [chatNotifications]);
+
+        return <ChatNotificationContext.Provider value={contextValue}>{children}</ChatNotificationContext.Provider>;
     } catch (error) {
-        console.error('ChatNotificationProvider 오류:', error);
+        console.error("ChatNotificationProvider 오류:", error);
         throw error;
     }
 }
@@ -47,4 +47,4 @@ export function useChatNotificationContext() {
         throw new Error("useChatNotificationContext must be used within ChatNotificationProvider");
     }
     return context;
-} 
+}
