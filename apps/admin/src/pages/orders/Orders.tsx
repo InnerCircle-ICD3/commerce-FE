@@ -48,15 +48,9 @@ export default function OrdersPage() {
         <div className="space-y-6">
             <div className="flex items-center justify-between">
                 <div>
-                    <h1 className="text-h2 font-bold text-gray-900">상품 관리</h1>
-                    <p className="mt-2 text-gray-600">상품 목록을 확인하고 관리하세요.</p>
+                    <h1 className="text-h2 font-bold text-gray-900">주문 관리</h1>
+                    <p className="mt-2 text-gray-600">주문 목록을 확인하고 관리하세요.</p>
                 </div>
-                <button
-                    type="button"
-                    className="rounded-md bg-blue-600 px-4 py-2 text-sm font-medium text-white shadow-sm hover:bg-blue-700 focus:outline-none focus:ring-2 focus:ring-blue-500 focus:ring-offset-2"
-                >
-                    + 상품 추가
-                </button>
             </div>
             {/* 필터링 및 검색 UI */}
             <div className="bg-white p-4 rounded-lg shadow-sm border border-gray-200">
