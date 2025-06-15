@@ -377,7 +377,7 @@ const ChatDialog = ({ onClose, productInfo: initialProductInfo }: ChatDialogProp
     return (
         <dialog
             ref={dialogRef}
-            className="w-full max-w-lg bg-white rounded-2xl shadow-xl flex flex-col h-[90vh] p-0 [&::backdrop]:bg-black/50"
+            className="fixed top-[100px] left-1/2 -translate-x-1/2 w-full max-w-[450px] h-[700px] bg-white rounded-2xl shadow-xl flex flex-col p-0 [&::backdrop]:bg-black/50"
             onClick={e => e.target === dialogRef.current && handleCloseClick()}
         >
             <header className="flex items-center justify-between p-4 border-b border-[#EEEEEE]">
