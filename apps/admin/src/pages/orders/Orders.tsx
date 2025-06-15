@@ -1,7 +1,7 @@
 import { useState } from "react";
 import { Table, TableBody, TableCaption, TableCell, TableHead, TableHeader, TableRow } from "@/shared/components/ui/table/table";
 import { Pagination } from "@/shared/components/ui/pagination";
-import { useNavigate } from "@tanstack/react-router";
+import { Link } from "@tanstack/react-router";
 
 interface Order {
     orderNumber: string;
@@ -43,8 +43,6 @@ export default function OrdersPage() {
     const handlePageChange = (page: number) => {
         setCurrentPage(page);
     };
-
-    const navigate = useNavigate();
 
     return (
         <div className="space-y-6">
@@ -118,18 +116,12 @@ export default function OrdersPage() {
                     </TableHeader>
                     <TableBody>
                         {orders.map(order => (
-                            <TableRow
-                                key={order.orderNumber}
-                                onClick={() => {
-                                    navigate({
-                                        to: "/orders/$orderNumber",
-                                        params: {
-                                            orderNumber: order.orderNumber,
-                                        },
-                                    });
-                                }}
-                            >
-                                <TableCell className="font-medium">{order.orderNumber}</TableCell>
+                            <TableRow key={order.orderNumber}>
+                                <TableCell className="font-medium">
+                                    <Link to="/orders/$orderNumber" params={{ orderNumber: order.orderNumber }} className="underline">
+                                        {order.orderNumber}
+                                    </Link>
+                                </TableCell>
                                 <TableCell>{order.userName}</TableCell>
                                 <TableCell>{order.orderName}</TableCell>
                                 <TableCell>₩{order.finalTotalPrice.toLocaleString()}</TableCell>
