@@ -60,8 +60,8 @@ const ChatRoomItem = memo(
                             <span className="text-xs text-gray-500">{formattedDate}</span>
                             {lastMessage && !isLastMessageAdmin && !isLastMessageReadByAdmin && (
                                 <div className="mt-1 relative">
-                                    <div className="w-3 h-3 bg-red-500 rounded-full animate-ping"></div>
-                                    <div className="w-3 h-3 bg-red-600 rounded-full absolute top-0 left-0"></div>
+                                    <div className="w-3 h-3 bg-red-500 rounded-full animate-ping" />
+                                    <div className="w-3 h-3 bg-red-600 rounded-full absolute top-0 left-0" />
                                 </div>
                             )}
                         </div>
