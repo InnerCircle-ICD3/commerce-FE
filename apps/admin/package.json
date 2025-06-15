@@ -6,7 +6,9 @@
     "scripts": {
         "dev": "vite",
         "build": "tsc -b && vite build",
-        "lint": "eslint ."
+        "lint": "biome check src",
+        "lint:fix": "biome check --write src",
+        "format": "biome format --write src"
     },
     "dependencies": {
         "@commerce-fe/stores": "workspace:*",
