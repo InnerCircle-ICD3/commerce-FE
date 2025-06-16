@@ -52,7 +52,7 @@ export default function MyReviewsPage() {
             </div>
 
             {/* 리뷰 목록 */}
-            <MyReviewList reviews={reviews} hasMore={currentPage < totalPages - 1} />
+            <MyReviewList reviews={reviews} />
 
             {/* 페이지네이션 */}
             <Pagination page={currentPage} totalPages={totalPages || 0} />

@@ -11,10 +11,9 @@ import { useMutation, useQueryClient } from "@tanstack/react-query";
 
 interface MyReviewListProps {
     reviews: UserReview[];
-    hasMore?: boolean;
 }
 
-export default function MyReviewList({ reviews, hasMore = false }: MyReviewListProps) {
+export default function MyReviewList({ reviews }: MyReviewListProps) {
     const [editingReview, setEditingReview] = useState<UserReview | null>(null);
     const [deletingReviewId, setDeletingReviewId] = useState<number | null>(null);
     const fetch = fetchClient();
@@ -83,18 +82,6 @@ export default function MyReviewList({ reviews, hasMore = false }: MyReviewListP
                         />
                     ))}
                 </div>
-
-                {/* 더보기 버튼 */}
-                {hasMore && (
-                    <div className="text-center pt-8">
-                        <button
-                            type="button"
-                            className="px-8 py-3 border border-gray-300 rounded-lg text-gray-700 hover:bg-gray-50 transition-colors"
-                        >
-                            더보기
-                        </button>
-                    </div>
-                )}
             </div>
             {editingReview && (
                 <CreateReviewModal
@@ -105,9 +92,9 @@ export default function MyReviewList({ reviews, hasMore = false }: MyReviewListP
                         content: editingReview.content || "",
                     }}
                     product={{
-                        productId: editingReview.productId,
-                        title: editingReview.productName,
-                        imageUrl: editingReview.productThumbnail || "",
+                        productId: editingReview.product.productId,
+                        title: editingReview.product.productName,
+                        imageUrl: editingReview.product.productThumbnail || "",
                     }}
                     isOpen={!!editingReview}
                     onClickClose={() => setEditingReview(null)}

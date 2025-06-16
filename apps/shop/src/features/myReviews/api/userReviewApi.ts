@@ -23,7 +23,7 @@ export async function getUserReviews({ monthRange, page, sort }: UserReviewListR
     if (sort) params.append("sort", sort);
 
     return fetchData({
-        endpoint: `/users/me/reviews?${params.toString()}`,
+        endpoint: `/reviews:byAuthor?${params.toString()}`,
         defaultValue,
         mockDataFn: mockFn,
     });

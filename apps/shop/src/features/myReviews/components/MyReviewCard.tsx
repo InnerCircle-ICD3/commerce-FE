@@ -35,14 +35,14 @@ export default function MyReviewCard({ review, onEdit, onDelete }: MyReviewCardP
             <div className="flex items-center gap-4 mb-4 pb-4 border-b border-gray-100">
                 <div className="relative w-16 h-16 flex-shrink-0">
                     <Image
-                        src={review.productThumbnail || "/placeholder.jpg"}
-                        alt={review.productName || "상품"}
+                        src={review.product.productThumbnail || "/placeholder.jpg"}
+                        alt={review.product.productName || "상품"}
                         fill
                         className="object-cover rounded-lg"
                     />
                 </div>
                 <div className="flex-1">
-                    <h3 className="font-medium text-gray-900 mb-1">{review.productName || "상품명 없음"}</h3>
+                    <h3 className="font-medium text-gray-900 mb-1">{review.product.productName || "상품명 없음"}</h3>
                     <div className="flex items-center gap-2">
                         <div className="flex">{renderStars(review.rating || 0)}</div>
                         <span className="text-sm text-gray-500">{formatDate(review.createdAt)}</span>

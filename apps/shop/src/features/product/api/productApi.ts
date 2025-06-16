@@ -69,7 +69,7 @@ export async function getProductReviews(productId: string, page: number, sort?: 
     const sortParam = sort ? `&sort=${sort}` : "";
 
     return fetchData({
-        endpoint: `/products/${productId}/reviews?page=${page}${sortParam}`, // 제품 리뷰 조회 API 주소
+        endpoint: `/reviews:byProduct?productId=${productId}&page=${page}${sortParam}`, // 제품 리뷰 조회 API 주소
         defaultValue: emptyReview, // 실패 시 반환할 기본값
         mockDataFn: mockFn, // 개발기 환경에서 API 실패 시 호출할 목 데이터 생성 함수 (발표 끝나고 백엔드 서버가 폭파되면 이걸 대신 띄워야 함)
     });
@@ -94,7 +94,7 @@ export async function getProductReviewStats(productId: string): Promise<ReviewSt
     const mockFn = () => getMockReviewStats(productId);
 
     return fetchData({
-        endpoint: `/products/${productId}/reviews/rating`, // 리뷰 통계 조회 API 주소
+        endpoint: `/reviews/rating:byProduct?productId=${productId}`, // 리뷰 통계 조회 API 주소
         defaultValue: emptyStats, // 실패 시 반환할 기본값
         mockDataFn: mockFn, // 개발기 환경에서 API 실패 시 호출할 목 데이터 생성 함수 (발표 끝나고 백엔드 서버가 폭파되면 이걸 대신 띄워야 함)
     });

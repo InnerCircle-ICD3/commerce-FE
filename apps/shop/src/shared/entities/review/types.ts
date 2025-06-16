@@ -27,9 +27,11 @@ export interface AdminReply {
 
 // 사용자 리뷰 (myReviews에서 사용)
 export type UserReview = Omit<ReviewType, "nickname"> & {
-    productId: number;
-    productName: string;
-    productThumbnail: string;
+    product: {
+        productId: number;
+        productName: string;
+        productThumbnail: string;
+    };
 };
 
 // 리뷰 작성 요청 (POST /reviews)

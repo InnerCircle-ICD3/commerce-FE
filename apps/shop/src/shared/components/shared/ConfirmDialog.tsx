@@ -13,7 +13,7 @@ interface ConfirmDialogProps {
 export default function ConfirmDialog({ open, title, description, confirmText = "확인", cancelText, onConfirm, onCancel }: ConfirmDialogProps) {
     if (!open) return null;
     return (
-        <div className="fixed inset-0 flex items-center justify-center z-40 backdrop-blur-sm">
+        <div className="fixed inset-0 flex items-center justify-center z-100 backdrop-blur-sm">
             <dialog
                 className="fixed top-1/2 left-1/2 transform -translate-x-1/2 -translate-y-1/2 z-50 max-w-full size-fit bg-white border border-gray-200 shadow-xl rounded-2xl px-16 py-8 flex flex-col items-center"
                 aria-modal="true"
