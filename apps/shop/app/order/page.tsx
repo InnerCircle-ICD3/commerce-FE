@@ -1,5 +1,4 @@
-import { getOrderList } from "@/src/features/order/api/getOrderList";
-import { OrderHistoryPage } from "@/src/features/order/OrderHistoryPage";
+import { OrderHistoryPage } from "@/src/features/order/components/OrderHistoryPage";
 
 export const metadata = {
     title: "주문 내역",
@@ -7,7 +6,5 @@ export const metadata = {
 };
 
 export default async function OrderPage() {
-    // const { data } = await getOrderList()
-
-    return <OrderHistoryPage initialOrders={[]} />;
+    return <OrderHistoryPage />;
 }

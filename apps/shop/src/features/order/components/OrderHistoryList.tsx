@@ -3,7 +3,8 @@ import { ArrowIcon } from "@/src/shared/components/shared/Icon";
 import { formatCurrency } from "@/src/shared/utils/formatUtils";
 import Link from "next/link";
 import { useState } from "react";
-import { useOrderList } from "./hooks/useOrderList";
+import { useOrderList } from "../hooks/useOrderList";
+import type { OrderStatus } from "../types";
 
 interface ButtonConfig {
     text: string;
@@ -16,24 +17,24 @@ export const OrderHistoryList = () => {
     const { data: orders, totalPages } = useOrderList(page);
 
     // 주문 상태별 버튼 구성 정의
-    const getButtonsByStatus = (status: string): ButtonConfig[] => {
+    const getButtonsByStatus = (status: OrderStatus): ButtonConfig[] => {
         switch (status) {
-            case "준비중":
+            case "WAITING_FOR_PAYMENT":
                 return [
                     { text: "주문 취소", variant: "outline" },
                     { text: "배송 조회", isGreen: true },
                 ];
-            case "배송중":
+            case "SHIPPED":
                 return [
                     { text: "반품 신청", variant: "outline" },
                     { text: "배송 조회", isGreen: true },
                 ];
-            case "배송완료":
+            case "DELIVERED":
                 return [
                     { text: "반품 신청", variant: "outline" },
                     { text: "배송 조회", variant: "outline" },
                 ];
-            case "반품완료":
+            case "REFUNDED":
                 return [
                     { text: "반품 정보", variant: "outline" },
                     { text: "장바구니 담기", variant: "outline" },

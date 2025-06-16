@@ -5,15 +5,16 @@ import { useEffect, useState } from "react";
 
 export const useOrderList = (page?: number) => {
     const [orderList, setOrderList] = useState<OrderListItem[]>([]);
-    const { data } = useQuery({
+    const { data: orderListData } = useQuery({
         queryKey: ["orderList", page],
         queryFn: () => getOrderList(page),
     });
     useEffect(() => {
-        if (data) {
-            setOrderList(prev => [...prev, ...data.data.content]);
+        const orderList = orderListData?.data?.content;
+        if (orderList) {
+            setOrderList(prev => [...prev, ...orderList]);
         }
-    }, [data]);
+    }, [orderListData]);
 
-    return { data: orderList, totalPages: data?.data.totalPages || 1 };
+    return { data: orderList, totalPages: orderListData?.data?.totalPages || 1 };
 };

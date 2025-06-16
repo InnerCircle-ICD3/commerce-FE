@@ -2,14 +2,9 @@
 
 import { OrderHistoryList } from "./OrderHistoryList";
 import { ArrowIcon, FilterIcon, SearchIcon } from "@/src/shared/components/shared/Icon";
-import type { OrderListItem } from "./types/orderListItem";
 import { useRouter } from "next/navigation";
 
-interface OrderHistoryPageProps {
-    initialOrders: OrderListItem[];
-}
-
-export const OrderHistoryPage = ({ initialOrders }: OrderHistoryPageProps) => {
+export const OrderHistoryPage = () => {
     const router = useRouter();
     return (
         <div className="w-full max-w-7xl mx-auto px-4 py-8">

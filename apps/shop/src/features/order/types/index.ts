@@ -1,19 +1,15 @@
+import type { PaymentStatus } from "../../payment/types";
+
 export type OrderType = {
     orderNumber: string;
     user: {
         externalId: string;
         name: string;
     };
-    status: {
-        code: string;
-        label: string;
-    };
+    orderStatus: OrderStatus;
+    paymentStatus: PaymentStatus;
     orderedAt: string;
     paymentNumber: string;
-    paymentStatus: {
-        code: string;
-        label: string;
-    };
     paymentMethod: string;
     paidAt: string;
     originalPrice: number;
@@ -94,3 +90,5 @@ export type AddressType = {
     recipientPhone: string;
     isDefault: boolean;
 };
+
+export type OrderStatus = "WAITING_FOR_PAYMENT" | "SHIPPED" | "DELIVERED" | "CANCELLED" | "REFUND_REQUESTED" | "REFUNDED" | "REFUND_REJECTED";
