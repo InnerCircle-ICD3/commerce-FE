@@ -2,6 +2,7 @@ import NextAuth from "next-auth";
 import NaverProvider from "next-auth/providers/naver";
 import type { NextAuthOptions } from "next-auth";
 import type { NextApiRequest, NextApiResponse } from "next";
+import { processLoginCallback } from "@/lib/authService";
 
 // 네이버 프로필 타입 정의
 interface NaverProfile {
@@ -12,37 +13,6 @@ interface NaverProfile {
     gender?: string;
     birthday?: string;
     age?: string;
-}
-
-// 서버로 콜백 데이터를 전송하고 토큰을 받는 함수
-async function sendCallbackToServer(
-    authInfo: { provider: string; token: string },
-    userProfile: { email: string; name: string; nickname: string; profile_image: string; gender: string; birthday: string; age: string },
-) {
-    try {
-        const response = await fetch(`${process.env.NEXTAUTH_URL || "http://localhost:3000"}/api/auth/login`, {
-            method: "POST",
-            headers: {
-                "Content-Type": "application/json",
-            },
-            body: JSON.stringify({
-                auth_info: authInfo,
-                user_profile: userProfile,
-            }),
-        });
-
-        if (!response.ok) {
-            console.error("서버 콜백 전송 실패:", response.status, response.statusText);
-            return null;
-        }
-
-        const result = await response.json();
-        console.log("서버 콜백 전송 성공:", result);
-        return result.data?.tokens || null;
-    } catch (error) {
-        console.error("서버 콜백 전송 중 오류:", error);
-        return null;
-    }
 }
 
 const handler = NextAuth({
@@ -87,7 +57,7 @@ const handler = NextAuth({
                 };
 
                 // 서버로 콜백 데이터 전송하고 토큰 받기
-                const tokens = await sendCallbackToServer(authInfo, userProfile);
+                const tokens = await processLoginCallback(authInfo, userProfile);
 
                 // 토큰을 user 객체에 임시 저장 (JWT 콜백에서 사용하기 위해)
                 if (tokens && user) {

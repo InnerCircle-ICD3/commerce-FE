@@ -29,8 +29,15 @@ export async function fetchData<T>(options: FetchDataOptions<T>): Promise<T> {
     try {
         const fetch = fetchServer();
         const response = await fetch<T>(endpoint);
+
+        // API 응답 데이터가 배열인지 확인 (T가 배열 타입일 경우를 위함)
+        if (Array.isArray(defaultValue) && !Array.isArray(response.data)) {
+            console.warn(`API 응답이 배열이 아닙니다. 엔드포인트: ${endpoint}, 응답:`, response.data);
+            return defaultValue;
+        }
+
         if (response.data === null) {
-            return defaultValue as T;
+            return defaultValue;
         }
 
         return response.data;

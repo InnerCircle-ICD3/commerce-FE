@@ -43,13 +43,13 @@ export const fetchClient = () => {
         throw new Error("NEXT_PUBLIC_API_URL이 설정되지 않았습니다.");
     }
 
-    return createFetcher(process.env.NEXT_PUBLIC_API_URL, async () => {
+    return createFetcher(process.env.NEXT_PUBLIC_API_URL, async (): Promise<HeadersInit> => {
         // NextAuth 세션에서 JWT 토큰 가져오기
         if (typeof window !== "undefined") {
             const { getSession } = await import("next-auth/react");
             const session = await getSession();
 
-            if (session?.accessToken) {
+            if (session && "accessToken" in session && session.accessToken) {
                 return {
                     Authorization: `Bearer ${session.accessToken}`,
                 };
