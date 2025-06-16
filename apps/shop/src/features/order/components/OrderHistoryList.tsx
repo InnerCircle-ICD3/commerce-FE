@@ -5,33 +5,48 @@ import Link from "next/link";
 import { useState } from "react";
 import { useOrderList } from "../hooks/useOrderList";
 import type { OrderStatus } from "../types";
+import { useCancelPayment } from "../../payment/hooks/useCancelPayment";
+import { useRefundPayment } from "../../payment/hooks/useRefundPayment";
+import { cva } from "class-variance-authority";
+import Image from "next/image";
+import type { OrderListItem } from "../types/orderListItem";
 
 interface ButtonConfig {
     text: string;
     variant?: "outline" | "default";
     isGreen?: boolean;
+    onClick?: () => void;
 }
+// 공통 버튼 스타일 클래스
+const buttonStyle = cva("flex-1 h-10 text-sm font-semibold", {
+    variants: {
+        color: {
+            default: "",
+            green: "bg-[#257a57] border-[#257a57] hover:bg-[#1a5f42] hover:border-[#1a5f42]",
+        },
+    },
+});
 
 export const OrderHistoryList = () => {
     const [page, setPage] = useState(1);
     const { data: orders, totalPages } = useOrderList(page);
 
+    const { mutate: cancelPayment } = useCancelPayment();
+    const { mutate: refundPayment } = useRefundPayment();
+
     // 주문 상태별 버튼 구성 정의
-    const getButtonsByStatus = (status: OrderStatus): ButtonConfig[] => {
-        switch (status) {
+    const getButtonsByStatus = (order: OrderListItem): ButtonConfig[] => {
+        switch (order.orderStatus) {
             case "WAITING_FOR_PAYMENT":
                 return [
-                    { text: "주문 취소", variant: "outline" },
+                    { text: "주문 취소", variant: "outline", onClick: () => cancelPayment(order.orderNumber) },
                     { text: "배송 조회", isGreen: true },
                 ];
             case "SHIPPED":
-                return [
-                    { text: "반품 신청", variant: "outline" },
-                    { text: "배송 조회", isGreen: true },
-                ];
+                return [{ text: "배송 조회", isGreen: true }];
             case "DELIVERED":
                 return [
-                    { text: "반품 신청", variant: "outline" },
+                    { text: "반품 신청", variant: "outline", onClick: () => refundPayment(order.orderNumber) },
                     { text: "배송 조회", variant: "outline" },
                 ];
             case "REFUNDED":
@@ -43,10 +58,6 @@ export const OrderHistoryList = () => {
                 return [];
         }
     };
-
-    // 공통 버튼 스타일 클래스
-    const baseButtonClass = "flex-1 h-10 text-sm font-semibold";
-    const greenButtonClass = "bg-[#257a57] border-[#257a57] hover:bg-[#1a5f42] hover:border-[#1a5f42]";
 
     return (
         <div className="flex flex-col w-full gap-4">
@@ -66,7 +77,7 @@ export const OrderHistoryList = () => {
 
                     <div className="flex gap-4 mb-4">
                         <div className="w-20 h-20 bg-gray-100 rounded-md overflow-hidden relative">
-                            {/* <Image src={order.mainProductThumbnail} alt={`${order.orderName} 이미지`} fill sizes="5rem" className="object-cover" /> */}
+                            <Image src={order.mainProductThumbnail} alt={`${order.orderName} 이미지`} fill sizes="5rem" className="object-cover" />
                         </div>
                         <div className="flex flex-col justify-between">
                             <h3 className="font-bold text-sm">{order.orderName}</h3>
@@ -75,9 +86,13 @@ export const OrderHistoryList = () => {
                     </div>
 
                     <div className="flex gap-4">
-                        {getButtonsByStatus(order.orderStatus).map(button => (
+                        {getButtonsByStatus(order).map(button => (
                             <Link key={`${order.orderName}-${button.text}`} href={`/order/${order.orderNumber}`} className="flex-1">
-                                <Button variant={button.variant} className={`${baseButtonClass} ${button.isGreen ? greenButtonClass : ""} w-full`}>
+                                <Button
+                                    variant={button.variant}
+                                    className={buttonStyle({ color: button.isGreen ? "green" : "default" })}
+                                    onClick={button.onClick}
+                                >
                                     {button.text}
                                 </Button>
                             </Link>
