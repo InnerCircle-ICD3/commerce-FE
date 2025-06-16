@@ -91,4 +91,12 @@ export type AddressType = {
     isDefault: boolean;
 };
 
-export type OrderStatus = "WAITING_FOR_PAYMENT" | "SHIPPED" | "DELIVERED" | "CANCELLED" | "REFUND_REQUESTED" | "REFUNDED" | "REFUND_REJECTED";
+export type OrderStatus =
+    | "WAITING_FOR_PAYMENT"
+    | "PAID"
+    | "SHIPPED"
+    | "DELIVERED"
+    | "CANCELLED"
+    | "REFUND_REQUESTED"
+    | "REFUNDED"
+    | "REFUND_REJECTED";

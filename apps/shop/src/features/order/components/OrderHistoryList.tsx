@@ -4,12 +4,11 @@ import { formatCurrency } from "@/src/shared/utils/formatUtils";
 import Link from "next/link";
 import { useState } from "react";
 import { useOrderList } from "../hooks/useOrderList";
-import type { OrderStatus } from "../types";
-import { useCancelPayment } from "../../payment/hooks/useCancelPayment";
-import { useRefundPayment } from "../../payment/hooks/useRefundPayment";
 import { cva } from "class-variance-authority";
-import Image from "next/image";
 import type { OrderListItem } from "../types/orderListItem";
+import { RefundModal } from "./RefundModal";
+import Image from "next/image";
+import { getOrderStatusLabel } from "@/src/shared/utils/getOrderStatusLabel";
 
 interface ButtonConfig {
     text: string;
@@ -30,23 +29,44 @@ const buttonStyle = cva("flex-1 h-10 text-sm font-semibold", {
 export const OrderHistoryList = () => {
     const [page, setPage] = useState(1);
     const { data: orders, totalPages } = useOrderList(page);
+    const [cancelOrderData, setCancelOrderData] = useState<OrderListItem | null>(null);
 
-    const { mutate: cancelPayment } = useCancelPayment();
-    const { mutate: refundPayment } = useRefundPayment();
+    const mockOrders: OrderListItem[] = [
+        {
+            orderNumber: "1234567890",
+            orderStatus: "WAITING_FOR_PAYMENT",
+            orderedAt: "2025-01-01",
+            mainProductThumbnail: "https://via.placeholder.com/150",
+            orderName: "주문 1",
+            finalTotalPrice: 100000,
+            cancelable: true,
+            refundable: true,
+        },
+        {
+            orderNumber: "1234567891",
+            orderStatus: "SHIPPED",
+            orderedAt: "2025-01-01",
+            mainProductThumbnail: "https://via.placeholder.com/150",
+            orderName: "주문 1",
+            finalTotalPrice: 100000,
+            cancelable: true,
+            refundable: true,
+        },
+    ];
 
     // 주문 상태별 버튼 구성 정의
     const getButtonsByStatus = (order: OrderListItem): ButtonConfig[] => {
         switch (order.orderStatus) {
             case "WAITING_FOR_PAYMENT":
                 return [
-                    { text: "주문 취소", variant: "outline", onClick: () => cancelPayment(order.orderNumber) },
+                    { text: "주문 취소", variant: "outline", onClick: () => setCancelOrderData(order) },
                     { text: "배송 조회", isGreen: true },
                 ];
             case "SHIPPED":
                 return [{ text: "배송 조회", isGreen: true }];
             case "DELIVERED":
                 return [
-                    { text: "반품 신청", variant: "outline", onClick: () => refundPayment(order.orderNumber) },
+                    { text: "반품 신청", variant: "outline", onClick: () => setCancelOrderData(order) },
                     { text: "배송 조회", variant: "outline" },
                 ];
             case "REFUNDED":
@@ -61,11 +81,11 @@ export const OrderHistoryList = () => {
 
     return (
         <div className="flex flex-col w-full gap-4">
-            {orders?.map(order => (
+            {mockOrders?.map(order => (
                 <div key={order.orderNumber} className="w-full p-6 border border-gray-300/30 rounded-xl">
                     <div className="flex justify-between items-center mb-4">
                         <div className="flex items-center gap-2">
-                            <span className="font-bold text-base">{order.orderStatus}</span>
+                            <span className="font-bold text-base">{getOrderStatusLabel(order.orderStatus)}</span>
                             {order?.orderedAt && <span className="text-emerald-700 text-sm">{order.orderedAt}</span>}
                         </div>
                         <Link href="/order/123456456789">
@@ -77,7 +97,7 @@ export const OrderHistoryList = () => {
 
                     <div className="flex gap-4 mb-4">
                         <div className="w-20 h-20 bg-gray-100 rounded-md overflow-hidden relative">
-                            <Image src={order.mainProductThumbnail} alt={`${order.orderName} 이미지`} fill sizes="5rem" className="object-cover" />
+                            {/* <Image src={order.mainProductThumbnail} alt={`${order.orderName} 이미지`} fill sizes="5rem" className="object-cover" /> */}
                         </div>
                         <div className="flex flex-col justify-between">
                             <h3 className="font-bold text-sm">{order.orderName}</h3>
@@ -85,17 +105,17 @@ export const OrderHistoryList = () => {
                         </div>
                     </div>
 
-                    <div className="flex gap-4">
+                    <div className="grid grid-cols-2 gap-4">
                         {getButtonsByStatus(order).map(button => (
-                            <Link key={`${order.orderName}-${button.text}`} href={`/order/${order.orderNumber}`} className="flex-1">
-                                <Button
-                                    variant={button.variant}
-                                    className={buttonStyle({ color: button.isGreen ? "green" : "default" })}
-                                    onClick={button.onClick}
-                                >
-                                    {button.text}
-                                </Button>
-                            </Link>
+                            <Button
+                                key={`${order.orderName}-${button.text}`}
+                                variant={button.variant}
+                                className={buttonStyle({ color: button.isGreen ? "green" : "default" })}
+                                onClick={button.onClick}
+                                type="button"
+                            >
+                                {button.text}
+                            </Button>
                         ))}
                     </div>
                 </div>
@@ -110,6 +130,7 @@ export const OrderHistoryList = () => {
                 더보기
                 <ArrowIcon direction="down" size="sm" strokeWidth={1.5} title="더 많은 주문 내역 보기" />
             </Button>
+            {cancelOrderData && <RefundModal order={cancelOrderData} onClickClose={() => setCancelOrderData(null)} />}
         </div>
     );
 };
