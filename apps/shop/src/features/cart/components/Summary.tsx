@@ -11,7 +11,8 @@ export default function Summary({ cartItems }: { cartItems: CartItem[] }) {
 
     const handleCheckout = () => {
         useCheckoutCartStore.getState().setCartItems(cartItems);
-        router.push("/order/checkout");
+        const cartItemIds = cartItems.map(item => item.cartItemId).join(",");
+        router.push(`/order/checkout?cartItemIds=${cartItemIds}`);
     };
 
     return (
