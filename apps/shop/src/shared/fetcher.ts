@@ -3,6 +3,24 @@ type ApiResponse<T> = {
     error: CustomError | null;
 };
 
+/**
+ * 백엔드 API 응답에 래핑 구조가 있는지 확인하고 필요시 변환하는 함수
+ * Spring Boot API가 { data: T } 형태를 사용하지 않고 직접 데이터를 반환할 경우를 처리
+ */
+function normalizeApiResponse<T>(responseData: unknown): ApiResponse<T> {
+    // 이미 ApiResponse 구조인 경우 (data와 error 속성이 있음)
+    if (responseData && typeof responseData === 'object' && responseData !== null && 
+        ('data' in responseData || 'error' in responseData)) {
+        return responseData as ApiResponse<T>;
+    }
+    
+    // 직접 데이터를 반환하는 경우 -> ApiResponse 구조로 래핑
+    return {
+        data: responseData as T,
+        error: null
+    };
+}
+
 export type CustomError = Error & {
     code: string;
     message: string;
@@ -22,15 +40,23 @@ const createFetcher = (url: string, getHeaders?: () => HeadersInit) => {
         let json: ApiResponse<T>;
 
         try {
-            json = await res.json();
-        } catch {
+            const rawJson = await res.json();
+            // API 응답 정규화 (직접 데이터 반환 형식 처리)
+            json = normalizeApiResponse<T>(rawJson);
+        } catch (e) {
+            console.error('JSON 파싱 오류:', e);
             throw new Error("JSON 파싱에 실패했습니다.");
         }
 
-        if (!res.ok || json.error) {
-            const error = new Error(json.error?.message || "API 요청에 실패했습니다.") as CustomError;
-            error.code = json.error?.code || "UNKNOWN_ERROR";
-
+        if (!res.ok) {
+            const error = new Error("API 요청에 실패했습니다.") as CustomError;
+            error.code = "UNKNOWN_ERROR";
+            throw error;
+        }
+        
+        if (json.error) {
+            const error = new Error(json.error.message || "API 요청에 실패했습니다.") as CustomError;
+            error.code = json.error.code || "UNKNOWN_ERROR";
             throw error;
         }
 

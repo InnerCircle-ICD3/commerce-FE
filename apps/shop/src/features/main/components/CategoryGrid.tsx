@@ -1,9 +1,10 @@
 import { CategoryItem } from "./CategoryItem";
 import { CategoryNav } from "./CategoryNav";
-import { getCategories } from "@/src/features/main/api/categoryApi";
+import { getMockCategories } from "@/src/features/main/mocks/categoryMock";
 
-export default async function CategoryGrid() {
-    const categories = await getCategories();
+export default function CategoryGrid() {
+    // API 연동대신 목 데이터를 사용하여 카테고리 표시
+    const categories = getMockCategories();
 
     return (
         <section className="py-36 px-6">
