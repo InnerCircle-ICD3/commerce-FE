@@ -5,7 +5,7 @@ export type OrderListItem = {
     orderName: string;
     orderStatus: OrderStatus;
     finalTotalPrice: number;
-    cancelable: boolean;
+    cancellable: boolean;
     refundable: boolean;
     orderedAt: string;
     mainProductThumbnail: string;

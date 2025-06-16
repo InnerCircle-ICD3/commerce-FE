@@ -3,37 +3,52 @@ import { getMockOrderDetail } from "@/src/features/order/mocks/orderDetailMock";
 import { getMockOrderHistory } from "@/src/features/order/mocks/orderHistoryMock";
 import type { OrderDetailData } from "@/src/features/order/types/orderDetail";
 import type { OrderHistoryItem } from "@/src/features/order/types/orderHistory";
+import { fetchServer } from "@/src/shared/fetcher";
 
 /**
  * 빈 주문 상세 정보 객체 (에러 발생 시 반환용)
  */
 export const emptyOrderDetail: OrderDetailData = {
-    orderId: "",
-    orderStatus: "",
-    orderDate: "",
-    products: [],
-    paymentItems: [],
-    shipping: {
-        name: "",
-        address: "",
-        phone: "",
+    orderNumber: "1",
+    orderStatus: "WAITING_FOR_PAYMENT",
+    orderedAt: "",
+    paymentNumber: "",
+    paymentStatus: "COMPLETED",
+    paymentMethod: "",
+    itemsSubTotal: 0,
+    shippingFee: 0,
+    finalTotalPrice: 0,
+    items: [],
+    shippingInfo: {
+        recipientName: "",
+        recipientPhone: "",
+        zipCode: "",
+        address1: "",
+        address2: "",
+        deliveryMessage: "",
     },
-    totalAmount: 0,
-    discount: 0,
+    paidAt: "",
+    cancellable: false,
+    refundRequested: false,
+    cancelReason: "",
+    canceledAt: "",
+    refundable: false,
+    refundReason: "",
+    refundRequestedAt: "",
+    refunded: false,
+    refunedAt: "",
+    reviewable: false,
+    reviewWritten: false,
 };
 
 /**
  * 주문 상세 정보를 가져오는 API 함수
  */
-export async function getOrderDetail(orderId: string): Promise<OrderDetailData> {
+export async function getOrderDetail(orderId: string): Promise<{ data: OrderDetailData | null; error: Error | null }> {
     // 주문 ID 기반 목 데이터 생성 함수
-    const mockFn = () => getMockOrderDetail(orderId);
-
-    return fetchData({
-        endpoint: `/orders/${orderId}`, // 주문 상세 조회 API 주소
-        defaultValue: emptyOrderDetail, // 실패 시 반환할 기본값
-        mockDataFn: mockFn, // 개발기 환경에서 API 실패 시 호출할 목 데이터 생성 함수 (발표 끝나고 백엔드 서버가 폭파되면 이걸 대신 띄워야 함)
-    });
+    const fetch = fetchServer();
+    const response = await fetch<OrderDetailData>(`/orders/${orderId}`);
+    return response;
 }
 
 /**

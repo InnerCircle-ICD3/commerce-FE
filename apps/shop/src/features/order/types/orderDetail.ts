@@ -1,3 +1,6 @@
+import type { OrderStatus } from ".";
+import type { PaymentStatus } from "../../payment/types";
+
 // 주문 상세 페이지 관련 UI 타입들
 export interface Product {
     id: string;
@@ -22,12 +25,42 @@ export interface ShippingInfo {
 }
 
 export interface OrderDetailData {
-    orderId: string;
-    orderStatus: string;
-    orderDate: string;
-    products: Product[];
-    paymentItems: PaymentItem[];
-    shipping: ShippingInfo;
-    totalAmount: number;
-    discount: number;
+    orderNumber: string;
+    orderStatus: OrderStatus;
+    paymentNumber: string;
+    paymentStatus: PaymentStatus;
+    paymentMethod: string;
+    itemsSubTotal: number;
+    shippingFee: number;
+    finalTotalPrice: number;
+    items: {
+        orderItemId: string;
+        productSnapshotId: number;
+        name: string;
+        thumbnail: string;
+        unitPrice: number;
+        quantity: number;
+        itemSubTotal: number;
+    }[];
+    shippingInfo: {
+        recipientName: string;
+        recipientPhone: string;
+        zipCode: string;
+        address1: string;
+        address2: string;
+        deliveryMessage: string;
+    };
+    orderedAt: string;
+    paidAt: string;
+    cancellable: boolean;
+    refundRequested: boolean;
+    cancelReason: string;
+    canceledAt: string;
+    refundable: boolean;
+    refundReason: string;
+    refundRequestedAt: string;
+    refunded: boolean;
+    refunedAt: string;
+    reviewable: boolean;
+    reviewWritten: boolean;
 }

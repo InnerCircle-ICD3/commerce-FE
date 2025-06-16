@@ -1,13 +1,8 @@
 import { formatCurrency, formatNumber } from "@/src/shared/utils/formatUtils";
-
-interface PaymentItem {
-    id: string;
-    name: string;
-    price: number;
-}
+import type { OrderDetailData } from "../types/orderDetail";
 
 interface PaymentInfoProps {
-    items: PaymentItem[];
+    items: OrderDetailData["items"];
     discount: number;
     total: number;
 }
@@ -18,9 +13,9 @@ export const PaymentInfo = ({ items, discount, total }: PaymentInfoProps) => {
             <h2 className="text-xl font-bold mb-4">결제 정보</h2>
             <div className="flex flex-col gap-2">
                 {items.map(item => (
-                    <div key={item.id} className="flex justify-between">
+                    <div key={item.orderItemId} className="flex justify-between">
                         <p className="text-[#2e2f33] opacity-90">{item.name}</p>
-                        <p>{formatCurrency(item.price)}</p>
+                        <p>{formatCurrency(item.itemSubTotal)}</p>
                     </div>
                 ))}
                 <div className="flex justify-between">

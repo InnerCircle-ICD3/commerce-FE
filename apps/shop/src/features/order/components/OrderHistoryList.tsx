@@ -39,7 +39,7 @@ export const OrderHistoryList = () => {
             mainProductThumbnail: "https://via.placeholder.com/150",
             orderName: "주문 1",
             finalTotalPrice: 100000,
-            cancelable: true,
+            cancellable: true,
             refundable: true,
         },
         {
@@ -49,7 +49,7 @@ export const OrderHistoryList = () => {
             mainProductThumbnail: "https://via.placeholder.com/150",
             orderName: "주문 1",
             finalTotalPrice: 100000,
-            cancelable: true,
+            cancellable: true,
             refundable: true,
         },
     ];

@@ -9,7 +9,7 @@ import { useToast } from "@/src/shared/hooks/useToast";
 export const RefundModal = ({
     order,
     onClickClose,
-}: { order: { orderNumber: string; orderStatus: OrderStatus; cancelable: boolean; refundable: boolean }; onClickClose: () => void }) => {
+}: { order: { orderNumber: string; orderStatus: OrderStatus; cancellable: boolean; refundable: boolean }; onClickClose: () => void }) => {
     const { openModal, closeModal, Modal } = useModal();
     const { toast, ToastUI } = useToast();
     const { mutate: cancelPayment } = useCancelPayment({
@@ -39,7 +39,7 @@ export const RefundModal = ({
         switch (order.orderStatus) {
             case "WAITING_FOR_PAYMENT":
             case "PAID":
-                if (order.cancelable) cancelPayment(order.orderNumber);
+                if (order.cancellable) cancelPayment(order.orderNumber);
                 break;
             case "SHIPPED":
             case "DELIVERED":
