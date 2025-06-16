@@ -16,23 +16,22 @@ export default async function OrderDetailPage({ params }: OrderDetailPageParams)
     const orderId = resolvedParams.orderId;
 
     // API를 통해 주문 정보 가져오기
-
     const orderDetail = await getOrderDetail(orderId);
     if (!orderDetail.data) return null;
-    const { orderStatus, orderedAt, items, shippingInfo, finalTotalPrice } = orderDetail.data;
+    const { orderStatus, orderedAt, items, shippingInfo, finalTotalPrice, orderNumber } = orderDetail.data;
 
     return (
         <div className="w-full min-h-screen flex flex-col">
             <main className="flex-1 w-full max-w-7xl mx-auto px-6 py-16">
                 <OrderHeader title="주문 상세" />
-                <OrderInfo orderId={orderId} orderDate={orderedAt} orderStatus={orderStatus} />
+                <OrderInfo orderNumber={orderNumber} orderedAt={orderedAt} orderStatus={orderStatus} />
                 <ShippingInfo
                     name={shippingInfo.recipientName}
                     address={`${shippingInfo.address1} ${shippingInfo.address2}`}
                     phone={shippingInfo.recipientPhone}
                     memo={shippingInfo.deliveryMessage}
                 />
-                <OrderProduct products={items} />
+                <OrderProduct products={items} reviewable={orderDetail.data.reviewable} />
                 <PaymentInfo items={items} discount={0} total={finalTotalPrice} />
             </main>
         </div>

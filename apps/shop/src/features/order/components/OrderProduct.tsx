@@ -5,9 +5,10 @@ import type { OrderDetailData } from "../types/orderDetail";
 
 interface OrderProductProps {
     products: OrderDetailData["items"];
+    reviewable: boolean;
 }
 
-export const OrderProduct = ({ products }: OrderProductProps) => {
+export const OrderProduct = ({ products, reviewable }: OrderProductProps) => {
     return (
         <div className="mb-10">
             <h2 className="text-xl font-bold mb-4">주문 상품</h2>
@@ -47,9 +48,11 @@ export const OrderProduct = ({ products }: OrderProductProps) => {
                 <button type="button" className="flex-1 py-3 border border-black rounded-lg font-semibold">
                     배송 조회
                 </button>
-                <button type="button" className="flex-1 py-3 bg-[#257a57] text-white rounded-lg font-semibold">
-                    리뷰 작성
-                </button>
+                {reviewable && (
+                    <button type="button" className="flex-1 py-3 bg-[#257a57] text-white rounded-lg font-semibold">
+                        리뷰 작성
+                    </button>
+                )}
             </div>
         </div>
     );
