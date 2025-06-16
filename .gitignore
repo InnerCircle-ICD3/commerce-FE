@@ -8,3 +8,5 @@ node_modules
 /.windsurf
 apps/admin/.env
 /.cursor
+/.windsurf
+/.windsurf/rules

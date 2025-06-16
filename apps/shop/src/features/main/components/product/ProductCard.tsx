@@ -1,4 +1,6 @@
-import { Fragment } from "react";
+'use client';
+
+import { Fragment, useState } from "react";
 import { ProductFeature } from "./ProductFeature";
 import AddToCart from "@/src/features/product/components/AddToCart";
 import { formatCurrency } from "@/src/shared/utils/formatUtils";
@@ -27,19 +29,33 @@ export interface ProductCardProps {
     stockQuantity: number;
 }
 
+// 기본 대체 이미지 URL
+const fallbackImageUrl = "https://cdn.builder.io/api/v1/image/assets/TEMP/4c7bfa7b14aca451340208bfc07390f055298c80";
+
 export const ProductCard = ({ productId, badges, image, features, name, description, price, unit, stockQuantity }: ProductCardProps) => {
+    const [imgSrc, setImgSrc] = useState(image);
+    
+    // 이미지 로드 오류 처리
+    const handleImageError = () => {
+        setImgSrc(fallbackImageUrl);
+    };
     return (
         <article className="w-full h-full pt-4 pb-6 px-4 bg-white rounded-xl border border-gray-200/10 flex flex-col justify-start items-start gap-4">
             <div className="self-stretch flex-1 flex flex-col justify-between items-center gap-3">
                 <div className="self-stretch flex flex-col justify-start items-start gap-3">
                     {/* 이미지 영역 */}
                     <div className="self-stretch flex items-center justify-center overflow-hidden aspect-[136/117]">
-                        <img src={image} alt={name} className="w-full h-full object-cover" />
+                        <img 
+                            src={imgSrc} 
+                            alt={name} 
+                            className="w-full h-full object-cover" 
+                            onError={handleImageError}
+                        />
                     </div>
 
                     {/* 특징 영역 */}
                     <div className="self-stretch flex justify-center items-center gap-4">
-                        {features.map((feature, index) => {
+                        {(features || []).map((feature, index) => {
                             const featureKey = `feature-${index}-${feature.value.replace(/\s+/g, "-")}`;
                             return (
                                 <Fragment key={featureKey}>
