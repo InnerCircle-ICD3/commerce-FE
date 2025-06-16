@@ -23,12 +23,12 @@ const ChatNotificationContext = createContext<ChatNotificationContextType | null
 
 // Provider 컴포넌트
 export function ChatNotificationProvider({ children }: { children: ReactNode }) {
-    console.log("ChatNotificationProvider 마운트됨");
+    // console.log("ChatNotificationProvider 마운트됨");
 
     try {
-        console.log("useChatNotifications 호출 시도...");
+        // console.log("useChatNotifications 호출 시도...");
         const chatNotifications = useChatNotifications();
-        console.log("useChatNotifications 호출 성공:", chatNotifications);
+        // console.log("useChatNotifications 호출 성공:", chatNotifications);
 
         // 컨텍스트 값을 메모이제이션하여 불필요한 리렌더링 방지
         const contextValue = useMemo(() => chatNotifications, [chatNotifications]);
