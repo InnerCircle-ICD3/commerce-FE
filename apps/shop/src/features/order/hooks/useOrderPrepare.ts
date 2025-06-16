@@ -8,5 +8,6 @@ export const useOrderPrepare = (props: UseOrderPrepareProps) => {
     return useQuery({
         queryKey: ["orderPrepare", { cartItemIds: props.cartItemIds }],
         queryFn: () => orderPrepare(props.cartItemIds),
+        throwOnError: true,
     });
 };

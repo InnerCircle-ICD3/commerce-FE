@@ -1,6 +1,6 @@
 import OrderCheckoutPage from "@/src/features/order/components/OrderCheckoutPage";
-import Loading from "@/src/shared/components/shared/Loading";
-import { Suspense } from "react";
+import ErrorComponent from "@/src/shared/components/shared/ErrorComponent";
+import { ErrorBoundary } from "next/dist/client/components/error-boundary";
 
 export const metadata = {
     title: "주문 결제",
@@ -9,8 +9,8 @@ export const metadata = {
 
 export default function OrderCheckout() {
     return (
-        <Suspense fallback={<Loading />}>
+        <ErrorBoundary errorComponent={ErrorComponent}>
             <OrderCheckoutPage />
-        </Suspense>
+        </ErrorBoundary>
     );
 }

@@ -17,13 +17,7 @@ export default function CartPageClient() {
         <ErrorBoundary>
             <div className="flex flex-col lg:flex-row justify-center items-center max-w-screen-xl mx-auto px-2 lg:px-8">
                 <CartSectionLayout>
-                    {isLoading ? (
-                        <Loading />
-                    ) : isError ? (
-                        <ErrorComponent message={error?.message || "장바구니 불러오기 실패"} />
-                    ) : (
-                        <CartProduct cartItems={items} />
-                    )}
+                    {isLoading ? <Loading /> : isError ? <ErrorComponent error={error} /> : <CartProduct cartItems={items} />}
                 </CartSectionLayout>
                 <CartSectionLayout>
                     <Summary cartItems={inStockItems} />

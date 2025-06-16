@@ -11,6 +11,7 @@ export const useCreatePayment = () => {
                 router.push(`/orders/${data.orderNumber}`);
             }
         },
+        retry: 3,
     });
 
     return { mutate, error };

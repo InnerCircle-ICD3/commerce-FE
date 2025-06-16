@@ -27,7 +27,7 @@ export default function MyReviewsPage() {
     }
 
     if (error) {
-        return <ErrorComponent message={error?.message || "리뷰 불러오기 실패"} />;
+        return <ErrorComponent error={error} />;
     }
     const reviews = data?.content || [];
     const totalPages = data?.totalPages || 0;
