@@ -14,26 +14,13 @@ import type { ReviewResponse } from "@/src/shared/entities/review/types";
  */
 const emptyProduct: ProductType = {
     id: 0,
-    title: "제품 정보를 찾을 수 없습니다",
-    description: "요청하신 제품 정보를 찾을 수 없습니다.",
+    name: "제품 정보 없음",
     price: 0,
-    pricePerUnit: "",
-    images: [],
-    tags: [],
-    badges: [],
-    coffeeSize: "",
-    aromaFeatures: [],
-    bodyLevel: 0,
-    bitterLevel: 0,
-    acidLevel: 0,
-    roastLevel: 0,
+    detailImage: "",
+    intensity: 0,
     quantity: 0,
-    limitDescription: "",
-    additionalDescription: "",
-    productDetails: {
-        detailText: "",
-    },
-    stockQuantity: 0,
+    thumbnail: "",
+    cupSize: "없음",
 };
 
 /**

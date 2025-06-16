@@ -8,57 +8,13 @@ export function getMockProduct(id?: string): ProductType {
     // id를 활용하여 다른 제품 반환 로직을 추가할 수 있음
     return {
         id: 1,
-        title: "스페셜 리저브 하와이 코나",
-        description: "이국적인 열대 과일향과 고소한 견과류향이 어우러진 싱글 오리진 커피",
+        name: "스페셜 리저브 하와이 코나",
         price: 35000,
-        pricePerUnit: "1 슬리브 (10 캡슐) / 캡슐 1개당 가격 : ₩ 3,500",
-        images: [
-            "https://cdn.builder.io/api/v1/image/assets/TEMP/e6efa1b8d524b91891b772502f42519490e0b876",
-            "https://cdn.builder.io/api/v1/image/assets/TEMP/4c7bfa7b14aca451340208bfc07390f055298c80",
-        ],
-        tags: ["버츄오", "시즌 한정", "에스프레소"],
-        badges: [
-            {
-                text: "더블 에스프레소",
-                bgColor: "rgba(55, 56, 60, 0.16)",
-            },
-            {
-                text: "신제품",
-                bgColor: "#ffc000",
-            },
-            {
-                text: "시즌 한정",
-                bgColor: "#7030a0",
-                textColor: "#ffffff",
-            },
-        ],
-        coffeeSize: "80ml",
-        aromaFeatures: ["과일향\n이그조틱", "견과류향\n트로피컬 ", "곡물향"],
-        bodyLevel: 3,
-        bitterLevel: 2,
-        acidLevel: 2,
-        roastLevel: 2,
-        stockQuantity: 50,
-        limitDescription: "*스페셜 리저브 하와이 코나는 한정 수량 준비되어 매진될 수 있습니다.",
-        additionalDescription: "*재활용 알루미늄 85% 포함된 캡슐 사용",
-        productDetails: {
-            detailText: `
-                ○ 제품명: 스페셜 리저브 하와이 코나
-                ○ 식품유형: 커피
-                ○ 원산지: 스위스
-                ○ 품질유지기한: 제품 측면 별도 표기(읽는법: 일.월.년순)
-                ○ 내용량: 10개입(102g)
-                ○ 원재료명: 커피원두 100%
-                ○ 반품 및 교환: 801 전용 클럽 080-734-1111 (매일, 9시~18시/ 수신자 부담)
-                ○ 보관방법: 직사광선을 피하여 건조하고 서늘한 실온에 보관
-                ○ 포장재질: 바디-알루미늄/코팅-폴리프로필렌(내면)
-
-                ※ 재활용한 알루미늄 85% 포함된 캡슐 사용
-                ※ 수입 식품 안전 관리 특별법에 의한 수입신고를 필함
-                ※ 본 제품은 공정거래위원회 고시 소비자 분쟁 해결 기준에 의거, 교환 또는 보상 받으실 수 있습니다.
-                ※ 부정, 불량식품 신고는 국번없이 1399
-            `,
-        },
+        detailImage: "https://cdn.builder.io/api/v1/image/assets/TEMP/4c7bfa7b14aca451340208bfc07390f055298c80",
+        intensity: 4,
+        quantity: 100,
+        thumbnail: "https://cdn.builder.io/api/v1/image/assets/TEMP/4c7bfa7b14aca451340208bfc07390f055298c80",
+        cupSize: "미디엄",
     };
 }
 
@@ -113,6 +69,7 @@ export function getMockReviews(page = 0, size = 20): ReviewResponse {
 
 export type ReviewStats = {
     averageRating: number;
+    totalCount?: number;
     ratingDistribution: {
         oneStarCount: number;
         twoStarsCount: number;

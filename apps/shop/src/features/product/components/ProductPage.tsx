@@ -27,7 +27,7 @@ export function ProductPage({ product, reviews, reviewStats }: ProductPageProps)
     const breadcrumbItems = [
         { label: "버츄오", href: "/category/virtuo" },
         { label: "New 시즌 한정 커피", href: "/category/seasonal" },
-        { label: product.title, isCurrent: true },
+        { label: product.name, isCurrent: true },
     ];
 
     return (
@@ -37,13 +37,13 @@ export function ProductPage({ product, reviews, reviewStats }: ProductPageProps)
                     <Breadcrumbs items={breadcrumbItems} />
 
                     <section className="py-10 flex flex-wrap lg:flex-nowrap gap-12 mb-16 justify-center">
-                        <ProductImage images={product.images} title={product.title} />
+                        <ProductImage thumbnail={product.thumbnail} title={product.name} />
                         <ProductInfo product={product} />
                     </section>
                 </div>
 
                 <ProductDetails product={product} />
-                <ProductVideo />
+                <ProductVideo detailImage={product.detailImage} />
                 <ProductReviews productId={product.id.toString()} reviews={reviews} reviewStats={reviewStats} />
                 {/* <RecommendedProducts products={recommendedProducts} /> */}
             </main>

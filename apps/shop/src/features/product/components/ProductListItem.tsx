@@ -8,10 +8,10 @@ export const ProductListItem = ({ product }: ProductListItemProps) => {
     return (
         <div className="flex">
             <div>
-                <Image src={product.images[0]} alt={product.title} width={100} height={100} />
+                <Image src={product.detailImage} alt={product.name} width={100} height={100} />
             </div>
             <div>
-                <p>{product.title}</p>
+                <p>{product.name}</p>
                 <p>₩ {product.price.toLocaleString()}</p>
             </div>
         </div>

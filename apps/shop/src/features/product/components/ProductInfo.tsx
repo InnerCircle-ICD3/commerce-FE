@@ -11,7 +11,7 @@ export function ProductInfo({ product }: ProductInfoProps) {
     return (
         <div className="flex flex-col gap-8 w-full max-w-xl">
             {/* 뱃지 영역 */}
-            <div className="flex flex-wrap gap-2">
+            {/* <div className="flex flex-wrap gap-2">
                 {product.badges.map((badge, index) => (
                     <div
                         key={`${badge.text}-${index}`}
@@ -24,12 +24,12 @@ export function ProductInfo({ product }: ProductInfoProps) {
                         {badge.text}
                     </div>
                 ))}
-            </div>
+            </div> */}
 
             {/* 제품 제목 및 설명 */}
             <div className="space-y-2">
-                <h1 className="text-3xl font-bold leading-9 tracking-tight">{product.title}</h1>
-                <p className="text-base text-gray-900">{product.description}</p>
+                <h1 className="text-3xl font-bold leading-9 tracking-tight">{product.name}</h1>
+                {/* <p className="text-base text-gray-900">{product.description}</p> */}
             </div>
 
             {/* 가격 정보 */}
@@ -37,7 +37,7 @@ export function ProductInfo({ product }: ProductInfoProps) {
                 <div className="flex items-center">
                     <span className="text-2xl font-bold text-emerald-700">{formatCurrency(product.price)}</span>
                 </div>
-                {product.pricePerUnit && <p className="text-sm text-gray-600">{product.pricePerUnit}</p>}
+                {product.price && <p className="text-sm text-gray-600">{product.price}</p>}
             </div>
 
             {/* 수량 선택 */}

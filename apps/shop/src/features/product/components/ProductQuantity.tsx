@@ -75,7 +75,7 @@ export default function ProductQuantity({ product }: { product: ProductType }) {
                 <span className="text-sm text-gray-600">빠른 선택</span>
                 <div className="flex flex-wrap gap-2">
                     {[10, 20, 30, 40, 50, 60]
-                        .filter(qty => qty <= product.stockQuantity)
+                        .filter(qty => qty <= product.quantity)
                         .map(qty => (
                             <button
                                 key={`qty-${qty}`}
@@ -94,15 +94,15 @@ export default function ProductQuantity({ product }: { product: ProductType }) {
             </div>
 
             {/* 추가 설명 */}
-            {(product.limitDescription || product.additionalDescription) && (
+            {/* {(product.limitDescription || product.additionalDescription) && (
                 <div className="text-xs text-gray-400 space-y-1">
                     {product.limitDescription && <p>{product.limitDescription}</p>}
                     {product.additionalDescription && <p>{product.additionalDescription}</p>}
                 </div>
-            )}
+            )} */}
 
             {/* 장바구니 버튼 */}
-            <AddToCart productId={product.id} title={product.title} stockQuantity={product.stockQuantity} quantity={quantity} />
+            <AddToCart productId={product.id} title={product.name} stockQuantity={product.quantity} quantity={quantity} />
         </div>
     );
 }

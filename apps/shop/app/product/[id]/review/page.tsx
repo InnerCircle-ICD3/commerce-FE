@@ -18,7 +18,7 @@ export default async function ReviewsPage({ params }: ReviewsPageProps) {
 
     return (
         <ProductReviewsPage
-            productTitle={product.title}
+            productTitle={product.name}
             reviews={reviewsData.content}
             totalElements={reviewsData.totalElements || 0}
             totalPages={reviewsData.totalPages || 0}

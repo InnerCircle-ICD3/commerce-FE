@@ -3,28 +3,13 @@ export type { ReviewType } from "@/src/shared/entities/review/types";
 
 export interface ProductType {
     id: number;
-    title: string;
-    description: string;
+    name: string;
     price: number;
-    pricePerUnit?: string;
-    images: string[];
-    tags: string[];
-    badges: Array<{
-        text: string;
-        bgColor: string;
-        textColor?: string;
-    }>;
-    coffeeSize?: string;
-    aromaFeatures?: string[];
-    bodyLevel?: number;
-    bitterLevel?: number;
-    acidLevel?: number;
-    roastLevel?: number;
-    quantity?: number;
-    limitDescription?: string;
-    additionalDescription?: string;
-    productDetails?: ProductDetails;
-    stockQuantity: number;
+    detailImage: string;
+    intensity: number;
+    quantity: number;
+    thumbnail: string;
+    cupSize: string;
 }
 
 export interface ProductDetails {

@@ -1,6 +1,3 @@
-"use client";
-
-import { useState } from "react";
 import type { ProductType } from "@/src/features/product/types";
 import { CupSizeCircleIcon } from "@/src/shared/components/shared/Icon";
 
@@ -9,29 +6,27 @@ interface ProductDetailsProps {
 }
 
 export function ProductDetails({ product }: ProductDetailsProps) {
-    const [isExpanded, setIsExpanded] = useState(false);
-
-    const getRatingBar = (level: number, maxLevel = 5) => {
-        return (
-            <div className="flex items-center gap-4">
-                <div className="flex w-96 h-1">
-                    {Array.from({ length: maxLevel }).map((_, i) => (
-                        <div
-                            key={`rating-bar-${level}-${i}-${Math.random()}`}
-                            className={`w-1/5 h-full ${i < level ? "bg-black" : "bg-[#f7f7f8]"}`}
-                        />
-                    ))}
-                </div>
-            </div>
-        );
-    };
+    // const getRatingBar = (level: number, maxLevel = 5) => {
+    //     return (
+    //         <div className="flex items-center gap-4">
+    //             <div className="flex w-96 h-1">
+    //                 {Array.from({ length: maxLevel }).map((_, i) => (
+    //                     <div
+    //                         key={`rating-bar-${level}-${i}-${Math.random()}`}
+    //                         className={`w-1/5 h-full ${i < level ? "bg-black" : "bg-[#f7f7f8]"}`}
+    //                     />
+    //                 ))}
+    //             </div>
+    //         </div>
+    //     );
+    // };
 
     return (
         <section className="bg-[#fafafa] py-16">
             <div className="max-w-6xl mx-auto">
                 <div className="bg-white rounded-xl p-12">
                     <div className="space-y-4">
-                        <h2 className="text-2xl font-bold text-black">{product.title}</h2>
+                        <h2 className="text-2xl font-bold text-black">{product.name}</h2>
                         <p className="text-sm text-[#37383c] opacity-60">*캡슐에는 그림에 표시된 원료가 들어있지 않습니다.</p>
                     </div>
 
@@ -44,14 +39,14 @@ export function ProductDetails({ product }: ProductDetailsProps) {
                                     <CupSizeCircleIcon size="md" />
                                 </div>
                                 <div>
-                                    <p className="text-sm">{product.coffeeSize}</p>
+                                    <p className="text-sm">{product.cupSize}</p>
                                     <p className="text-sm">더블 에스프레소</p>
                                 </div>
                             </div>
                         </div>
 
                         {/* 아로마 특징 섹션 */}
-                        <div>
+                        {/* <div>
                             <h3 className="text-xl font-bold mb-4">주요 아로마 특징</h3>
                             <div className="flex gap-6">
                                 {product.aromaFeatures?.map((feature, index) => (
@@ -60,11 +55,11 @@ export function ProductDetails({ product }: ProductDetailsProps) {
                                     </p>
                                 ))}
                             </div>
-                        </div>
+                        </div> */}
                     </div>
 
                     {/* 커피 정보 섹션 */}
-                    <div className="mt-8">
+                    {/* <div className="mt-8">
                         <h3 className="text-xl font-bold mb-4">커피 정보</h3>
                         <div className="grid grid-cols-2 gap-x-8 gap-y-4">
                             <div>
@@ -84,10 +79,10 @@ export function ProductDetails({ product }: ProductDetailsProps) {
                                 {getRatingBar(product.roastLevel || 0)}
                             </div>
                         </div>
-                    </div>
+                    </div> */}
 
                     {/* 제품 상세정보 섹션 - isExpanded 상태에 따라 표시 */}
-                    {isExpanded && (
+                    {/* {isExpanded && (
                         <div className="mt-10">
                             <h3 className="text-xl font-bold mb-4">제품 상세정보</h3>
                             <div className="text-sm leading-relaxed">
@@ -96,10 +91,10 @@ export function ProductDetails({ product }: ProductDetailsProps) {
                                 </div>
                             </div>
                         </div>
-                    )}
+                    )} */}
 
                     {/* 추가 상세정보 버튼 */}
-                    <div className="mt-10 flex justify-center">
+                    {/* <div className="mt-10 flex justify-center">
                         <button
                             type="button"
                             onClick={() => setIsExpanded(!isExpanded)}
@@ -118,7 +113,7 @@ export function ProductDetails({ product }: ProductDetailsProps) {
                                 <path d="M8 10L4 6H12L8 10Z" fill="currentColor" />
                             </svg>
                         </button>
-                    </div>
+                    </div> */}
                 </div>
             </div>
         </section>
