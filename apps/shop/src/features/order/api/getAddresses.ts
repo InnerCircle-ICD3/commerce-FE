@@ -1,9 +1,12 @@
+import { fetchClient } from "@/src/shared/fetcher";
 import type { AddressType } from "../types";
 
 export const getAddresses = async (): Promise<{
-    data: AddressType[];
+    data: AddressType[] | null;
+    error: Error | null;
 }> => {
-    const response = await fetch("http://localhost:3000/api/users/addresses", {
+    const fetch = fetchClient();
+    const response = await fetch<AddressType[]>("/api/users/addresses", {
         method: "GET",
         headers: {
             "Content-Type": "application/json",
@@ -11,5 +14,5 @@ export const getAddresses = async (): Promise<{
         },
     });
 
-    return response.json();
+    return response;
 };

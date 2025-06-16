@@ -41,12 +41,12 @@ const createOrder = async (params: CreateOrderParams): Promise<{ data: CreateOrd
     console.log(params);
     try {
         const validatedParams = createOrderSchema.parse(params);
-        // const fetch = fetchClient();
-        const response = await fetch("http://localhost:3000/api/orders", {
+        const fetch = fetchClient();
+        const response = await fetch<CreateOrderResponse>("/api/orders", {
             method: "POST",
             body: JSON.stringify(validatedParams),
         });
-        return response.json();
+        return response;
     } catch (e) {
         if (e instanceof z.ZodError) {
             throw new Error(e.errors[0].message);

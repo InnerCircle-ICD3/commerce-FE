@@ -1,3 +1,4 @@
+import { fetchClient } from "@/src/shared/fetcher";
 import type { OrderListItem } from "../types/orderListItem";
 
 type GetOrderListResponse = {
@@ -8,9 +9,8 @@ type GetOrderListResponse = {
     totalElements: number;
 };
 
-export const getOrderList = async (page?: number): Promise<{ data: GetOrderListResponse; error: Error | null }> => {
-    // const fetch = fetchClient();
-    const response = await fetch(`http://localhost:3000/api/orders?page=${page}`);
-    const data = await response.json();
-    return data;
+export const getOrderList = async (page?: number): Promise<{ data: GetOrderListResponse | null; error: Error | null }> => {
+    const fetch = fetchClient();
+    const response = await fetch<GetOrderListResponse>(`/api/orders?page=${page}`);
+    return response;
 };

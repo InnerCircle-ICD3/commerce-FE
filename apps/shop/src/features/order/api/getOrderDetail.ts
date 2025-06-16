@@ -1,5 +1,5 @@
 import { fetchClient } from "@/src/shared/fetcher";
-import type { AddressType, OrderType } from "../types";
+import type { OrderType } from "../types";
 
 export const getOrderDetail = async (orderId: string) => {
     const fetch = fetchClient();
