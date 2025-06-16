@@ -31,29 +31,6 @@ export const OrderHistoryList = () => {
     const { data: orders, totalPages } = useOrderList(page);
     const [cancelOrderData, setCancelOrderData] = useState<OrderListItem | null>(null);
 
-    const mockOrders: OrderListItem[] = [
-        {
-            orderNumber: "1234567890",
-            orderStatus: "WAITING_FOR_PAYMENT",
-            orderedAt: "2025-01-01",
-            mainProductThumbnail: "https://via.placeholder.com/150",
-            orderName: "주문 1",
-            finalTotalPrice: 100000,
-            cancellable: true,
-            refundable: true,
-        },
-        {
-            orderNumber: "1234567891",
-            orderStatus: "SHIPPED",
-            orderedAt: "2025-01-01",
-            mainProductThumbnail: "https://via.placeholder.com/150",
-            orderName: "주문 1",
-            finalTotalPrice: 100000,
-            cancellable: true,
-            refundable: true,
-        },
-    ];
-
     // 주문 상태별 버튼 구성 정의
     const getButtonsByStatus = (order: OrderListItem): ButtonConfig[] => {
         switch (order.orderStatus) {
@@ -81,7 +58,7 @@ export const OrderHistoryList = () => {
 
     return (
         <div className="flex flex-col w-full gap-4">
-            {mockOrders?.map(order => (
+            {orders?.map(order => (
                 <div key={order.orderNumber} className="w-full p-6 border border-gray-300/30 rounded-xl">
                     <div className="flex justify-between items-center mb-4">
                         <div className="flex items-center gap-2">

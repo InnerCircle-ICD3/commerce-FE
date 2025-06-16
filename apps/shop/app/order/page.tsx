@@ -1,4 +1,6 @@
 import { OrderHistoryPage } from "@/src/features/order/components/OrderHistoryPage";
+import ErrorComponent from "@/src/shared/components/shared/ErrorComponent";
+import { ErrorBoundary } from "next/dist/client/components/error-boundary";
 
 export const metadata = {
     title: "주문 내역",
@@ -6,5 +8,9 @@ export const metadata = {
 };
 
 export default async function OrderPage() {
-    return <OrderHistoryPage />;
+    return (
+        <ErrorBoundary errorComponent={ErrorComponent}>
+            <OrderHistoryPage />
+        </ErrorBoundary>
+    );
 }

@@ -8,6 +8,7 @@ export const useOrderList = (page?: number) => {
     const { data: orderListData } = useQuery({
         queryKey: ["orderList", page],
         queryFn: () => getOrderList(page),
+        throwOnError: true,
     });
     useEffect(() => {
         const orderList = orderListData?.data?.content;
