@@ -5,6 +5,7 @@ import { Button } from "@/src/shared/components/shared/button";
 import { useCancelPayment } from "../../payment/hooks/useCancelPayment";
 import { useRefundPayment } from "../../payment/hooks/useRefundPayment";
 import { useToast } from "@/src/shared/hooks/useToast";
+import { useCancelOrder } from "../hooks/useCancelOrder";
 
 export const RefundModal = ({
     order,
@@ -28,6 +29,16 @@ export const RefundModal = ({
         },
     });
 
+    const { mutate: cancelOrder } = useCancelOrder({
+        onSuccess: () => {
+            onClickClose();
+            closeModal();
+        },
+        onError: () => {
+            toast({ message: "주문 취소에 실패했습니다." });
+        },
+    });
+
     useEffect(() => {
         if (order) {
             openModal();
@@ -38,6 +49,8 @@ export const RefundModal = ({
         e.preventDefault();
         switch (order.orderStatus) {
             case "WAITING_FOR_PAYMENT":
+                if (order.cancellable) cancelOrder(order.orderNumber);
+                break;
             case "PAID":
                 if (order.cancellable) cancelPayment(order.orderNumber);
                 break;
@@ -56,9 +69,9 @@ export const RefundModal = ({
     };
 
     return (
-        <Modal title="반품 신청">
+        <Modal title={order.orderStatus === "WAITING_FOR_PAYMENT" ? "주문 취소" : "반품 신청"}>
             <form onSubmit={handleSubmit}>
-                <p className="text-center mt-4">반품 신청을 하시겠습니까?</p>
+                <p className="text-center mt-4">{order.orderStatus === "WAITING_FOR_PAYMENT" ? "주문 취소" : "반품 신청"}을 하시겠습니까?</p>
                 <div className="flex gap-2 mt-10">
                     <Button variant="default" className="flex-1" type="submit">
                         반품 신청
