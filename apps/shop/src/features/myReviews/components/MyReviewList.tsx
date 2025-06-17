@@ -32,6 +32,7 @@ export default function MyReviewList({ reviews }: MyReviewListProps) {
         if (deletingReviewId === null) return;
 
         deleteReview.mutate(deletingReviewId);
+        setDeletingReviewId(null);
     }, [deletingReviewId]);
 
     const deleteReview = useMutation({
@@ -96,7 +97,7 @@ export default function MyReviewList({ reviews }: MyReviewListProps) {
                         title: editingReview.product.productName,
                         imageUrl: editingReview.product.productThumbnail || "",
                     }}
-                    isOpen={!!editingReview}
+                    isOpen={editingReview !== null}
                     onClickClose={() => setEditingReview(null)}
                 />
             )}

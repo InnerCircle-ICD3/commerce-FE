@@ -39,17 +39,33 @@ export default function CreateReviewModal({ isEdit = false, reviewInfo, product,
 
     const handleClose = () => {
         setIsAlertOpen(true);
-        // onClickClose();
     };
 
     const handleSubmit = () => {
         if (content.length === 0) return;
 
-        if (isEdit) {
-            editReview();
-        }
+        isEdit ? editReview() : createReview();
+    };
 
-        onClickClose();
+    const createReview = () => {
+        fetch("/reviews", {
+            method: "POST",
+            headers: { "Content-Type": "application/json" },
+            body: JSON.stringify({
+                productId: product.productId,
+                rating,
+                content,
+            }),
+        })
+            .then(() => {
+                onClickClose();
+            })
+            .catch(error => {
+                console.error("리뷰 작성 실패:", error);
+                toast({
+                    message: "리뷰 작성 중 오류가 발생했습니다.",
+                });
+            });
     };
 
     const editReview = () => {
