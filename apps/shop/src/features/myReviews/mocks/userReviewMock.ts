@@ -8,6 +8,10 @@ export function getMockUserReviews(page = 0, size = 10): UserReviewResponse {
         content: [
             {
                 reviewId: 1,
+                user: {
+                    userId: 1,
+                    nickname: "커피사랑",
+                },
                 product: {
                     productId: 1,
                     productName: "스페셜 리저브 하와이 코나",
@@ -25,6 +29,10 @@ export function getMockUserReviews(page = 0, size = 10): UserReviewResponse {
             },
             {
                 reviewId: 2,
+                user: {
+                    userId: 1,
+                    nickname: "커피사랑",
+                },
                 product: {
                     productId: 2,
                     productName: "에어로치노4",
@@ -36,6 +44,10 @@ export function getMockUserReviews(page = 0, size = 10): UserReviewResponse {
             },
             {
                 reviewId: 3,
+                user: {
+                    userId: 1,
+                    nickname: "커피사랑",
+                },
                 product: {
                     productId: 3,
                     productName: "버츄오 머그 컵 세트 스몰",
@@ -53,6 +65,10 @@ export function getMockUserReviews(page = 0, size = 10): UserReviewResponse {
             },
             {
                 reviewId: 4,
+                user: {
+                    userId: 1,
+                    nickname: "커피사랑",
+                },
                 product: {
                     productId: 4,
                     productName: "바리스타 카푸치노 컵 세트",
@@ -64,6 +80,10 @@ export function getMockUserReviews(page = 0, size = 10): UserReviewResponse {
             },
             {
                 reviewId: 5,
+                user: {
+                    userId: 1,
+                    nickname: "커피사랑",
+                },
                 product: {
                     productId: 5,
                     productName: "라이브스톡 브라질 원두",

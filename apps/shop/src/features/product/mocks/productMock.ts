@@ -138,7 +138,10 @@ const PRODUCT_REVIEWS: Record<number, ReviewType[]> = {
         // 에스프레소
         {
             reviewId: 1,
-            nickname: "에스프레소매니아",
+            user: {
+                userId: 1,
+                nickname: "에스프레소매니아",
+            },
             rating: 5,
             createdAt: "2023-12-15",
             content: "진짜 진한 에스프레소! 크레마가 훌륭해요.",
@@ -150,14 +153,20 @@ const PRODUCT_REVIEWS: Record<number, ReviewType[]> = {
         },
         {
             reviewId: 2,
-            nickname: "아침커피",
+            user: {
+                userId: 2,
+                nickname: "아침커피",
+            },
             rating: 4,
             createdAt: "2023-12-10",
             content: "아침에 마시기 좋아요. 진한 맛이 하루를 시작하기에 완벽!",
         },
         {
             reviewId: 3,
-            nickname: "커피초보",
+            user: {
+                userId: 3,
+                nickname: "커피초보",
+            },
             rating: 3,
             createdAt: "2023-12-05",
             content: "좀 쓴 편이지만 진짜 에스프레소 맛이네요.",
@@ -167,14 +176,20 @@ const PRODUCT_REVIEWS: Record<number, ReviewType[]> = {
         // 아메리카노
         {
             reviewId: 4,
-            nickname: "아메리카노러버",
+            user: {
+                userId: 4,
+                nickname: "아메리카노러버",
+            },
             rating: 5,
             createdAt: "2023-12-14",
             content: "깔끔하고 부드러운 아메리카노. 매일 마셔도 질리지 않아요!",
         },
         {
             reviewId: 5,
-            nickname: "직장인김씨",
+            user: {
+                userId: 5,
+                nickname: "직장인김씨",
+            },
             rating: 4,
             createdAt: "2023-12-12",
             content: "사무실에서 마시기 딱 좋아요. 적당한 쓴맛이 좋습니다.",
@@ -186,7 +201,10 @@ const PRODUCT_REVIEWS: Record<number, ReviewType[]> = {
         },
         {
             reviewId: 6,
-            nickname: "커피중독자",
+            user: {
+                userId: 6,
+                nickname: "커피중독자",
+            },
             rating: 5,
             createdAt: "2023-12-08",
             content: "하루에 3잔씩 마셔도 부담없어요. 최고!",
@@ -196,21 +214,30 @@ const PRODUCT_REVIEWS: Record<number, ReviewType[]> = {
         // 카페라떼
         {
             reviewId: 7,
-            nickname: "라떼사랑",
+            user: {
+                userId: 7,
+                nickname: "라떼사랑",
+            },
             rating: 5,
             createdAt: "2023-12-13",
             content: "부드럽고 크리미한 맛이 일품! 우유와 커피의 조화가 완벽해요.",
         },
         {
             reviewId: 8,
-            nickname: "달콤한하루",
+            user: {
+                userId: 8,
+                nickname: "달콤한하루",
+            },
             rating: 4,
             createdAt: "2023-12-11",
             content: "달달하면서도 커피 맛이 살아있어요. 디저트랑 같이 마시면 더 좋아요!",
         },
         {
             reviewId: 9,
-            nickname: "카페사장",
+            user: {
+                userId: 9,
+                nickname: "카페사장",
+            },
             rating: 4,
             createdAt: "2023-12-07",
             content: "카페에서 파는 라떼랑 비슷한 맛이에요. 집에서도 카페 기분!",
@@ -220,21 +247,30 @@ const PRODUCT_REVIEWS: Record<number, ReviewType[]> = {
         // 카푸치노
         {
             reviewId: 10,
-            nickname: "카푸치노킹",
+            user: {
+                userId: 10,
+                nickname: "카푸치노킹",
+            },
             rating: 5,
             createdAt: "2023-12-12",
             content: "거품이 정말 부드러워요! 카푸치노 특유의 맛이 살아있습니다.",
         },
         {
             reviewId: 11,
-            nickname: "이탈리아여행자",
+            user: {
+                userId: 11,
+                nickname: "이탈리아여행자",
+            },
             rating: 4,
             createdAt: "2023-12-09",
             content: "이탈리아에서 마신 카푸치노가 생각나네요. 향이 정말 좋아요!",
         },
         {
             reviewId: 12,
-            nickname: "폼아트러버",
+            user: {
+                userId: 12,
+                nickname: "폼아트러버",
+            },
             rating: 5,
             createdAt: "2023-12-06",
             content: "거품으로 라떼아트 연습하기 좋아요. 맛도 훌륭하고!",
@@ -244,21 +280,30 @@ const PRODUCT_REVIEWS: Record<number, ReviewType[]> = {
         // 마키아토
         {
             reviewId: 13,
-            nickname: "마키아토전문가",
+            user: {
+                userId: 13,
+                nickname: "마키아토전문가",
+            },
             rating: 5,
             createdAt: "2023-12-11",
             content: "진한 에스프레소에 우유 거품이 조화로워요. 정통 마키아토 맛!",
         },
         {
             reviewId: 14,
-            nickname: "커피탐험가",
+            user: {
+                userId: 14,
+                nickname: "커피탐험가",
+            },
             rating: 4,
             createdAt: "2023-12-08",
             content: "처음 마셔봤는데 생각보다 맛있네요. 달지 않아서 좋아요.",
         },
         {
             reviewId: 15,
-            nickname: "강한커피선호",
+            user: {
+                userId: 15,
+                nickname: "강한커피선호",
+            },
             rating: 5,
             createdAt: "2023-12-04",
             content: "강한 커피 맛을 원하는 분들께 추천! 만족스러워요.",
@@ -298,22 +343,26 @@ export function getMockReviews(page = 0, size = 20, productId?: string): ReviewR
             totalPages: 1,
             totalElements: productReviews.length,
         };
-    }
-
-    // 제품은 존재하지만 리뷰가 정의되지 않은 경우 (6번 이상 제품)
+    } // 제품은 존재하지만 리뷰가 정의되지 않은 경우 (6번 이상 제품)
     // 기본 리뷰 템플릿 사용
     const productName = product.name;
     const defaultReviews = [
         {
             reviewId: id * 10 + 1,
-            nickname: "커피러버",
+            user: {
+                userId: id * 10 + 1,
+                nickname: "커피러버",
+            },
             rating: 4,
             createdAt: "2023-12-10",
             content: `${productName} 정말 맛있어요! 매일 마시고 싶은 맛입니다.`,
         },
         {
             reviewId: id * 10 + 2,
-            nickname: "맛집탐방가",
+            user: {
+                userId: id * 10 + 2,
+                nickname: "맛집탐방가",
+            },
             rating: 5,
             createdAt: "2023-12-08",
             content: `${productName}는 진짜 맛있네요. 친구들한테도 추천했어요!`,
@@ -325,7 +374,10 @@ export function getMockReviews(page = 0, size = 20, productId?: string): ReviewR
         },
         {
             reviewId: id * 10 + 3,
-            nickname: "일상커피",
+            user: {
+                userId: id * 10 + 3,
+                nickname: "일상커피",
+            },
             rating: 4,
             createdAt: "2023-12-05",
             content: `${productName} 향이 정말 좋아요. 기분이 좋아집니다.`,
@@ -333,53 +385,7 @@ export function getMockReviews(page = 0, size = 20, productId?: string): ReviewR
     ];
 
     return {
-        content: [
-            {
-                reviewId: 1,
-                user: {
-                    userId: 1,
-                    nickname: "커피사랑",
-                },
-                rating: 4,
-                createdAt: "2023-01-24",
-                content: "향이 정말 좋고 산미가 적절해요. 아침에 마시기 좋은 커피입니다.",
-                adminReply: {
-                    replyId: 1,
-                    content: "감사합니다! 앞으로도 좋은 커피로 보답하겠습니다.",
-                    createdAt: "2025-05-25",
-                },
-            },
-            {
-                reviewId: 2,
-                user: {
-                    userId: 2,
-                    nickname: "여름커피",
-                },
-                rating: 5,
-                createdAt: "2023-02-15",
-                content: "시즌 한정이라 아쉽지만 매번 구매하는 제품입니다. 열대과일향이 특히 좋아요!",
-            },
-            {
-                reviewId: 3,
-                user: {
-                    userId: 3,
-                    nickname: "하와이커피팬",
-                },
-                rating: 4,
-                createdAt: "2023-03-02",
-                content: "하와이 코나는 처음 마셔봤는데 기대 이상이네요. 부드러운 맛이 일품입니다.",
-            },
-            {
-                reviewId: 4,
-                user: {
-                    userId: 4,
-                    nickname: "가성비커피",
-                },
-                rating: 3,
-                createdAt: "2023-03-15",
-                content: "품질은 좋지만 가격이 조금 비싼 편입니다. 특별한 날에 마시기 좋아요.",
-            },
-        ],
+        content: defaultReviews,
         page: page,
         size: size,
         totalPages: 1,
