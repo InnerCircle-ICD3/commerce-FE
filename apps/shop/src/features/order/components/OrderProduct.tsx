@@ -7,7 +7,10 @@ import type { OrderDetailData } from "../types/orderDetail";
 import CreateReviewModal from "@/src/features/reviewCreate/components/CreateReviewModal";
 import { useState } from "react";
 
-type OrderDetailItem = OrderDetailData["items"][number] & { reviewWritten?: boolean };
+type OrderDetailItem = OrderDetailData["items"][number] & {
+    reviewWritten?: boolean;
+    orderNumber: string;
+};
 
 interface OrderProductProps {
     products: OrderDetailItem[];
@@ -90,6 +93,7 @@ export const OrderProduct = ({ products, reviewable }: OrderProductProps) => {
                         title: reviewingProduct.name,
                         imageUrl: reviewingProduct.thumbnail,
                     }}
+                    orderNumber={reviewingProduct.orderNumber}
                     isOpen={!!reviewingProduct}
                     onClickClose={() => setReviewingProduct(null)}
                 />
