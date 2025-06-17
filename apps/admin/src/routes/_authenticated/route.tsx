@@ -1,24 +1,28 @@
-import { createRoute } from "@tanstack/react-router";
-import { Route as rootRoute } from "../__root";
+import { createFileRoute, redirect } from "@tanstack/react-router";
 import RootLayout from "@/features/common/layout/RootLayout";
 
 // 인증 상태 확인 함수
 const isAuthenticated = () => {
-    const authToken = localStorage.getItem("auth-token");
-    return authToken === "abcd";
+    try {
+        const storage = localStorage.getItem("admin-auth-storage");
+        if (!storage) return false;
+
+        const parsed = JSON.parse(storage);
+        return parsed?.state?.isAuthenticated === true && parsed?.state?.tokens?.accessToken;
+    } catch (error) {
+        console.error("인증 상태 확인 오류:", error);
+        return false;
+    }
 };
 
-export const Route = createRoute({
-    getParentRoute: () => rootRoute,
-    id: "authenticated",
+export const Route = createFileRoute("/_authenticated")({
     component: RootLayout,
     beforeLoad: () => {
         // 로그인되지 않은 경우 로그인 페이지로 리디렉션
         if (!isAuthenticated()) {
-            return {
-                redirect: "/login",
-            };
+            throw redirect({
+                to: "/login",
+            });
         }
-        return {};
     },
 });

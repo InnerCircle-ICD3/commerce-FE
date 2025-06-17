@@ -11,17 +11,23 @@
 // Import Routes
 
 import { Route as rootRoute } from './routes/__root'
+import { Route as LoginImport } from './routes/login'
 import { Route as ChatImport } from './routes/chat'
 import { Route as AuthenticatedRouteImport } from './routes/_authenticated/route'
-import { Route as authRouteImport } from './routes/(auth)/route'
 import { Route as AuthenticatedIndexImport } from './routes/_authenticated/index'
+import { Route as AuthCallbackImport } from './routes/auth/callback'
 import { Route as AuthenticatedReviewsImport } from './routes/_authenticated/reviews'
 import { Route as AuthenticatedChatManagementImport } from './routes/_authenticated/chat-management'
-import { Route as authLoginImport } from './routes/(auth)/login'
 import { Route as AuthenticatedProductsIndexImport } from './routes/_authenticated/products/index'
 import { Route as AuthenticatedProductsNewImport } from './routes/_authenticated/products/new'
 
 // Create/Update Routes
+
+const LoginRoute = LoginImport.update({
+  id: '/login',
+  path: '/login',
+  getParentRoute: () => rootRoute,
+} as any)
 
 const ChatRoute = ChatImport.update({
   id: '/chat',
@@ -34,15 +40,16 @@ const AuthenticatedRouteRoute = AuthenticatedRouteImport.update({
   getParentRoute: () => rootRoute,
 } as any)
 
-const authRouteRoute = authRouteImport.update({
-  id: '/(auth)',
-  getParentRoute: () => rootRoute,
-} as any)
-
 const AuthenticatedIndexRoute = AuthenticatedIndexImport.update({
   id: '/',
   path: '/',
   getParentRoute: () => AuthenticatedRouteRoute,
+} as any)
+
+const AuthCallbackRoute = AuthCallbackImport.update({
+  id: '/auth/callback',
+  path: '/auth/callback',
+  getParentRoute: () => rootRoute,
 } as any)
 
 const AuthenticatedReviewsRoute = AuthenticatedReviewsImport.update({
@@ -57,12 +64,6 @@ const AuthenticatedChatManagementRoute =
     path: '/chat-management',
     getParentRoute: () => AuthenticatedRouteRoute,
   } as any)
-
-const authLoginRoute = authLoginImport.update({
-  id: '/login',
-  path: '/login',
-  getParentRoute: () => authRouteRoute,
-} as any)
 
 const AuthenticatedProductsIndexRoute = AuthenticatedProductsIndexImport.update(
   {
@@ -82,13 +83,6 @@ const AuthenticatedProductsNewRoute = AuthenticatedProductsNewImport.update({
 
 declare module '@tanstack/react-router' {
   interface FileRoutesByPath {
-    '/(auth)': {
-      id: '/(auth)'
-      path: '/'
-      fullPath: '/'
-      preLoaderRoute: typeof authRouteImport
-      parentRoute: typeof rootRoute
-    }
     '/_authenticated': {
       id: '/_authenticated'
       path: ''
@@ -103,12 +97,12 @@ declare module '@tanstack/react-router' {
       preLoaderRoute: typeof ChatImport
       parentRoute: typeof rootRoute
     }
-    '/(auth)/login': {
-      id: '/(auth)/login'
+    '/login': {
+      id: '/login'
       path: '/login'
       fullPath: '/login'
-      preLoaderRoute: typeof authLoginImport
-      parentRoute: typeof authRouteImport
+      preLoaderRoute: typeof LoginImport
+      parentRoute: typeof rootRoute
     }
     '/_authenticated/chat-management': {
       id: '/_authenticated/chat-management'
@@ -123,6 +117,13 @@ declare module '@tanstack/react-router' {
       fullPath: '/reviews'
       preLoaderRoute: typeof AuthenticatedReviewsImport
       parentRoute: typeof AuthenticatedRouteImport
+    }
+    '/auth/callback': {
+      id: '/auth/callback'
+      path: '/auth/callback'
+      fullPath: '/auth/callback'
+      preLoaderRoute: typeof AuthCallbackImport
+      parentRoute: typeof rootRoute
     }
     '/_authenticated/': {
       id: '/_authenticated/'
@@ -150,18 +151,6 @@ declare module '@tanstack/react-router' {
 
 // Create and export the route tree
 
-interface authRouteRouteChildren {
-  authLoginRoute: typeof authLoginRoute
-}
-
-const authRouteRouteChildren: authRouteRouteChildren = {
-  authLoginRoute: authLoginRoute,
-}
-
-const authRouteRouteWithChildren = authRouteRoute._addFileChildren(
-  authRouteRouteChildren,
-)
-
 interface AuthenticatedRouteRouteChildren {
   AuthenticatedChatManagementRoute: typeof AuthenticatedChatManagementRoute
   AuthenticatedReviewsRoute: typeof AuthenticatedReviewsRoute
@@ -182,34 +171,36 @@ const AuthenticatedRouteRouteWithChildren =
   AuthenticatedRouteRoute._addFileChildren(AuthenticatedRouteRouteChildren)
 
 export interface FileRoutesByFullPath {
-  '/': typeof AuthenticatedIndexRoute
   '': typeof AuthenticatedRouteRouteWithChildren
   '/chat': typeof ChatRoute
-  '/login': typeof authLoginRoute
+  '/login': typeof LoginRoute
   '/chat-management': typeof AuthenticatedChatManagementRoute
   '/reviews': typeof AuthenticatedReviewsRoute
+  '/auth/callback': typeof AuthCallbackRoute
+  '/': typeof AuthenticatedIndexRoute
   '/products/new': typeof AuthenticatedProductsNewRoute
   '/products': typeof AuthenticatedProductsIndexRoute
 }
 
 export interface FileRoutesByTo {
-  '/': typeof AuthenticatedIndexRoute
   '/chat': typeof ChatRoute
-  '/login': typeof authLoginRoute
+  '/login': typeof LoginRoute
   '/chat-management': typeof AuthenticatedChatManagementRoute
   '/reviews': typeof AuthenticatedReviewsRoute
+  '/auth/callback': typeof AuthCallbackRoute
+  '/': typeof AuthenticatedIndexRoute
   '/products/new': typeof AuthenticatedProductsNewRoute
   '/products': typeof AuthenticatedProductsIndexRoute
 }
 
 export interface FileRoutesById {
   __root__: typeof rootRoute
-  '/(auth)': typeof authRouteRouteWithChildren
   '/_authenticated': typeof AuthenticatedRouteRouteWithChildren
   '/chat': typeof ChatRoute
-  '/(auth)/login': typeof authLoginRoute
+  '/login': typeof LoginRoute
   '/_authenticated/chat-management': typeof AuthenticatedChatManagementRoute
   '/_authenticated/reviews': typeof AuthenticatedReviewsRoute
+  '/auth/callback': typeof AuthCallbackRoute
   '/_authenticated/': typeof AuthenticatedIndexRoute
   '/_authenticated/products/new': typeof AuthenticatedProductsNewRoute
   '/_authenticated/products/': typeof AuthenticatedProductsIndexRoute
@@ -218,31 +209,33 @@ export interface FileRoutesById {
 export interface FileRouteTypes {
   fileRoutesByFullPath: FileRoutesByFullPath
   fullPaths:
-    | '/'
     | ''
     | '/chat'
     | '/login'
     | '/chat-management'
     | '/reviews'
+    | '/auth/callback'
+    | '/'
     | '/products/new'
     | '/products'
   fileRoutesByTo: FileRoutesByTo
   to:
-    | '/'
     | '/chat'
     | '/login'
     | '/chat-management'
     | '/reviews'
+    | '/auth/callback'
+    | '/'
     | '/products/new'
     | '/products'
   id:
     | '__root__'
-    | '/(auth)'
     | '/_authenticated'
     | '/chat'
-    | '/(auth)/login'
+    | '/login'
     | '/_authenticated/chat-management'
     | '/_authenticated/reviews'
+    | '/auth/callback'
     | '/_authenticated/'
     | '/_authenticated/products/new'
     | '/_authenticated/products/'
@@ -250,15 +243,17 @@ export interface FileRouteTypes {
 }
 
 export interface RootRouteChildren {
-  authRouteRoute: typeof authRouteRouteWithChildren
   AuthenticatedRouteRoute: typeof AuthenticatedRouteRouteWithChildren
   ChatRoute: typeof ChatRoute
+  LoginRoute: typeof LoginRoute
+  AuthCallbackRoute: typeof AuthCallbackRoute
 }
 
 const rootRouteChildren: RootRouteChildren = {
-  authRouteRoute: authRouteRouteWithChildren,
   AuthenticatedRouteRoute: AuthenticatedRouteRouteWithChildren,
   ChatRoute: ChatRoute,
+  LoginRoute: LoginRoute,
+  AuthCallbackRoute: AuthCallbackRoute,
 }
 
 export const routeTree = rootRoute
@@ -271,15 +266,10 @@ export const routeTree = rootRoute
     "__root__": {
       "filePath": "__root.tsx",
       "children": [
-        "/(auth)",
         "/_authenticated",
-        "/chat"
-      ]
-    },
-    "/(auth)": {
-      "filePath": "(auth)/route.tsx",
-      "children": [
-        "/(auth)/login"
+        "/chat",
+        "/login",
+        "/auth/callback"
       ]
     },
     "/_authenticated": {
@@ -295,9 +285,8 @@ export const routeTree = rootRoute
     "/chat": {
       "filePath": "chat.tsx"
     },
-    "/(auth)/login": {
-      "filePath": "(auth)/login.tsx",
-      "parent": "/(auth)"
+    "/login": {
+      "filePath": "login.tsx"
     },
     "/_authenticated/chat-management": {
       "filePath": "_authenticated/chat-management.tsx",
@@ -306,6 +295,9 @@ export const routeTree = rootRoute
     "/_authenticated/reviews": {
       "filePath": "_authenticated/reviews.tsx",
       "parent": "/_authenticated"
+    },
+    "/auth/callback": {
+      "filePath": "auth/callback.tsx"
     },
     "/_authenticated/": {
       "filePath": "_authenticated/index.tsx",
