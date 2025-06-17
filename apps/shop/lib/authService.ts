@@ -1,9 +1,9 @@
-interface AuthInfo {
+export interface AuthInfo {
     provider: string;
     token: string;
 }
 
-interface UserProfile {
+export interface UserProfile {
     email: string;
     name: string;
     nickname: string;
@@ -51,7 +51,7 @@ export async function processLoginCallback(authInfo: AuthInfo, userProfile: User
         const result = await response.json();
         console.log("백엔드 서버 응답 성공:", result);
 
-        return result.data?.tokens || null;
+        return result.data || null;
     } catch (error) {
         console.error("백엔드 서버 연결 중 오류:", error);
         return null;

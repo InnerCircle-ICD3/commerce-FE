@@ -4,6 +4,7 @@ import { Geist, Geist_Mono } from "next/font/google";
 import localFont from "next/font/local";
 import "./globals.css";
 import Providers from "./providers";
+import React, { Suspense } from "react";
 
 const geistSans = Geist({
     variable: "--font-geist-sans",
@@ -44,7 +45,9 @@ export default function RootLayout({
     return (
         <html lang="ko">
             <body className={`${geistSans.variable} ${geistMono.variable} ${pretendard.variable} antialiased`}>
-                <Providers>{children}</Providers>
+                <Providers>
+                    <Suspense fallback={<div>페이지를 로드 중입니다...</div>}>{children}</Suspense>
+                </Providers>
             </body>
         </html>
     );
