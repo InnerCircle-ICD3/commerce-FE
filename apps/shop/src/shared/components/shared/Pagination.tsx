@@ -17,9 +17,24 @@ export default function Pagination({ page, totalPages }: PaginationProps) {
         router.push(`?${params.toString()}`);
     };
 
-    // if (totalPages <= 1) {
-    //     return null; // 페이지가 하나도 없으면 렌더링하지 않음
-    // }
+    const getVisiblePages = () => {
+        const maxVisiblePages = 5;
+
+        if (totalPages <= maxVisiblePages) {
+            // 전체 페이지가 5개 이하면 모두 표시
+            return Array.from({ length: totalPages }, (_, i) => i);
+        }
+        // 현재 페이지를 중심으로 5개 페이지 계산
+        let startPage = Math.max(0, page - 2);
+        const endPage = Math.min(totalPages - 1, startPage + maxVisiblePages - 1);
+
+        // 끝페이지가 최대값에 도달했을 때 시작페이지 조정
+        if (endPage - startPage < maxVisiblePages - 1) {
+            startPage = Math.max(0, endPage - maxVisiblePages + 1);
+        }
+
+        return Array.from({ length: endPage - startPage + 1 }, (_, i) => startPage + i);
+    };
 
     return (
         <div className="flex items-center justify-center gap-1 my-4">
@@ -31,7 +46,7 @@ export default function Pagination({ page, totalPages }: PaginationProps) {
             >
                 {"<"}
             </button>
-            {Array.from({ length: totalPages }, (_, i) => {
+            {getVisiblePages().map(i => {
                 const pageNumber = i + 1;
                 return (
                     <button
