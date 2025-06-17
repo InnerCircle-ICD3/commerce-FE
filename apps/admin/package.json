@@ -6,6 +6,7 @@
     "scripts": {
         "dev": "vite",
         "build": "tsc -b && vite build",
+        "clean": "rm -rf node_modules/.vite && rm -rf node_modules/.tmp && rm -rf dist && rm -rf .turbo",
         "lint": "biome check src",
         "lint:fix": "biome check --write src",
         "format": "biome format --write src"
