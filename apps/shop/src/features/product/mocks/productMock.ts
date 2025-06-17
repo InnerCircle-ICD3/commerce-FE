@@ -333,7 +333,53 @@ export function getMockReviews(page = 0, size = 20, productId?: string): ReviewR
     ];
 
     return {
-        content: defaultReviews,
+        content: [
+            {
+                reviewId: 1,
+                user: {
+                    userId: 1,
+                    nickname: "커피사랑",
+                },
+                rating: 4,
+                createdAt: "2023-01-24",
+                content: "향이 정말 좋고 산미가 적절해요. 아침에 마시기 좋은 커피입니다.",
+                adminReply: {
+                    replyId: 1,
+                    content: "감사합니다! 앞으로도 좋은 커피로 보답하겠습니다.",
+                    createdAt: "2025-05-25",
+                },
+            },
+            {
+                reviewId: 2,
+                user: {
+                    userId: 2,
+                    nickname: "여름커피",
+                },
+                rating: 5,
+                createdAt: "2023-02-15",
+                content: "시즌 한정이라 아쉽지만 매번 구매하는 제품입니다. 열대과일향이 특히 좋아요!",
+            },
+            {
+                reviewId: 3,
+                user: {
+                    userId: 3,
+                    nickname: "하와이커피팬",
+                },
+                rating: 4,
+                createdAt: "2023-03-02",
+                content: "하와이 코나는 처음 마셔봤는데 기대 이상이네요. 부드러운 맛이 일품입니다.",
+            },
+            {
+                reviewId: 4,
+                user: {
+                    userId: 4,
+                    nickname: "가성비커피",
+                },
+                rating: 3,
+                createdAt: "2023-03-15",
+                content: "품질은 좋지만 가격이 조금 비싼 편입니다. 특별한 날에 마시기 좋아요.",
+            },
+        ],
         page: page,
         size: size,
         totalPages: 1,

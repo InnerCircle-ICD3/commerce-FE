@@ -103,11 +103,13 @@ export async function getProductReviews(productId: string, page = 0, sort?: stri
         });
     }
 
-    return fetchData({
-        endpoint: `/reviews/byProduct?productId=${productId}&page=${page}${sortParam}`, // 개발기에서도 동일한 경로 사용
+    const data = fetchData({
+        endpoint: `/reviews:byProduct?productId=${productId}&page=${page}${sortParam}`, // 제품 리뷰 조회 API 주소
         defaultValue: emptyReview, // 실패 시 반환할 기본값
         mockDataFn: mockFn, // 개발기 환경에서 API 실패 시 호출할 목 데이터 생성 함수 (발표 끝나고 백엔드 서버가 폭파되면 이걸 대신 띄워야 함)
     });
+
+    return data;
 }
 
 /**
