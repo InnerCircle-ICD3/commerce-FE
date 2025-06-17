@@ -5,11 +5,14 @@ import { useRouter, useSearchParams } from "next/navigation";
 type PaginationProps = {
     page: number;
     totalPages: number;
+    totalElements?: number;
 };
 
 export default function Pagination({ page, totalPages }: PaginationProps) {
     const router = useRouter();
     const searchParams = useSearchParams();
+
+    console.log("Pagination component rendered with page:", page, "totalPages:", totalPages);
 
     const changePage = (newPage: number) => {
         const params = new URLSearchParams(searchParams.toString());
@@ -35,9 +38,16 @@ export default function Pagination({ page, totalPages }: PaginationProps) {
 
         return Array.from({ length: endPage - startPage + 1 }, (_, i) => startPage + i);
     };
-
     return (
         <div className="flex items-center justify-center gap-1 my-4">
+            <button
+                type="button"
+                onClick={() => changePage(0)}
+                disabled={page === 0}
+                className="px-2 py-1 text-lg font-bold text-gray-500 disabled:text-gray-300"
+            >
+                {"<<"}
+            </button>
             <button
                 type="button"
                 onClick={() => changePage(Math.max(0, page - 1))}
@@ -62,10 +72,18 @@ export default function Pagination({ page, totalPages }: PaginationProps) {
             <button
                 type="button"
                 onClick={() => changePage(page + 1)}
-                disabled={page === totalPages - 1}
+                disabled={page === totalPages - 2}
                 className="px-2 py-1 text-lg font-bold text-gray-500 disabled:text-gray-300"
             >
                 {">"}
+            </button>
+            <button
+                type="button"
+                onClick={() => changePage(totalPages - 2)}
+                disabled={page === totalPages - 2}
+                className="px-2 py-1 text-lg font-bold text-gray-500 disabled:text-gray-300"
+            >
+                {">>"}
             </button>
         </div>
     );
