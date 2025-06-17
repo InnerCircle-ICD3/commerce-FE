@@ -1,11 +1,21 @@
+"use client";
+import { useState } from "react";
+
 interface ProductImageProps {
     thumbnail: string;
+    detailImage: string;
     title: string;
 }
 
-export function ProductImage({ thumbnail, title }: ProductImageProps) {
+export function ProductImage({ thumbnail, detailImage, title }: ProductImageProps) {
+    const [currentImage, setCurrentImage] = useState(0);
+
+    // 이미지 배열 생성 (thumbnail과 detailImage 사용)
+    const images = [thumbnail, detailImage];
+
     // 메인 이미지가 없는 경우 기본 이미지 사용
-    const mainImage = thumbnail ? thumbnail : "https://cdn.builder.io/api/v1/image/assets/TEMP/e6efa1b8d524b91891b772502f42519490e0b876";
+    const mainImage =
+        images.length > 0 ? images[currentImage] : "https://cdn.builder.io/api/v1/image/assets/TEMP/e6efa1b8d524b91891b772502f42519490e0b876";
 
     return (
         <div className="w-full max-w-xl">

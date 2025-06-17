@@ -9,15 +9,14 @@ type ApiResponse<T> = {
  */
 function normalizeApiResponse<T>(responseData: unknown): ApiResponse<T> {
     // 이미 ApiResponse 구조인 경우 (data와 error 속성이 있음)
-    if (responseData && typeof responseData === 'object' && responseData !== null && 
-        ('data' in responseData || 'error' in responseData)) {
+    if (responseData && typeof responseData === "object" && responseData !== null && ("data" in responseData || "error" in responseData)) {
         return responseData as ApiResponse<T>;
     }
-    
+
     // 직접 데이터를 반환하는 경우 -> ApiResponse 구조로 래핑
     return {
         data: responseData as T,
-        error: null
+        error: null,
     };
 }
 
@@ -44,7 +43,7 @@ const createFetcher = (url: string, getHeaders?: () => Promise<HeadersInit> | He
             // API 응답 정규화 (직접 데이터 반환 형식 처리)
             json = normalizeApiResponse<T>(rawJson);
         } catch (e) {
-            console.error('JSON 파싱 오류:', e);
+            console.error("JSON 파싱 오류:", e);
             throw new Error("JSON 파싱에 실패했습니다.");
         }
 
@@ -53,7 +52,7 @@ const createFetcher = (url: string, getHeaders?: () => Promise<HeadersInit> | He
             error.code = "UNKNOWN_ERROR";
             throw error;
         }
-        
+
         if (json.error) {
             const error = new Error(json.error.message || "API 요청에 실패했습니다.") as CustomError;
             error.code = json.error.code || "UNKNOWN_ERROR";

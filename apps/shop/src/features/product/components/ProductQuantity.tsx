@@ -10,6 +10,11 @@ export default function ProductQuantity({ product }: { product: ProductType }) {
     const [isInputActive, setIsInputActive] = useState(false);
     const inputRef = useRef<HTMLInputElement>(null);
 
+    // 안전하게 product 속성들 추출
+    const productQuantity = product?.quantity || 0;
+    const productId = product?.id || 0;
+    const productName = product?.name || "제품명 없음";
+
     // 숫자 버튼 클릭시
     const handleButtonSelect = (buttonValue: number) => {
         setQuantity(buttonValue);
@@ -75,7 +80,7 @@ export default function ProductQuantity({ product }: { product: ProductType }) {
                 <span className="text-sm text-gray-600">빠른 선택</span>
                 <div className="flex flex-wrap gap-2">
                     {[10, 20, 30, 40, 50, 60]
-                        .filter(qty => qty <= product.quantity)
+                        .filter(qty => qty <= productQuantity)
                         .map(qty => (
                             <button
                                 key={`qty-${qty}`}
@@ -93,16 +98,8 @@ export default function ProductQuantity({ product }: { product: ProductType }) {
                 </div>
             </div>
 
-            {/* 추가 설명 */}
-            {/* {(product.limitDescription || product.additionalDescription) && (
-                <div className="text-xs text-gray-400 space-y-1">
-                    {product.limitDescription && <p>{product.limitDescription}</p>}
-                    {product.additionalDescription && <p>{product.additionalDescription}</p>}
-                </div>
-            )} */}
-
             {/* 장바구니 버튼 */}
-            <AddToCart productId={product.id} title={product.name} stockQuantity={product.quantity} quantity={quantity} />
+            <AddToCart productId={productId} title={productName} stockQuantity={productQuantity} quantity={quantity} />
         </div>
     );
 }

@@ -3,18 +3,23 @@ import { getProduct, getProductReviews } from "@/src/features/product/api/produc
 
 interface ReviewsPageProps {
     params: Promise<{
-        productId: string;
+        id: string;
+    }>;
+    searchParams: Promise<{
         page?: string;
+        sort?: string;
     }>;
 }
 
-export default async function ReviewsPage({ params }: ReviewsPageProps) {
+export default async function ReviewsPage({ params, searchParams }: ReviewsPageProps) {
     const resolvedParams = await params;
-    const productId = resolvedParams.productId;
-    const page = Number.parseInt(String(resolvedParams?.page)) || 0;
+    const resolvedSearchParams = await searchParams;
+    const productId = resolvedParams.id;
+    const page = Number.parseInt(String(resolvedSearchParams?.page)) || 0;
+    const sort = resolvedSearchParams?.sort || undefined;
 
     // 제품 정보와 리뷰 데이터 동시에 가져오기
-    const [product, reviewsData] = await Promise.all([getProduct(productId), getProductReviews(productId, page)]);
+    const [product, reviewsData] = await Promise.all([getProduct(productId), getProductReviews(productId, page, sort)]);
 
     return (
         <ProductReviewsPage

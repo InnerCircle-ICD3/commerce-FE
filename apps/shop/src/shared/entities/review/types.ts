@@ -9,11 +9,13 @@ export interface ReviewResponse {
 
 export interface ReviewType {
     reviewId: number;
-    nickname: string;
+    user: {
+        userId: number;
+        nickname: string;
+    };
     rating: number;
     createdAt: string;
     content: string;
-    images?: string[];
     adminReply?: AdminReply;
 }
 

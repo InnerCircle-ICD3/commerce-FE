@@ -8,21 +8,17 @@ import { useSearchParams } from "next/navigation";
 import { Button } from "@/src/shared/components/shared/button";
 
 interface ProductFilterProps {
-    intensities: ProductCategoryType[];
-    cupSizes: ProductCategoryType[];
+    intensities: string[];
+    cupSizes: string[];
     onChange?: (filter: {
-        intensity: ProductCategoryType | null;
-        cupSize: ProductCategoryType | null;
+        intensity: string | null;
+        cupSize: string | null;
     }) => void;
 }
-export function ProductFilter({
-    intensities,
-    cupSizes,
-    onChange,
-}: ProductFilterProps) {
+export function ProductFilter({ intensities, cupSizes, onChange }: ProductFilterProps) {
     const [filter, setFilter] = useState<{
-        intensity: ProductCategoryType | null;
-        cupSize: ProductCategoryType | null;
+        intensity: string | null;
+        cupSize: string | null;
     }>({
         intensity: null,
         cupSize: null,
@@ -34,11 +30,11 @@ export function ProductFilter({
         const newParams = new URLSearchParams(searchParams);
 
         if (filter.intensity) {
-            newParams.set("intensityId", filter.intensity.id.toString());
+            newParams.set("intensity", filter.intensity);
         }
 
         if (filter.cupSize) {
-            newParams.set("cupSizeId", filter.cupSize.id.toString());
+            newParams.set("cupSize", filter.cupSize);
         }
 
         return newParams.toString();
@@ -56,7 +52,7 @@ export function ProductFilter({
                     {intensities.map(intensity => {
                         return (
                             <button
-                                key={intensity.id}
+                                key={intensity}
                                 type="button"
                                 onClick={() => {
                                     setFilter(prev => ({
@@ -65,11 +61,10 @@ export function ProductFilter({
                                     }));
                                 }}
                                 className={filterButton({
-                                    active:
-                                        filter.intensity?.id === intensity.id,
+                                    active: filter.intensity === intensity,
                                 })}
                             >
-                                {intensity.label}
+                                {intensity}
                             </button>
                         );
                     })}
@@ -82,7 +77,7 @@ export function ProductFilter({
                     {cupSizes.map(cupSize => {
                         return (
                             <button
-                                key={cupSize.id}
+                                key={cupSize}
                                 type="button"
                                 onClick={() => {
                                     setFilter(prev => ({
@@ -91,10 +86,10 @@ export function ProductFilter({
                                     }));
                                 }}
                                 className={filterButton({
-                                    active: filter.cupSize?.id === cupSize.id,
+                                    active: filter.cupSize === cupSize,
                                 })}
                             >
-                                {cupSize.label}
+                                {cupSize}
                             </button>
                         );
                     })}
