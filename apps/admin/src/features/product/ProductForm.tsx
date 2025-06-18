@@ -9,6 +9,7 @@ import { createProduct } from "./api";
 import type { CreateProductDto } from "./api";
 import ImageUpload from "./components/ImageUpload";
 import CategorySelectEnum from "./components/CategorySelectEnum";
+import { logger } from "@/shared/utils/logger";
 
 // 숫자를 천 단위 콤마가 포함된 문자열로 변환
 function formatPrice(value: number | string): string {
@@ -36,7 +37,7 @@ function saveDraftToStorage(data: DraftData): void {
     try {
         localStorage.setItem(DRAFT_STORAGE_KEY, JSON.stringify(data));
     } catch (error) {
-        console.error("임시저장 실패:", error);
+        logger.error("임시저장 실패:", error);
     }
 }
 
@@ -46,7 +47,7 @@ function getDraftFromStorage(): DraftData | null {
         const stored = localStorage.getItem(DRAFT_STORAGE_KEY);
         return stored ? JSON.parse(stored) : null;
     } catch (error) {
-        console.error("임시저장 데이터 읽기 실패:", error);
+        logger.error("임시저장 데이터 읽기 실패:", error);
         return null;
     }
 }
@@ -56,7 +57,7 @@ function clearDraftFromStorage(): void {
     try {
         localStorage.removeItem(DRAFT_STORAGE_KEY);
     } catch (error) {
-        console.error("임시저장 데이터 삭제 실패:", error);
+        logger.error("임시저장 데이터 삭제 실패:", error);
     }
 }
 
