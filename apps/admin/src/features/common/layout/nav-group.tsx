@@ -1,7 +1,7 @@
-import { Link } from "@tanstack/react-router";
-import type { LucideIcon } from "lucide-react";
 import { cn } from "@/lib/utils";
 import { useSidebar } from "@/shared/components/ui/sidebar";
+import { Link } from "@tanstack/react-router";
+import type { LucideIcon } from "lucide-react";
 
 export interface NavItem {
     title: string;

@@ -1,6 +1,6 @@
 import { TanStackRouterDevtools } from "@tanstack/react-router-devtools";
-import Sidebar from "./Sidebar";
 import MainContent from "./MainContent";
+import Sidebar from "./Sidebar";
 
 interface RootLayoutProps {
     children?: React.ReactNode;

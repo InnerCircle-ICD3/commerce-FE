@@ -1,6 +1,6 @@
-import { Sidebar as SidebarUI, SidebarContent, SidebarFooter, SidebarRail } from "@/shared/components/ui/sidebar";
 import { NavGroup } from "@/features/common/layout/nav-group";
 import { NavUser } from "@/features/common/layout/nav-user";
+import { SidebarContent, SidebarFooter, SidebarRail, Sidebar as SidebarUI } from "@/shared/components/ui/sidebar";
 import { sidebarData } from "./data/sidebar-data";
 
 export default function Sidebar() {

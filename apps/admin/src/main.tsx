@@ -1,8 +1,8 @@
 import { StrictMode } from "react";
 import { createRoot } from "react-dom/client";
 import "@/index.css";
-import { QueryClient } from "@tanstack/react-query";
 import { TanstackQueryProviders } from "@/shared/TanstackQueryProviders";
+import { QueryClient } from "@tanstack/react-query";
 import { RouterProvider, createRouter } from "@tanstack/react-router";
 // 파일 시스템 기반 라우트 가져오기
 import { routeTree } from "./routeTree.gen";

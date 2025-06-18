@@ -1,7 +1,7 @@
-import { useState } from "react";
 import { useQueryClient } from "@tanstack/react-query";
 import ReplyWrite from "@/features/review/components/ReplyWrite";
 import { fetcher } from "@/shared/kyInstance";
+import { useState } from "react";
 
 export default function ReplyPending({ reviewId }: { reviewId: number }) {
     const [isReplying, setIsReplying] = useState(false);

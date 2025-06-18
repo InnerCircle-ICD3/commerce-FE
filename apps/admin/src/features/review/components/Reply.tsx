@@ -1,7 +1,7 @@
-import { useState } from "react";
 import type { AdminReply } from "@/features/review/types/type";
-import { fetcher } from "@/shared/kyInstance";
 import { EditIcon, TrashIcon } from "@/shared/components/shared/Icon";
+import { fetcher } from "@/shared/kyInstance";
+import { useState } from "react";
 import { useQueryClient } from "@tanstack/react-query";
 
 interface ReplyProps {
