@@ -27,7 +27,7 @@ export default async function ReviewsPage({ params, searchParams }: ReviewsPageP
             reviews={reviewsData.content}
             totalElements={reviewsData.totalElements || 0}
             totalPages={reviewsData.totalPages || 0}
-            currentPage={reviewsData.page || 0}
+            currentPage={reviewsData.page || 1}
         />
     );
 }

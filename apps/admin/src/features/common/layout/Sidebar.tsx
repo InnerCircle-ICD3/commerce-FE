@@ -12,7 +12,7 @@ export default function Sidebar() {
                 ))}
             </SidebarContent>
             <SidebarFooter>
-                <NavUser user={sidebarData.user} />
+                <NavUser />
             </SidebarFooter>
             <SidebarRail />
         </SidebarUI>

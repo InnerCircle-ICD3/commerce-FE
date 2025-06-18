@@ -62,7 +62,7 @@ const ChatButton = ({ productInfo, isFloating = false }: ChatButtonProps) => {
                     onClick={handleOpen}
                     className="fixed bottom-8 right-8 w-16 h-16 bg-[#257A57] rounded-full flex items-center justify-center text-white shadow-2xl hover:bg-[#1f6347] transition-all duration-200 z-[9999] hover:scale-110"
                     aria-label="채팅 열기"
-                    style={{ position: "fixed", zIndex: 9999 }}
+                    style={{ position: "fixed", zIndex: 9000 }}
                 >
                     <svg width="28" height="28" viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg">
                         <title>채팅 아이콘</title>

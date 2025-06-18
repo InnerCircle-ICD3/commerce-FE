@@ -11,6 +11,8 @@ import { useToast } from "@/src/shared/hooks/useToast";
 const MAX_CONTENT_LENGTH = 999;
 interface CreateReviewModalProps {
     isEdit?: boolean;
+    orderNumber?: string; // 주문 번호는 리뷰 작성 시 필요
+    // 리뷰 정보는 수정 시 필요
     reviewInfo?: {
         reviewId: number;
         rating: number;
@@ -23,28 +25,67 @@ interface CreateReviewModalProps {
     };
     isOpen: boolean;
     onClickClose: () => void;
+    onSuccess?: () => void; // 성공 시 실행할 콜백
 }
-export default function CreateReviewModal({ isEdit = false, reviewInfo, product, isOpen, onClickClose }: CreateReviewModalProps) {
+export default function CreateReviewModal({
+    isEdit = false,
+    orderNumber,
+    reviewInfo,
+    product,
+    isOpen,
+    onClickClose,
+    onSuccess,
+}: CreateReviewModalProps) {
     const [rating, setRating] = useState(isEdit ? reviewInfo?.rating || 0 : 0);
     const [content, setContent] = useState(isEdit ? reviewInfo?.content || "" : "");
     const [isAlertOpen, setIsAlertOpen] = useState(false);
+    const [showRatingError, setShowRatingError] = useState(false);
+    const [showContentError, setShowContentError] = useState(false);
     const { toast, ToastUI } = useToast();
 
     const fetch = fetchClient();
-
     const handleContentChange = (e: React.ChangeEvent<HTMLTextAreaElement>) => {
         if (e.target.value.length > MAX_CONTENT_LENGTH) return;
         setContent(e.target.value);
+
+        // 내용이 입력되면 에러 상태 해제
+        if (e.target.value.trim().length > 0) {
+            setShowContentError(false);
+        }
+    };
+
+    const handleRatingChange = (newRating: number) => {
+        setRating(newRating);
+
+        if (newRating > 0) {
+            setShowRatingError(false); // 별점이 1 이상이면 에러 해제
+        }
     };
 
     const handleClose = () => {
         setIsAlertOpen(true);
     };
-
     const handleSubmit = () => {
-        if (content.length === 0) return;
+        if (!isValidReview()) {
+            return;
+        }
 
+        setShowRatingError(false); // 성공 시 에러 상태 초기화
+        setShowContentError(false); // 성공 시 에러 상태 초기화
         isEdit ? editReview() : createReview();
+    };
+
+    const isValidReview = () => {
+        if (rating <= 0) {
+            setShowRatingError(true);
+            return false;
+        }
+        if (content.trim().length === 0) {
+            setShowContentError(true);
+            return false;
+        }
+
+        return true;
     };
 
     const createReview = () => {
@@ -52,12 +93,14 @@ export default function CreateReviewModal({ isEdit = false, reviewInfo, product,
             method: "POST",
             headers: { "Content-Type": "application/json" },
             body: JSON.stringify({
-                productId: product.productId,
+                orderNumber: orderNumber,
+                orderItemId: product.productId,
                 rating,
                 content,
             }),
         })
             .then(() => {
+                onSuccess?.(); // 성공 콜백 실행
                 onClickClose();
             })
             .catch(error => {
@@ -75,6 +118,7 @@ export default function CreateReviewModal({ isEdit = false, reviewInfo, product,
             body: JSON.stringify({ rating, content }),
         })
             .then(() => {
+                onSuccess?.(); // 성공 콜백 실행
                 onClickClose();
             })
             .catch(error => {
@@ -104,8 +148,9 @@ export default function CreateReviewModal({ isEdit = false, reviewInfo, product,
                         <p className="text-gray-400">(별점을 눌러 평가해 주세요)</p>
                     </div>
                     <div className="py-4 bg-gray-100 flex justify-center gap-6 rounded-xl">
-                        <Rating rating={rating} onChange={setRating} />
+                        <Rating rating={rating} onChange={handleRatingChange} />
                     </div>
+                    {showRatingError && <p className="text-[#FF4242] text-sm mt-2 text-center font-bold">별점은 1 이상이어야 합니다.</p>}
                 </div>
                 <div className="mb-10">
                     <div className="flex justify-between mb-4 items-center">
@@ -120,6 +165,7 @@ export default function CreateReviewModal({ isEdit = false, reviewInfo, product,
                         value={content}
                         onChange={handleContentChange}
                     />
+                    {showContentError && <p className="text-[#FF4242] text-sm mt-2 font-bold">리뷰 내용을 입력해주세요.</p>}
                 </div>
                 <Button size="full" className="py-4 text-base font-semibold" onClick={handleSubmit}>
                     리뷰 {isEdit ? "수정" : "등록"}하기

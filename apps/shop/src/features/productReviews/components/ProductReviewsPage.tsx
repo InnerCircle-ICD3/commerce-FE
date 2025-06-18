@@ -30,7 +30,7 @@ export default function ProductReviewsPage({ productTitle, reviews, totalElement
 
                     {/* 페이지네이션 */}
                     <div className="mt-8 mb-4 flex justify-center">
-                        <Pagination page={currentPage} totalPages={totalPages || 0} />
+                        <Pagination page={currentPage} totalPages={totalPages || 0} totalElements={totalElements} />
                     </div>
                 </div>
             </div>
