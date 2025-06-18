@@ -1,5 +1,6 @@
 import { del, get, post, put } from "@/shared/kyInstance";
 import type { PageResponse, PaginationParams } from "@/shared/types";
+import { logger } from "@/shared/utils/logger";
 
 // 상품 정보 타입 정의
 export interface Product {
@@ -58,15 +59,53 @@ export interface CreateProductDto {
     cupSizeId: number;
 }
 
+// 상품 수정을 위한 인터페이스 (백엔드 API 스펙에 맞춤)
+export interface UpdateProductDto {
+    name: string;
+    price: number;
+    quantity: number;
+    thumbnail: string;
+    detailImage: string;
+    intensityId: number;
+    cupSizeId: number;
+    status: "ON_SALE" | "UNAVAILABLE"; // 백엔드 SellingStatus enum
+}
+
+// 관리자 상품 상세 조회용 인터페이스 (백엔드 응답 형식)
+export interface AdminProduct {
+    id: number;
+    name: string;
+    price: number;
+    quantity: number;
+    thumbnail: string;
+    detailImage: string;
+    intensity: string;
+    cupSize: string;
+    status: "ON_SALE" | "UNAVAILABLE";
+}
+
 // 상품 생성
 export async function createProduct(productData: CreateProductDto): Promise<{ productId: number }> {
     const response = await post<{ data: { productId: number } }>("admin/products", productData);
     return response.data;
 }
 
-// 상품 정보 업데이트
-export async function updateProduct(id: number, productData: Partial<Product>): Promise<Product> {
-    return put<Product>(`admin/products/${id}`, productData);
+// 관리자 상품 상세 조회 (수정용)
+export async function getAdminProductById(id: number): Promise<AdminProduct> {
+    const response = await get<AdminProduct>(`admin/products/${id}`);
+    logger.debug("Admin product API response:", response);
+
+    if (!response) {
+        throw new Error("상품 정보를 찾을 수 없습니다.");
+    }
+
+    return response;
+}
+
+// 상품 수정
+export async function updateProduct(id: number, productData: UpdateProductDto): Promise<{ productId: number }> {
+    const response = await put<{ data: { productId: number } }>(`admin/products/${id}`, productData);
+    return response.data;
 }
 
 // 커피 강도 카테고리 타입
