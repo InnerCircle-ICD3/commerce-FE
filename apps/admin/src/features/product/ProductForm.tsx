@@ -3,7 +3,7 @@ import { Input } from "@/shared/components/ui/input";
 import { toast } from "@/shared/components/ui/use-toast";
 import { useMutation } from "@tanstack/react-query";
 import { useNavigate } from "@tanstack/react-router";
-import { useState } from "react";
+import { useState, useEffect } from "react";
 import type { ChangeEvent, FormEvent } from "react";
 import { createProduct } from "./api";
 import type { CreateProductDto } from "./api";
@@ -19,6 +19,45 @@ function formatPrice(value: number | string): string {
 // 콤마가 포함된 문자열을 숫자로 변환
 function parsePrice(value: string): number {
     return Number(value.replace(/,/g, '')) || 0;
+}
+
+// 로컬스토리지 키
+const DRAFT_STORAGE_KEY = "product_form_draft";
+
+// 임시저장 데이터 타입
+interface DraftData extends CreateProductDto {
+    selectedIntensityId: string;
+    selectedCupSizeId: string;
+    priceDisplay: string;
+}
+
+// 로컬스토리지에 임시저장
+function saveDraftToStorage(data: DraftData): void {
+    try {
+        localStorage.setItem(DRAFT_STORAGE_KEY, JSON.stringify(data));
+    } catch (error) {
+        console.error("임시저장 실패:", error);
+    }
+}
+
+// 로컬스토리지에서 임시저장 데이터 가져오기
+function getDraftFromStorage(): DraftData | null {
+    try {
+        const stored = localStorage.getItem(DRAFT_STORAGE_KEY);
+        return stored ? JSON.parse(stored) : null;
+    } catch (error) {
+        console.error("임시저장 데이터 읽기 실패:", error);
+        return null;
+    }
+}
+
+// 로컬스토리지에서 임시저장 데이터 삭제
+function clearDraftFromStorage(): void {
+    try {
+        localStorage.removeItem(DRAFT_STORAGE_KEY);
+    } catch (error) {
+        console.error("임시저장 데이터 삭제 실패:", error);
+    }
 }
 
 export default function ProductForm() {
@@ -62,6 +101,72 @@ export default function ProductForm() {
 
     // 재고 수량 모드 (true: 더하기, false: 빼기)
     const [isAddMode, setIsAddMode] = useState(true);
+
+    // 임시저장 복원 확인 다이얼로그 상태
+    const [showRestoreDialog, setShowRestoreDialog] = useState(false);
+    const [draftData, setDraftData] = useState<DraftData | null>(null);
+
+    // 페이지 로드 시 임시저장 데이터 확인
+    useEffect(() => {
+        const saved = getDraftFromStorage();
+        if (saved) {
+            setDraftData(saved);
+            setShowRestoreDialog(true);
+        }
+    }, []);
+
+    // 임시저장 데이터 복원
+    const restoreDraftData = () => {
+        if (draftData) {
+            setFormData({
+                name: draftData.name,
+                price: draftData.price,
+                quantity: draftData.quantity,
+                thumbnail: draftData.thumbnail || "",
+                detailImage: draftData.detailImage || "",
+                intensityId: draftData.intensityId,
+                cupSizeId: draftData.cupSizeId,
+            });
+            setSelectedIntensityId(draftData.selectedIntensityId);
+            setSelectedCupSizeId(draftData.selectedCupSizeId);
+            setPriceDisplay(draftData.priceDisplay);
+
+            const imageCount = (draftData.thumbnail ? 1 : 0) + (draftData.detailImage ? 1 : 0);
+            toast({
+                title: "임시저장 데이터 복원",
+                description: `이전에 작성하던 내용을 불러왔습니다.${imageCount > 0 ? ` (이미지 ${imageCount}개 포함)` : ''}`,
+            });
+        }
+        setShowRestoreDialog(false);
+    };
+
+    // 임시저장 데이터 거부
+    const rejectDraftData = () => {
+        clearDraftFromStorage();
+        setShowRestoreDialog(false);
+    };
+
+    // 현재 폼 데이터를 임시저장
+    const handleSaveDraft = () => {
+        const draftToSave: DraftData = {
+            name: formData.name,
+            price: formData.price,
+            quantity: formData.quantity,
+            thumbnail: formData.thumbnail,
+            detailImage: formData.detailImage,
+            intensityId: formData.intensityId,
+            cupSizeId: formData.cupSizeId,
+            selectedIntensityId,
+            selectedCupSizeId,
+            priceDisplay,
+        };
+
+        saveDraftToStorage(draftToSave);
+        toast({
+            title: "임시저장 완료",
+            description: `작성 중인 내용이 임시저장되었습니다.${formData.thumbnail || formData.detailImage ? ' (이미지 URL 포함)' : ''}`,
+        });
+    };
 
     // 카테고리 변경 핸들러
     const handleIntensityChange = (intensityId: string) => {
@@ -161,6 +266,8 @@ export default function ProductForm() {
     const createProductMutation = useMutation({
         mutationFn: createProduct,
         onSuccess: () => {
+            // 성공 시 임시저장 데이터 삭제
+            clearDraftFromStorage();
             toast({
                 title: "상품 등록 성공",
                 description: "새 상품이 성공적으로 등록되었습니다.",
@@ -391,11 +498,34 @@ export default function ProductForm() {
                     >
                         {isAnyImageUploading ? "이미지 업로드 중..." : createProductMutation.isPending ? "등록 중..." : "등록"}
                     </Button>
+                    <Button type="button" variant="outline" onClick={handleSaveDraft}>
+                        임시저장
+                    </Button>
                     <Button type="button" variant="outline" onClick={handleBackToList}>
                         취소
                     </Button>
                 </div>
             </form>
+
+            {/* 임시저장 복원 확인 다이얼로그 */}
+            {showRestoreDialog && (
+                <div className="fixed inset-0 bg-black bg-opacity-50 flex items-center justify-center z-50">
+                    <div className="bg-white rounded-lg p-6 max-w-md w-full mx-4">
+                        <h3 className="text-lg font-semibold mb-2">임시저장 데이터 발견</h3>
+                        <p className="text-gray-600 mb-6">
+                            이전에 작성하던 상품 정보가 있습니다. 불러오시겠습니까?
+                        </p>
+                        <div className="flex gap-3 justify-end">
+                            <Button variant="outline" onClick={rejectDraftData}>
+                                아니오
+                            </Button>
+                            <Button onClick={restoreDraftData}>
+                                예
+                            </Button>
+                        </div>
+                    </div>
+                </div>
+            )}
         </div>
     );
 }

@@ -4,7 +4,7 @@ import { Label } from "@/shared/components/ui/label";
 import { toast } from "@/shared/components/ui/use-toast";
 import { useMutation } from "@tanstack/react-query";
 import { Check, Copy, Image, Loader2, Upload, X } from "lucide-react";
-import { useRef, useState } from "react";
+import { useEffect, useRef, useState } from "react";
 import { type ImageType, uploadImage } from "../imageUploadApi";
 
 interface ImageUploadProps {
@@ -33,6 +33,14 @@ export default function ImageUpload({
     const [copiedUrl, setCopiedUrl] = useState(false);
     const [urlInput, setUrlInput] = useState<string>(currentImageUrl || "");
     const fileInputRef = useRef<HTMLInputElement>(null);
+
+    // currentImageUrl prop이 변경될 때 state 업데이트
+    useEffect(() => {
+        if (currentImageUrl !== undefined) {
+            setPreviewUrl(currentImageUrl || null);
+            setUrlInput(currentImageUrl || "");
+        }
+    }, [currentImageUrl]);
 
     // 이미지 업로드 뮤테이션
     const uploadMutation = useMutation({
