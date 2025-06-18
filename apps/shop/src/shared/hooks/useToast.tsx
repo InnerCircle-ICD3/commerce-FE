@@ -30,7 +30,7 @@ export function useToast() {
         toast,
         ToastUI: (
             <div
-                className={`fixed bottom-4 right-4 bg-[#257a57] text-white px-6 py-4 rounded-lg shadow-lg z-50 transition-opacity duration-300 ease-in-out ${
+                className={`fixed bottom-4 right-4 bg-[#257a57] text-white px-6 py-4 rounded-lg shadow-lg z-[9999] transition-opacity duration-300 ease-in-out ${
                     isVisible ? "opacity-100" : "opacity-0 pointer-events-none"
                 }`}
             >

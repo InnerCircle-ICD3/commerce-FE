@@ -24,6 +24,18 @@ export default function MyReviewList({ reviews }: MyReviewListProps) {
         setEditingReview(review);
     };
 
+    const refetchReviews = useCallback(() => {
+        // 리뷰 수정 성공 시 목록 재조회
+        queryClient.invalidateQueries({
+            queryKey: ["userReviews"],
+            exact: false,
+        });
+        setEditingReview(null);
+        toast({
+            message: "리뷰가 수정되었습니다.",
+        });
+    }, [queryClient, toast]);
+
     const onDeleteClick = (reviewId: number) => {
         setDeletingReviewId(reviewId);
     };
@@ -99,6 +111,7 @@ export default function MyReviewList({ reviews }: MyReviewListProps) {
                     }}
                     isOpen={editingReview !== null}
                     onClickClose={() => setEditingReview(null)}
+                    onSuccess={refetchReviews}
                 />
             )}
             {deletingReviewId !== null && (
