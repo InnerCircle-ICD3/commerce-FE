@@ -10,6 +10,7 @@ export default function ReviewSortSelect({ totalCount }: ReviewSortSelectProps) 
     const router = useRouter();
     const searchParams = useSearchParams();
     const currentSort = searchParams.get("sort") || "";
+    const currentPage = searchParams.get("page") || "1";
 
     const handleSortChange = (sortValue: string) => {
         const newSearchParams = new URLSearchParams(searchParams.toString());
@@ -18,6 +19,8 @@ export default function ReviewSortSelect({ totalCount }: ReviewSortSelectProps) 
         } else {
             newSearchParams.delete("sort");
         }
+        // 페이지를 1로 초기화
+        newSearchParams.set("page", "1");
         router.push(`?${newSearchParams.toString()}`);
     };
 

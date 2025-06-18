@@ -29,7 +29,7 @@ export default function Pagination({ page, totalPages }: PaginationProps) {
         }
         // 현재 페이지를 중심으로 5개 페이지 계산
         let startPage = Math.max(0, page - 2);
-        const endPage = Math.min(totalPages - 1, startPage + maxVisiblePages - 1);
+        const endPage = Math.min(totalPages, startPage + maxVisiblePages - 1);
 
         // 끝페이지가 최대값에 도달했을 때 시작페이지 조정
         if (endPage - startPage < maxVisiblePages - 1) {
@@ -42,8 +42,8 @@ export default function Pagination({ page, totalPages }: PaginationProps) {
         <div className="flex items-center justify-center gap-1 my-4">
             <button
                 type="button"
-                onClick={() => changePage(0)}
-                disabled={page === 0}
+                onClick={() => changePage(1)}
+                disabled={!page || page === 1}
                 className="px-2 py-1 text-lg font-bold text-gray-500 disabled:text-gray-300"
             >
                 {"<<"}
@@ -51,7 +51,7 @@ export default function Pagination({ page, totalPages }: PaginationProps) {
             <button
                 type="button"
                 onClick={() => changePage(Math.max(0, page - 1))}
-                disabled={page === 0}
+                disabled={!page || page === 1}
                 className="px-2 py-1 text-lg font-bold text-gray-500 disabled:text-gray-300"
             >
                 {"<"}
@@ -63,7 +63,7 @@ export default function Pagination({ page, totalPages }: PaginationProps) {
                         type="button"
                         key={pageNumber}
                         onClick={() => changePage(pageNumber)}
-                        className={`px-2 py-1 rounded ${page === i ? "bg-[#257A57] text-white" : "bg-gray-100 text-black"}`}
+                        className={`px-2 py-1 rounded ${page === pageNumber ? "bg-[#257A57] text-white" : "bg-gray-100 text-black"}`}
                     >
                         {pageNumber}
                     </button>
@@ -72,15 +72,15 @@ export default function Pagination({ page, totalPages }: PaginationProps) {
             <button
                 type="button"
                 onClick={() => changePage(page + 1)}
-                disabled={page === totalPages - 2}
+                disabled={page === totalPages}
                 className="px-2 py-1 text-lg font-bold text-gray-500 disabled:text-gray-300"
             >
                 {">"}
             </button>
             <button
                 type="button"
-                onClick={() => changePage(totalPages - 2)}
-                disabled={page === totalPages - 2}
+                onClick={() => changePage(totalPages)}
+                disabled={page === totalPages}
                 className="px-2 py-1 text-lg font-bold text-gray-500 disabled:text-gray-300"
             >
                 {">>"}
