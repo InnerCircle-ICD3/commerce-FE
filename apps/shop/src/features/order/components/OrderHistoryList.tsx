@@ -9,6 +9,7 @@ import type { OrderListItem } from "../types/orderListItem";
 import { RefundModal } from "./RefundModal";
 import Image from "next/image";
 import { getOrderStatusLabel } from "@/src/shared/utils/getOrderStatusLabel";
+import type { OrderStatus } from "../types";
 
 interface ButtonConfig {
     text: string;
@@ -26,8 +27,13 @@ const buttonStyle = cva("flex-1 h-10 text-sm font-semibold", {
     },
 });
 
-export const OrderHistoryList = () => {
-    const { data: orders, hasNextPage, fetchNextPage } = useOrderList();
+interface OrderHistoryListProps {
+    status: OrderStatus | null;
+    period: 3 | 6 | 12 | null;
+}
+
+export const OrderHistoryList = ({ status, period }: OrderHistoryListProps) => {
+    const { data: orders, hasNextPage, fetchNextPage } = useOrderList({ status, period });
     const [cancelOrderData, setCancelOrderData] = useState<OrderListItem | null>(null);
 
     // 주문 상태별 버튼 구성 정의

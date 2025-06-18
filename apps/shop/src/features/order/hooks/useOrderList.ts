@@ -1,10 +1,11 @@
 import { useInfiniteQuery, useQuery } from "@tanstack/react-query";
 import { getOrderList } from "../api/getOrderList";
+import type { OrderStatus } from "../types";
 
-export const useOrderList = () => {
+export const useOrderList = ({ status, period }: { status: OrderStatus | null; period: 3 | 6 | 12 | null }) => {
     const { data, fetchNextPage, hasNextPage, isFetchingNextPage } = useInfiniteQuery({
-        queryKey: ["orderList"],
-        queryFn: ({ pageParam = 1 }) => getOrderList(pageParam),
+        queryKey: ["orderList", status, period],
+        queryFn: ({ pageParam = 1 }) => getOrderList(pageParam, status, period),
         getNextPageParam: lastPage => {
             const page = lastPage.data?.page || 0;
             if (page === lastPage.data?.totalPages) {

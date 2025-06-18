@@ -1,11 +1,18 @@
 "use client";
 
 import { OrderHistoryList } from "./OrderHistoryList";
-import { ArrowIcon, FilterIcon, SearchIcon } from "@/src/shared/components/shared/Icon";
+import { ArrowIcon, FilterIcon } from "@/src/shared/components/shared/Icon";
+import { useModal } from "@/src/shared/hooks/useModal";
 import { useRouter } from "next/navigation";
+import { OrderFilter } from "./OrderFilter";
+import type { OrderStatus } from "../types";
+import { useState } from "react";
 
 export const OrderHistoryPage = () => {
     const router = useRouter();
+    const { Modal, openModal, closeModal } = useModal();
+    const [selectedStatus, setSelectedStatus] = useState<OrderStatus | null>(null);
+    const [selectedPeriod, setSelectedPeriod] = useState<3 | 6 | 12 | null>(null);
     return (
         <div className="w-full max-w-7xl mx-auto px-4 py-8">
             <div className="flex items-center gap-2 mb-6">
@@ -27,13 +34,26 @@ export const OrderHistoryPage = () => {
                 </div> */}
 
                 <div>
-                    <button type="button" className="h-10 px-4 border border-gray-300/30 rounded text-base flex items-center gap-2">
+                    <button
+                        type="button"
+                        className="h-10 px-4 border border-gray-300/30 rounded text-base flex items-center gap-2"
+                        onClick={openModal}
+                    >
                         필터
                         <FilterIcon title="필터" />
                     </button>
                 </div>
             </div>
-            <OrderHistoryList />
+            <OrderHistoryList status={selectedStatus} period={selectedPeriod} />
+            <Modal title="필터">
+                <OrderFilter
+                    onApply={(status, period) => {
+                        setSelectedStatus(status);
+                        setSelectedPeriod(period);
+                        closeModal();
+                    }}
+                />
+            </Modal>
         </div>
     );
 };

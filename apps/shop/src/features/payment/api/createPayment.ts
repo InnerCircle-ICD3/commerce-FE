@@ -12,7 +12,7 @@ type CreatePaymentParams = {
 export const createPayment = async (params: CreatePaymentParams) => {
     const fetch = fetchClient();
 
-    const response = await fetch<CreatePaymentResponse>("/payment", {
+    const response = await fetch<CreatePaymentResponse>("/payments", {
         method: "POST",
         body: JSON.stringify(params),
     });
