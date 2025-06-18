@@ -1,10 +1,12 @@
 import { createFileRoute } from "@tanstack/react-router";
 import { useEffect } from "react";
 import { useAuth } from "@/features/auth/hooks/useAuth";
+import { useNavigate } from "@tanstack/react-router";
 
 // 콜백 컴포넌트
 function AuthCallback() {
     const { processNaverCallback } = useAuth();
+    const navigate = useNavigate();
 
     useEffect(() => {
         const handleCallback = async () => {
@@ -17,7 +19,7 @@ function AuthCallback() {
             if (error) {
                 console.error("OAuth 에러:", error);
                 alert("로그인 중 오류가 발생했습니다.");
-                window.location.href = "/login";
+                navigate({ to: "/login" });
                 return;
             }
 
@@ -25,16 +27,16 @@ function AuthCallback() {
                 const success = await processNaverCallback(code, state);
                 if (!success) {
                     alert("로그인에 실패했습니다. 다시 시도해주세요.");
-                    window.location.href = "/login";
+                    navigate({ to: "/login" });
                 }
             } else {
                 console.error("필수 파라미터가 누락되었습니다.");
-                window.location.href = "/login";
+                navigate({ to: "/login" });
             }
         };
 
         handleCallback();
-    }, [processNaverCallback]);
+    }, [processNaverCallback, navigate]);
 
     return (
         <div className="w-full min-h-screen flex items-center justify-center bg-gray-50">
