@@ -192,7 +192,7 @@ export default function ImageUpload({
                             src={previewUrl}
                             alt="미리보기"
                             className="max-w-full max-h-48 mx-auto object-contain"
-                            onError={(e) => {
+                            onError={() => {
                                 // 이미지 로드 실패 시 미리보기 제거
                                 setPreviewUrl(null);
                                 toast({
