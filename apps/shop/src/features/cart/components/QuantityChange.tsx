@@ -4,6 +4,7 @@ import { QuantityDecreaseIcon, QuantityIncreaseIcon } from "@/src/shared/compone
 import { fetchClient } from "@/src/shared/fetcher";
 import { useToast } from "@/src/shared/hooks/useToast";
 import { useEffect, useState } from "react";
+import { useQueryClient } from "@tanstack/react-query";
 import type { UpdateCartItemRequest, UpdateCartItemResponse } from "../types/cart";
 
 type QuantityChangeProps = {
@@ -16,6 +17,7 @@ export default function QuantityChange({ cartItemId, initQuantity, stockQuantity
     const [quantity, setQuantity] = useState<number>(initQuantity);
     const { toast, ToastUI } = useToast();
     const fetch = fetchClient();
+    const queryClient = useQueryClient();
 
     useEffect(() => {
         if (quantity !== initQuantity) {
@@ -47,8 +49,7 @@ export default function QuantityChange({ cartItemId, initQuantity, stockQuantity
         })
             .then(res => {
                 if (!res.data) {
-                    throw new Error();
-                }
+                    throw new Error();                }
 
                 if (res.data.requiresQuantityAdjustment) {
                     toast({
@@ -57,6 +58,9 @@ export default function QuantityChange({ cartItemId, initQuantity, stockQuantity
                 }
 
                 setQuantity(res.data.quantity);
+                
+                // React Query 캐시 무효화하여 최신 데이터로 업데이트
+                queryClient.invalidateQueries({ queryKey: ["cart"] });
             })
             .catch(error => {
                 toast({
