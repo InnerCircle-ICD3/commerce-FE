@@ -18,22 +18,20 @@ export default function Pagination({ page, totalPages }: PaginationProps) {
         const params = new URLSearchParams(searchParams.toString());
         params.set("page", newPage.toString());
         router.push(`?${params.toString()}`);
-    };
-
-    const getVisiblePages = () => {
+    };    const getVisiblePages = () => {
         const maxVisiblePages = 5;
 
         if (totalPages <= maxVisiblePages) {
-            // 전체 페이지가 5개 이하면 모두 표시
-            return Array.from({ length: totalPages }, (_, i) => i);
+            // 전체 페이지가 5개 이하면 모두 표시 (1-based)
+            return Array.from({ length: totalPages }, (_, i) => i + 1);
         }
-        // 현재 페이지를 중심으로 5개 페이지 계산
-        let startPage = Math.max(0, page - 2);
+        // 현재 페이지를 중심으로 5개 페이지 계산 (1-based)
+        let startPage = Math.max(1, page - 2);
         const endPage = Math.min(totalPages, startPage + maxVisiblePages - 1);
 
         // 끝페이지가 최대값에 도달했을 때 시작페이지 조정
         if (endPage - startPage < maxVisiblePages - 1) {
-            startPage = Math.max(0, endPage - maxVisiblePages + 1);
+            startPage = Math.max(1, endPage - maxVisiblePages + 1);
         }
 
         return Array.from({ length: endPage - startPage + 1 }, (_, i) => startPage + i);
@@ -47,17 +45,14 @@ export default function Pagination({ page, totalPages }: PaginationProps) {
                 className="px-2 py-1 text-lg font-bold text-gray-500 disabled:text-gray-300"
             >
                 {"<<"}
-            </button>
-            <button
+            </button>            <button
                 type="button"
-                onClick={() => changePage(Math.max(0, page - 1))}
+                onClick={() => changePage(Math.max(1, page - 1))}
                 disabled={!page || page === 1}
                 className="px-2 py-1 text-lg font-bold text-gray-500 disabled:text-gray-300"
             >
                 {"<"}
-            </button>
-            {getVisiblePages().map(i => {
-                const pageNumber = i + 1;
+            </button>{getVisiblePages().map(pageNumber => {
                 return (
                     <button
                         type="button"
