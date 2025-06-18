@@ -1,10 +1,10 @@
-"use client";
-
 import { Geist, Geist_Mono } from "next/font/google";
 import localFont from "next/font/local";
-import "./globals.css";
-import Providers from "./providers";
-import React, { Suspense } from "react";
+import "@/app/globals.css";
+import Providers from "@/app/providers";
+import type React from "react";
+import { Suspense } from "react";
+import { metadata } from "@/app/metadata";
 
 const geistSans = Geist({
     variable: "--font-geist-sans",
@@ -36,6 +36,8 @@ const pretendard = localFont({
     ],
     variable: "--font-pretendard",
 });
+
+export { metadata };
 
 export default function RootLayout({
     children,
