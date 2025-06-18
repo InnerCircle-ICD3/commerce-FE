@@ -7,13 +7,12 @@ type CreatePaymentResponse = {
 type CreatePaymentParams = {
     orderNumber: string;
     transactionId: string;
-    paymentMethod: string;
 };
 
 export const createPayment = async (params: CreatePaymentParams) => {
     const fetch = fetchClient();
 
-    const response = await fetch<CreatePaymentResponse>("/api/payment", {
+    const response = await fetch<CreatePaymentResponse>("/payment", {
         method: "POST",
         body: JSON.stringify(params),
     });

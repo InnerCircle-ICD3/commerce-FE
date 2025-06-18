@@ -4,9 +4,9 @@ import { z } from "zod";
 import type { AddressType } from "../types";
 
 interface CreateOrderParams {
-    deliveryMessage: string | null;
-    cartItemIds: string;
-    shippingInfo: Omit<AddressType, "addressId">;
+    cartItemIds: number[];
+    shippingInfo: Omit<AddressType, "addressId"> & { deliveryMessage: string };
+    paymentMethod: string;
 }
 
 interface UseCreateOrderProps {
@@ -32,17 +32,17 @@ const createOrderSchema = z.object({
         recipientName: z.string().min(1, "받는 사람 이름을 입력해주세요."),
         recipientPhone: z.string().min(1, "받는 사람 전화번호를 입력해주세요."),
         isDefault: z.boolean().optional(),
+        deliveryMessage: z.string().optional(),
     }),
-    deliveryMessage: z.string().optional(),
-    cartItemIds: z.string().min(1, "상품을 선택해주세요."),
+    cartItemIds: z.array(z.number()).min(1, "상품을 선택해주세요."),
+    paymentMethod: z.string().min(1, "결제 수단을 선택해주세요."),
 });
 
 const createOrder = async (params: CreateOrderParams): Promise<{ data: CreateOrderResponse | null; error: Error | null }> => {
-    console.log(params);
     try {
         const validatedParams = createOrderSchema.parse(params);
         const fetch = fetchClient();
-        const response = await fetch<CreateOrderResponse>("/api/orders", {
+        const response = await fetch<CreateOrderResponse>("/orders", {
             method: "POST",
             body: JSON.stringify(validatedParams),
         });

@@ -4,34 +4,25 @@ import { useModal } from "@/src/shared/hooks/useModal";
 import AddressList from "./AddressList";
 import type { AddressType } from "@/src/features/order/types";
 import SelectDeliveryMessage from "./SelectDeliveryMessage";
-import { useAddressQuery } from "../hooks/useAddressesQuery";
-import { useEffect, useState } from "react";
 
 interface SelectShippingInfoProps {
-    shipingInfo?: Omit<AddressType, "addressId">;
+    shipingInfo: AddressType | null;
     onChangeAddress: (address: AddressType) => void;
     onChangeDeliveryMessage: (message: string) => void;
+    addresses: AddressType[];
 }
-export default function SelectShippingInfo({ shipingInfo, onChangeDeliveryMessage, onChangeAddress }: SelectShippingInfoProps) {
+export default function SelectShippingInfo({ shipingInfo, onChangeDeliveryMessage, onChangeAddress, addresses }: SelectShippingInfoProps) {
     const { openModal, closeModal, Modal } = useModal();
-    const { addresses, isLoading } = useAddressQuery();
-    const [selectedAddress, setSelectedAddress] = useState<AddressType | null>(null);
 
     const handleChangeAddress = (address: AddressType) => {
         onChangeAddress(address);
         closeModal();
     };
-    useEffect(() => {
-        if (!isLoading) {
-            const defaultAddress = addresses.find(address => address.isDefault);
-            setSelectedAddress(defaultAddress || null);
-        }
-    }, [addresses, isLoading]);
 
     return (
         <div className="p-4 border border-gray-200 rounded-2xl">
             <h4 className="text-lg font-bold">배송지</h4>
-            {shipingInfo ? (
+            {addresses.length > 0 && shipingInfo ? (
                 <>
                     <div className="flex justify-between items-center mb-5">
                         <div className="flex items-center gap-2">
@@ -58,7 +49,7 @@ export default function SelectShippingInfo({ shipingInfo, onChangeDeliveryMessag
                 </div>
             )}
             <Modal title="배송지 변경" onClickClose={closeModal}>
-                <AddressList onSelect={handleChangeAddress} selectMode={true} selectedAddressId={selectedAddress?.addressId} addresses={addresses} />
+                <AddressList onSelect={handleChangeAddress} selectMode={true} selectedAddressId={shipingInfo?.addressId} addresses={addresses} />
             </Modal>
         </div>
     );

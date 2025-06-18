@@ -11,6 +11,6 @@ type GetOrderListResponse = {
 
 export const getOrderList = async (page?: number): Promise<{ data: GetOrderListResponse | null; error: Error | null }> => {
     const fetch = fetchClient();
-    const response = await fetch<GetOrderListResponse>(`/api/orders?page=${page}`);
+    const response = await fetch<GetOrderListResponse>(`/orders?page=${page}`);
     return response;
 };

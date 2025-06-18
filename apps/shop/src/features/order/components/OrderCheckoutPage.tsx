@@ -13,17 +13,19 @@ import { useSearchParams } from "next/navigation";
 import PaymentSummary from "./PaymentSummary";
 import { ErrorBoundary } from "next/dist/client/components/error-boundary";
 import ErrorComponent from "@/src/shared/components/shared/ErrorComponent";
+import { useAddressQuery } from "../hooks/useAddressesQuery";
 
 export default function OrderCheckoutPage() {
     const { toast, ToastUI } = useToast();
     const params = useSearchParams();
     const cartItemIds = params.get("cartItemIds") as string;
-    const [shippingInfo, setShippingInfo] = useState<Omit<AddressType, "addressId"> | null>(null);
+    const [shippingInfo, setShippingInfo] = useState<AddressType | null>(null);
     const { data: orderPrepareData } = useOrderPrepare({
         cartItemIds: cartItemIds,
     });
     const [deliveryMessage, setDeliveryMessage] = useState<string>("");
     const [paymentMethod, setPaymentMethod] = useState<string | null>(null);
+    const { addresses, isLoading: isAddressLoading } = useAddressQuery();
 
     const { mutate: createPaymentMutate } = useCreatePayment();
 
@@ -39,7 +41,6 @@ export default function OrderCheckoutPage() {
                 createPaymentMutate({
                     orderNumber: data.data.orderNumber,
                     transactionId: `payment-${createUUID()}`,
-                    paymentMethod,
                 });
             }
         },
@@ -54,30 +55,32 @@ export default function OrderCheckoutPage() {
             });
             return;
         }
+        if (!paymentMethod) {
+            toast({
+                message: "결제 수단을 선택해주세요.",
+            });
+            return;
+        }
         createOrderMutate({
-            shippingInfo,
-            cartItemIds,
-            deliveryMessage,
+            shippingInfo: {
+                ...shippingInfo,
+                deliveryMessage,
+            },
+            cartItemIds: cartItemIds.split(",").map(Number),
+            paymentMethod,
         });
     };
 
     const handleShippingInfo = (address: AddressType) => {
-        setShippingInfo({
-            address1: address.address1,
-            address2: address.address2,
-            isDefault: address.isDefault,
-            recipientName: address.recipientName,
-            recipientPhone: address.recipientPhone,
-            zipCode: address.zipCode,
-            alias: address.alias,
-        });
+        setShippingInfo(address);
     };
 
     useEffect(() => {
-        if (orderPrepareData?.data) {
-            setShippingInfo(orderPrepareData.data.shippingInfo);
+        if (!isAddressLoading && addresses.length > 0) {
+            const defaultAddress = addresses.find(address => address.isDefault);
+            setShippingInfo(defaultAddress || null);
         }
-    }, [orderPrepareData]);
+    }, [addresses, isAddressLoading]);
 
     return (
         <ErrorBoundary errorComponent={ErrorComponent}>
@@ -88,13 +91,12 @@ export default function OrderCheckoutPage() {
                         <div>
                             <section className="mb-10">
                                 <h4 className="text-lg font-bold mb-4">배송지선택</h4>
-                                {shippingInfo && (
-                                    <SelectShippingInfo
-                                        shipingInfo={shippingInfo}
-                                        onChangeAddress={handleShippingInfo}
-                                        onChangeDeliveryMessage={setDeliveryMessage}
-                                    />
-                                )}
+                                <SelectShippingInfo
+                                    shipingInfo={shippingInfo}
+                                    onChangeAddress={handleShippingInfo}
+                                    onChangeDeliveryMessage={setDeliveryMessage}
+                                    addresses={addresses}
+                                />
                             </section>
 
                             <section className="mb-10">

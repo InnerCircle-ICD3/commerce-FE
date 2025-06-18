@@ -15,6 +15,7 @@ export type OrderPrepareResponse = {
         itemSubtotal: number;
     }[];
     shippingInfo: {
+        addressId: number;
         recipientName: string;
         recipientPhone: string;
         zipCode: string;
