@@ -6,17 +6,17 @@ import AddressItem from "./AddressItem";
 import { Button } from "@/src/shared/components/shared/button";
 import { useModal } from "@/src/shared/hooks/useModal";
 import EditAddress from "./EditAddress";
-import { useAddressQuery } from "../hooks/useAddressesQuery";
 
 interface AddressListProps {
     onSelect?: (address: AddressType) => void;
     selectMode?: boolean;
+    selectedAddressId?: number;
+    addresses: AddressType[];
 }
 
-export default function AddressList({ onSelect, selectMode = false }: AddressListProps) {
+export default function AddressList({ onSelect, selectMode = false, selectedAddressId, addresses }: AddressListProps) {
     // 현재 선택된 목록 표시를 위한 상태값
     const [selectedAddress, setSelectedAddress] = useState<AddressType | null>(null);
-    const { addresses } = useAddressQuery();
     const onClick = (id: number) => {
         if (addresses) {
             setSelectedAddress(addresses.find(address => address.addressId === id) || null);
@@ -33,10 +33,11 @@ export default function AddressList({ onSelect, selectMode = false }: AddressLis
     const { openModal: openEditAddressModal, closeModal: closeEditAddressModal, Modal } = useModal();
 
     useEffect(() => {
-        if (addresses.length > 0) {
-            setSelectedAddress(addresses[0]);
+        const selectedAddress = addresses.find(address => address.addressId === selectedAddressId);
+        if (selectedAddress) {
+            setSelectedAddress(selectedAddress);
         }
-    }, [addresses]);
+    }, [addresses, selectedAddressId]);
     return (
         <div>
             <div className="mb-4">

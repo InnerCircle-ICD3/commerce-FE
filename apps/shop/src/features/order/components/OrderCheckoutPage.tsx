@@ -76,7 +76,6 @@ export default function OrderCheckoutPage() {
     useEffect(() => {
         if (orderPrepareData?.data) {
             setShippingInfo(orderPrepareData.data.shippingInfo);
-            setPaymentMethod(orderPrepareData.data.paymentMethod[0].code);
         }
     }, [orderPrepareData]);
 
@@ -119,6 +118,7 @@ export default function OrderCheckoutPage() {
                                 <PaymentSummary
                                     items={
                                         orderPrepareData?.data?.items.map(item => ({
+                                            cartItemId: item.cartItemId,
                                             productId: item.productId,
                                             productName: item.name,
                                             unitPrice: item.unitPrice,

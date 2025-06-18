@@ -4,7 +4,7 @@ import { getAddresses } from "../api/getAddresses";
 export const useAddressQuery = () => {
     const { data, isLoading, error } = useQuery({
         queryKey: ["addresses"],
-        queryFn: () => getAddresses(),
+        queryFn: getAddresses,
     });
 
     return {

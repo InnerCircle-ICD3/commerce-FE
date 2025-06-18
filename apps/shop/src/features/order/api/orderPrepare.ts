@@ -8,7 +8,7 @@ export const orderPrepare = async (
     error: Error | null;
 }> => {
     const fetch = fetchClient();
-    const response = await fetch<OrderPrepareResponse>(`/api/orders/prepare?cartItemIds=${cartItemIds}`, {
+    const response = await fetch<OrderPrepareResponse>(`/orders/prepare?cartItemIds=${cartItemIds}`, {
         method: "GET",
         headers: {
             "Content-Type": "application/json",

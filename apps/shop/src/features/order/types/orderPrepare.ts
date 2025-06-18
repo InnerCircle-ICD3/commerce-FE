@@ -6,6 +6,7 @@ export type OrderPrepareResponse = {
     shippingFee: number;
     finalTotalPrice: number;
     items: {
+        cartItemId: number;
         productId: number;
         name: string;
         thumbnail: string;

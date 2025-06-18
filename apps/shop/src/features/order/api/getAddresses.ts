@@ -6,7 +6,7 @@ export const getAddresses = async (): Promise<{
     error: Error | null;
 }> => {
     const fetch = fetchClient();
-    const response = await fetch<AddressType[]>("/api/users/addresses", {
+    const response = await fetch<AddressType[]>("/users/addresses", {
         method: "GET",
         headers: {
             "Content-Type": "application/json",
