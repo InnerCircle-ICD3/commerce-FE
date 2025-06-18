@@ -2,6 +2,7 @@ import { useState } from "react";
 import type { AdminReply } from "@/features/review/types/type";
 import { fetcher } from "@/shared/kyInstance";
 import { EditIcon, TrashIcon } from "@/shared/components/shared/Icon";
+import { useQueryClient } from "@tanstack/react-query";
 
 interface ReplyProps {
     //todo: replyId가 필요한지 확인하기
@@ -12,6 +13,7 @@ interface ReplyProps {
 export default function Reply({ reply, reviewId }: ReplyProps) {
     const [isEditing, setIsEditing] = useState(false);
     const [editContent, setEditContent] = useState(reply.content);
+    const queryClient = useQueryClient();
 
     const handleEdit = () => {
         setIsEditing(true);
@@ -26,13 +28,12 @@ export default function Reply({ reply, reviewId }: ReplyProps) {
     };
 
     const requestEdit = async (content: string) => {
-        fetcher(`/admin/reviews/${reviewId}/reply`, {
+        fetcher(`admin/reviews/${reviewId}/reply`, {
             method: "PUT",
             json: { content },
         })
             .then(() => {
-                setEditContent(content);
-                setIsEditing(false);
+                queryClient.invalidateQueries({ queryKey: ["reviews"] }); // 리뷰 목록을 새로고침
             })
             .catch(error => {
                 console.error("답변 수정 실패:", error);
@@ -52,12 +53,16 @@ export default function Reply({ reply, reviewId }: ReplyProps) {
     };
 
     const requestDelete = async () => {
-        fetcher(`/admin/reviews/${reviewId}/reply`, {
+        fetcher(`admin/reviews/${reviewId}/reply`, {
             method: "DELETE",
-        }).catch(error => {
-            console.error("답변 삭제 실패:", error);
-            alert("답변 삭제에 실패했습니다. 나중에 다시 시도해주세요.");
-        });
+        })
+            .then(() => {
+                queryClient.invalidateQueries({ queryKey: ["reviews"] }); // 리뷰 목록을 새로고침
+            })
+            .catch(error => {
+                console.error("답변 삭제 실패:", error);
+                alert("답변 삭제에 실패했습니다. 나중에 다시 시도해주세요.");
+            });
     };
 
     return (

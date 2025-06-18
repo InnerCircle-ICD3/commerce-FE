@@ -2,48 +2,29 @@ import { useMemo } from "react";
 
 interface PaginationProps {
     currentPage: number;
-    totalItems: number;
+    totalPages: number;
     onPageChange: (page: number) => void;
 }
 
-const MAX_VISIBLE_PAGES = 5; // 최대 표시할 페이지 번호 개수
-const ITEMS_PER_PAGE = 10; // 페이지당 아이템 수
-
-export function Pagination({ currentPage, totalItems, onPageChange }: PaginationProps) {
-    const totalPages = Math.ceil(totalItems / ITEMS_PER_PAGE);
-    const startItem = (currentPage - 1) * ITEMS_PER_PAGE + 1;
-    const endItem = Math.min(currentPage * ITEMS_PER_PAGE, totalItems);
-
-    // 표시할 페이지 번호들을 계산
+export function Pagination({ currentPage, totalPages, onPageChange }: PaginationProps) {
+    // shop과 동일한 페이지 계산 알고리즘
     const visiblePages = useMemo(() => {
-        const pages: number[] = [];
+        const maxVisiblePages = 5;
 
-        if (totalPages <= MAX_VISIBLE_PAGES) {
-            // 전체 페이지가 maxVisiblePages보다 적으면 모든 페이지 표시
-            for (let i = 1; i <= totalPages; i++) {
-                pages.push(i);
-            }
-        } else {
-            // 현재 페이지를 중심으로 페이지 번호 계산
-            const halfVisible = Math.floor(MAX_VISIBLE_PAGES / 2);
-            let start = Math.max(1, currentPage - halfVisible);
-            let end = Math.min(totalPages, currentPage + halfVisible);
+        if (totalPages <= maxVisiblePages) {
+            // 전체 페이지가 5개 이하면 모두 표시 (1-based)
+            return Array.from({ length: totalPages }, (_, i) => i + 1);
+        }
+        // 현재 페이지를 중심으로 5개 페이지 계산 (1-based)
+        let startPage = Math.max(1, currentPage - 2);
+        const endPage = Math.min(totalPages, startPage + maxVisiblePages - 1);
 
-            // 시작이나 끝에 붙어있을 때 조정
-            if (end - start + 1 < MAX_VISIBLE_PAGES) {
-                if (start === 1) {
-                    end = Math.min(totalPages, start + MAX_VISIBLE_PAGES - 1);
-                } else {
-                    start = Math.max(1, end - MAX_VISIBLE_PAGES + 1);
-                }
-            }
-
-            for (let i = start; i <= end; i++) {
-                pages.push(i);
-            }
+        // 끝페이지가 최대값에 도달했을 때 시작페이지 조정
+        if (endPage - startPage < maxVisiblePages - 1) {
+            startPage = Math.max(1, endPage - maxVisiblePages + 1);
         }
 
-        return pages;
+        return Array.from({ length: endPage - startPage + 1 }, (_, i) => startPage + i);
     }, [currentPage, totalPages]);
 
     const handlePrevious = () => {
@@ -64,57 +45,79 @@ export function Pagination({ currentPage, totalItems, onPageChange }: Pagination
         }
     };
 
-    // 총 아이템이 0이면 페이지네이션을 표시하지 않음
-    if (totalItems === 0) {
+    // 총 페이지가 0이면 페이지네이션을 표시하지 않음
+    if (totalPages === 0) {
         return null;
     }
-
     return (
-        <div className="flex justify-between items-center">
-            <div className="text-sm text-gray-500">
-                {totalItems}개 항목 중 {startItem}-{endItem} 표시
-            </div>
-            <nav className="flex space-x-1">
-                {/* 처음 페이지 */}
-                <Button onClick={() => handlePageClick(1)} disabled={currentPage === 1} aria-label="First page">
-                    ≪
-                </Button>
+        <div className="flex items-center justify-center gap-2 my-6">
+            {/* 처음 페이지 */}
+            <Button onClick={() => handlePageClick(1)} disabled={currentPage === 1} aria-label="First page">
+                {"<<"}
+            </Button>
 
-                {/* 이전 페이지 */}
-                <Button onClick={handlePrevious} disabled={currentPage === 1} aria-label="Previous page">
-                    &lt;
-                </Button>
+            {/* 이전 페이지 */}
+            <Button onClick={handlePrevious} disabled={currentPage === 1} aria-label="Previous page">
+                {"<"}
+            </Button>
 
-                {/* 페이지 번호들 */}
-                {visiblePages.map(page => (
-                    <Button key={page} onClick={() => handlePageClick(page)} disabled={page === currentPage} aria-label={`Page ${page}`}>
-                        {page}
-                    </Button>
-                ))}
-
-                {/* 다음 페이지 */}
-                <Button onClick={handleNext} disabled={currentPage === totalPages} aria-label="Next page">
-                    &gt;
+            {/* 페이지 번호들 */}
+            {visiblePages.map(page => (
+                <Button
+                    key={page}
+                    onClick={() => handlePageClick(page)}
+                    disabled={page === currentPage}
+                    aria-label={`Page ${page}`}
+                    isActive={page === currentPage}
+                >
+                    {page}
                 </Button>
+            ))}
 
-                {/* 마지막 페이지 */}
-                <Button onClick={() => handlePageClick(totalPages)} disabled={currentPage === totalPages} aria-label="Last page">
-                    ≫
-                </Button>
-            </nav>
+            {/* 다음 페이지 */}
+            <Button onClick={handleNext} disabled={currentPage === totalPages} aria-label="Next page">
+                {">"}
+            </Button>
+
+            {/* 마지막 페이지 */}
+            <Button onClick={() => handlePageClick(totalPages)} disabled={currentPage === totalPages} aria-label="Last page">
+                {">>"}
+            </Button>
         </div>
     );
 }
 
-const Button = ({ children, onClick, disabled }: { children: React.ReactNode; onClick: () => void; disabled?: boolean }) => (
-    <button
-        type="button"
-        onClick={onClick}
-        disabled={disabled}
-        className={`flex justify-center w-8 px-3 py-1 text-sm rounded-md border border-gray-300 ${
-            disabled ? "bg-gray-100 text-gray-400 cursor-not-allowed" : "bg-white text-gray-500 hover:bg-gray-50"
-        }`}
-    >
-        {children}
-    </button>
-);
+type buttonProps = {
+    children: React.ReactNode;
+    onClick: () => void;
+    disabled?: boolean;
+    isActive?: boolean;
+};
+
+const Button = ({ children, onClick, disabled, isActive = false }: buttonProps) => {
+    if (isActive) {
+        return (
+            <button
+                type="button"
+                onClick={onClick}
+                disabled={disabled}
+                className="min-w-[2.5rem] h-9 px-3 py-2 rounded-md bg-blue-600 text-white text-sm font-medium transition-colors"
+            >
+                {children}
+            </button>
+        );
+    }
+
+    return (
+        <button
+            type="button"
+            onClick={onClick}
+            disabled={disabled}
+            className={`min-w-[2.5rem] h-9 px-3 py-2 rounded-md text-sm font-medium transition-colors ${
+                disabled ? "text-gray-400 cursor-not-allowed" : "bg-white border border-gray-300 text-gray-700 hover:bg-gray-50"
+            }`}
+        >
+            {children}
+        </button>
+    );
+};

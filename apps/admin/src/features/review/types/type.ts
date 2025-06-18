@@ -9,10 +9,14 @@ export interface Review {
     content: string;
     createdAt: string;
     adminReply?: AdminReply | null;
-    productId: number;
-    productName: string;
-    productThumbnail: string;
-    user: User;
+    product: {
+        productId: number;
+        productName: string;
+    };
+    user: {
+        userId: string;
+        nickname: string;
+    };
 }
 
 export interface ReviewData {
@@ -21,9 +25,4 @@ export interface ReviewData {
     size: number;
     totalPages: number;
     totalElements: number;
-}
-
-interface User {
-    userId: string;
-    nickname: string;
 }

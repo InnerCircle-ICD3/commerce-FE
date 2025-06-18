@@ -1,10 +1,12 @@
 import { useState } from "react";
+import { useQueryClient } from "@tanstack/react-query";
 import ReplyWrite from "@/features/review/components/ReplyWrite";
 import { fetcher } from "@/shared/kyInstance";
 
 export default function ReplyPending({ reviewId }: { reviewId: number }) {
     const [isReplying, setIsReplying] = useState(false);
     const [replyText, setReplyText] = useState("");
+    const queryClient = useQueryClient();
 
     const reply = () => {
         setIsReplying(true);
@@ -22,11 +24,15 @@ export default function ReplyPending({ reviewId }: { reviewId: number }) {
     };
 
     const requestReply = async () => {
-        fetcher(`/admin/reviews/${reviewId}/reply`, {
+        fetcher(`admin/reviews/${reviewId}/reply`, {
             method: "POST",
+            json: {
+                content: replyText,
+            },
         })
             .then(() => {
                 setIsReplying(false);
+                queryClient.invalidateQueries({ queryKey: ["reviews"] }); // 리뷰 목록을 새로고침
             })
             .catch(error => {
                 console.error("답변 요청 실패:", error);
@@ -52,15 +58,16 @@ export default function ReplyPending({ reviewId }: { reviewId: number }) {
                         <p className="text-xs text-amber-600">고객이 관리자 답변을 기다리고 있습니다.</p>
                     </div>
                 </div>
-                <button
-                    type="button"
-                    onClick={reply}
-                    className="inline-flex items-center px-3 py-2 border border-transparent text-sm leading-4 font-medium rounded-md text-white bg-blue-600 hover:bg-blue-700 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-blue-500 transition-colors"
-                >
-                    답변하기
-                </button>
+                {!isReplying && (
+                    <button
+                        type="button"
+                        onClick={reply}
+                        className="inline-flex items-center px-3 py-2 border border-transparent text-sm leading-4 font-medium rounded-md text-white bg-blue-600 hover:bg-blue-700 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-blue-500 transition-colors"
+                    >
+                        답변하기
+                    </button>
+                )}
             </div>
-
             {isReplying && (
                 <ReplyWrite setReplyText={setReplyText} replyText={replyText} onReplySubmit={handleSubmitReply} onCancel={handleCancelReply} />
             )}
