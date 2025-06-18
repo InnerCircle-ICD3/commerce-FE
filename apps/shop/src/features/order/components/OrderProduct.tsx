@@ -9,15 +9,15 @@ import { useState } from "react";
 
 type OrderDetailItem = OrderDetailData["items"][number] & {
     reviewWritten?: boolean;
-    orderNumber: string;
 };
 
 interface OrderProductProps {
     products: OrderDetailItem[];
     reviewable: boolean;
+    orderNumber: string;
 }
 
-export const OrderProduct = ({ products, reviewable }: OrderProductProps) => {
+export const OrderProduct = ({ products, reviewable, orderNumber }: OrderProductProps) => {
     const [reviewingProduct, setReviewingProduct] = useState<OrderDetailItem | null>(null);
 
     return (
@@ -93,7 +93,7 @@ export const OrderProduct = ({ products, reviewable }: OrderProductProps) => {
                         title: reviewingProduct.name,
                         imageUrl: reviewingProduct.thumbnail,
                     }}
-                    orderNumber={reviewingProduct.orderNumber}
+                    orderNumber={orderNumber}
                     isOpen={!!reviewingProduct}
                     onClickClose={() => setReviewingProduct(null)}
                 />
