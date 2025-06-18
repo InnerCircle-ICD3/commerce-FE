@@ -7,7 +7,9 @@ interface CancelOrderResponse {
 
 export const cancelOrder = async (orderId: string) => {
     const fetch = fetchClient();
-    const response = await fetch<CancelOrderResponse>(`/api/orders/${orderId}/cancel`);
+    const response = await fetch<CancelOrderResponse>(`/orders/${orderId}/cancel`, {
+        method: "POST",
+    });
 
     return response;
 };

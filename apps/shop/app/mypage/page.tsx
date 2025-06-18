@@ -43,14 +43,14 @@ export default function Page() {
         <div className="flex flex-col justify-center max-w-screen-xl mx-auto px-4 lg:px-8 gap-4 p-7 my-16">
             <h1 className="text-2xl font-bold mb-6">마이페이지</h1>
             <UserInfo />
-            <div className="flex flex-col gap-4 my-8">
+            {/* <div className="flex flex-col gap-4 my-8">
                 <h2 className="text-lg font-bold">배송 중 상품</h2>
                 <div className="flex flex-col lg:flex-row gap-4 flex-wrap">
                     {shippingProducts.map(product => (
                         <ShippingProductInfo key={product.orderNumber} product={product} />
                     ))}
                 </div>
-            </div>
+            </div> */}
             {menuInfos.map(menu => (
                 <LinkedMenu key={menu.title} name={menu.title} href={menu.href} />
             ))}

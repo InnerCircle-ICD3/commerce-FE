@@ -74,7 +74,7 @@ export const OrderHistoryList = () => {
 
                     <div className="flex gap-4 mb-4">
                         <div className="w-20 h-20 bg-gray-100 rounded-md overflow-hidden relative">
-                            {/* <Image src={order.mainProductThumbnail} alt={`${order.orderName} 이미지`} fill sizes="5rem" className="object-cover" /> */}
+                            <Image src={order.mainProductThumbnail} alt={`${order.orderName} 이미지`} fill sizes="5rem" className="object-cover" />
                         </div>
                         <div className="flex flex-col justify-between">
                             <h3 className="font-bold text-sm">{order.orderName}</h3>
