@@ -20,6 +20,7 @@ import { Route as AuthenticatedReviewsImport } from './routes/_authenticated/rev
 import { Route as AuthenticatedChatManagementImport } from './routes/_authenticated/chat-management'
 import { Route as AuthenticatedProductsIndexImport } from './routes/_authenticated/products/index'
 import { Route as AuthenticatedProductsNewImport } from './routes/_authenticated/products/new'
+import { Route as AuthenticatedProductsProductIdEditImport } from './routes/_authenticated/products/$productId.edit'
 
 // Create/Update Routes
 
@@ -78,6 +79,13 @@ const AuthenticatedProductsNewRoute = AuthenticatedProductsNewImport.update({
   path: '/products/new',
   getParentRoute: () => AuthenticatedRouteRoute,
 } as any)
+
+const AuthenticatedProductsProductIdEditRoute =
+  AuthenticatedProductsProductIdEditImport.update({
+    id: '/products/$productId/edit',
+    path: '/products/$productId/edit',
+    getParentRoute: () => AuthenticatedRouteRoute,
+  } as any)
 
 // Populate the FileRoutesByPath interface
 
@@ -146,6 +154,13 @@ declare module '@tanstack/react-router' {
       preLoaderRoute: typeof AuthenticatedProductsIndexImport
       parentRoute: typeof AuthenticatedRouteImport
     }
+    '/_authenticated/products/$productId/edit': {
+      id: '/_authenticated/products/$productId/edit'
+      path: '/products/$productId/edit'
+      fullPath: '/products/$productId/edit'
+      preLoaderRoute: typeof AuthenticatedProductsProductIdEditImport
+      parentRoute: typeof AuthenticatedRouteImport
+    }
   }
 }
 
@@ -157,6 +172,7 @@ interface AuthenticatedRouteRouteChildren {
   AuthenticatedIndexRoute: typeof AuthenticatedIndexRoute
   AuthenticatedProductsNewRoute: typeof AuthenticatedProductsNewRoute
   AuthenticatedProductsIndexRoute: typeof AuthenticatedProductsIndexRoute
+  AuthenticatedProductsProductIdEditRoute: typeof AuthenticatedProductsProductIdEditRoute
 }
 
 const AuthenticatedRouteRouteChildren: AuthenticatedRouteRouteChildren = {
@@ -165,6 +181,8 @@ const AuthenticatedRouteRouteChildren: AuthenticatedRouteRouteChildren = {
   AuthenticatedIndexRoute: AuthenticatedIndexRoute,
   AuthenticatedProductsNewRoute: AuthenticatedProductsNewRoute,
   AuthenticatedProductsIndexRoute: AuthenticatedProductsIndexRoute,
+  AuthenticatedProductsProductIdEditRoute:
+    AuthenticatedProductsProductIdEditRoute,
 }
 
 const AuthenticatedRouteRouteWithChildren =
@@ -180,6 +198,7 @@ export interface FileRoutesByFullPath {
   '/': typeof AuthenticatedIndexRoute
   '/products/new': typeof AuthenticatedProductsNewRoute
   '/products': typeof AuthenticatedProductsIndexRoute
+  '/products/$productId/edit': typeof AuthenticatedProductsProductIdEditRoute
 }
 
 export interface FileRoutesByTo {
@@ -191,6 +210,7 @@ export interface FileRoutesByTo {
   '/': typeof AuthenticatedIndexRoute
   '/products/new': typeof AuthenticatedProductsNewRoute
   '/products': typeof AuthenticatedProductsIndexRoute
+  '/products/$productId/edit': typeof AuthenticatedProductsProductIdEditRoute
 }
 
 export interface FileRoutesById {
@@ -204,6 +224,7 @@ export interface FileRoutesById {
   '/_authenticated/': typeof AuthenticatedIndexRoute
   '/_authenticated/products/new': typeof AuthenticatedProductsNewRoute
   '/_authenticated/products/': typeof AuthenticatedProductsIndexRoute
+  '/_authenticated/products/$productId/edit': typeof AuthenticatedProductsProductIdEditRoute
 }
 
 export interface FileRouteTypes {
@@ -218,6 +239,7 @@ export interface FileRouteTypes {
     | '/'
     | '/products/new'
     | '/products'
+    | '/products/$productId/edit'
   fileRoutesByTo: FileRoutesByTo
   to:
     | '/chat'
@@ -228,6 +250,7 @@ export interface FileRouteTypes {
     | '/'
     | '/products/new'
     | '/products'
+    | '/products/$productId/edit'
   id:
     | '__root__'
     | '/_authenticated'
@@ -239,6 +262,7 @@ export interface FileRouteTypes {
     | '/_authenticated/'
     | '/_authenticated/products/new'
     | '/_authenticated/products/'
+    | '/_authenticated/products/$productId/edit'
   fileRoutesById: FileRoutesById
 }
 
@@ -279,7 +303,8 @@ export const routeTree = rootRoute
         "/_authenticated/reviews",
         "/_authenticated/",
         "/_authenticated/products/new",
-        "/_authenticated/products/"
+        "/_authenticated/products/",
+        "/_authenticated/products/$productId/edit"
       ]
     },
     "/chat": {
@@ -309,6 +334,10 @@ export const routeTree = rootRoute
     },
     "/_authenticated/products/": {
       "filePath": "_authenticated/products/index.ts",
+      "parent": "/_authenticated"
+    },
+    "/_authenticated/products/$productId/edit": {
+      "filePath": "_authenticated/products/$productId.edit.tsx",
       "parent": "/_authenticated"
     }
   }
