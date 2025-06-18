@@ -1,6 +1,6 @@
-import { useSidebar } from "@/shared/components/ui/sidebar";
-import { useUser } from "@/features/auth/stores/authStore";
 import { useAuth } from "@/features/auth/hooks/useAuth";
+import { useUser } from "@/features/auth/stores/authStore";
+import { useSidebar } from "@/shared/components/ui/sidebar";
 
 interface User {
     name: string;

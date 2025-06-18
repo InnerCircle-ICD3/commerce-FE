@@ -1,288 +1,401 @@
 import { Button } from "@/shared/components/ui/button";
-import { useNavigate } from "@tanstack/react-router";
 import { Input } from "@/shared/components/ui/input";
-import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from "@/shared/components/ui/select";
-import { useMutation, useQuery } from "@tanstack/react-query";
 import { toast } from "@/shared/components/ui/use-toast";
-import { createProduct, getIntensities, getCupSizes } from "./api";
-import type { CreateProductDto } from "./api";
+import { useMutation } from "@tanstack/react-query";
+import { useNavigate } from "@tanstack/react-router";
 import { useState } from "react";
-import type { FormEvent, ChangeEvent } from "react";
+import type { ChangeEvent, FormEvent } from "react";
+import { createProduct } from "./api";
+import type { CreateProductDto } from "./api";
+import ImageUpload from "./components/ImageUpload";
+import CategorySelectEnum from "./components/CategorySelectEnum";
 
-export default function ProductForm() {
-  const navigate = useNavigate();
-  
-  // 상품 폼 상태 관리
-  const [formData, setFormData] = useState<CreateProductDto>({
-    name: "",
-    price: 0,
-    quantity: 0,
-    thumbnail: "",
-    detailImage: "",
-    intensityId: 0,
-    cupSizeId: 0
-  });
-  
-  // 에러 메시지 상태 관리
-  const [errors, setErrors] = useState<Record<string, string>>({
-    name: "",
-    price: "",
-    quantity: "",
-    thumbnail: "",
-    detailImage: "",
-    intensityId: "",
-    cupSizeId: ""
-  });
-
-  // 강도 카테고리 조회
-  const { data: intensities = [] } = useQuery({
-    queryKey: ['intensities'],
-    queryFn: getIntensities,
-  });
-
-  // 컵 사이즈 카테고리 조회
-  const { data: cupSizes = [] } = useQuery({
-    queryKey: ['cupSizes'],
-    queryFn: getCupSizes,
-  });
-  
-  // 입력 필드 변경 핸들러
-  const handleChange = (e: ChangeEvent<HTMLInputElement>) => {
-    const { name, value } = e.target;
-    setFormData((prev: CreateProductDto) => ({
-      ...prev,
-      [name]: name === "price" || name === "quantity" ? Number(value) : value
-    }));
-    
-    // 에러 메시지 초기화
-    if (errors[name]) {
-      setErrors((prev: Record<string, string>) => ({ ...prev, [name]: "" }));
-    }
-  };
-  
-  // 셀렉트 필드 변경 핸들러
-  const handleSelectChange = (name: string, value: string) => {
-    setFormData((prev: CreateProductDto) => ({
-      ...prev,
-      [name]: Number(value)
-    }));
-    
-    // 에러 메시지 초기화
-    if (errors[name]) {
-      setErrors((prev: Record<string, string>) => ({ ...prev, [name]: "" }));
-    }
-  };
-
-  // 폼 유효성 검사
-  const validateForm = () => {
-    const newErrors: Record<string, string> = {};
-    let isValid = true;
-    
-    // 상품명 검증
-    if (!formData.name || formData.name.length < 2) {
-      newErrors.name = "상품명은 2글자 이상이어야 합니다.";
-      isValid = false;
-    }
-    
-    // 가격 검증
-    if (formData.price < 0) {
-      newErrors.price = "가격은 0원 이상이어야 합니다.";
-      isValid = false;
-    }
-    
-    // 수량 검증
-    if (formData.quantity < 0) {
-      newErrors.quantity = "재고 수량은 0개 이상이어야 합니다.";
-      isValid = false;
-    }
-    
-    // 이미지 URL 검증
-    if (!formData.thumbnail) {
-      newErrors.thumbnail = "썸네일 이미지 URL을 입력해주세요.";
-      isValid = false;
-    }
-    
-    if (!formData.detailImage) {
-      newErrors.detailImage = "상세 이미지 URL을 입력해주세요.";
-      isValid = false;
-    }
-    
-    // 카테고리 검증
-    if (!formData.intensityId) {
-      newErrors.intensityId = "강도를 선택해주세요.";
-      isValid = false;
-    }
-    
-    if (!formData.cupSizeId) {
-      newErrors.cupSizeId = "컵 사이즈를 선택해주세요.";
-      isValid = false;
-    }
-    
-    setErrors(newErrors);
-    return isValid;
-  };
-
-  // 상품 등록 뮤테이션
-  const createProductMutation = useMutation({
-    mutationFn: createProduct,
-    onSuccess: () => {
-      toast({
-        title: "상품 등록 성공",
-        description: "새 상품이 성공적으로 등록되었습니다."
-      });
-      navigate({ to: '/products' });
-    },
-    onError: (error) => {
-      toast({
-        title: "상품 등록 실패",
-        description: error.message,
-        variant: "destructive"
-      });
-    }
-  });
-  
-  // 폼 제출 핸들러
-  const handleSubmit = (e: FormEvent) => {
-    e.preventDefault();
-    
-    if (validateForm()) {
-      createProductMutation.mutate(formData);
-    }
-  };
-  
-  // 목록으로 돌아가기
-  const handleBackToList = () => {
-    navigate({ to: '/products' });
-  };
-  
-  return (
-    <div className="px-4 py-8 sm:px-6 lg:px-8 space-y-6">
-      <div className="flex justify-between items-center">
-        <h1 className="text-2xl font-semibold">상품 등록</h1>
-      </div>
-      
-      <form onSubmit={handleSubmit} className="space-y-4">
-        {/* 상품명 입력 필드 */}
-        <div className="space-y-1">
-          <label htmlFor="name" className="block font-medium">상품명</label>
-          <Input
-            id="name"
-            name="name"
-            placeholder="상품명을 입력하세요"
-            value={formData.name}
-            onChange={handleChange}
-            className={errors.name ? "border-red-500" : ""}
-          />
-          {errors.name && <p className="text-sm text-red-500">{errors.name}</p>}
-        </div>
-
-        {/* 가격 입력 필드 */}
-        <div className="space-y-1">
-          <label htmlFor="price" className="block font-medium">가격</label>
-          <Input
-            type="number"
-            id="price"
-            name="price"
-            placeholder="가격을 입력하세요"
-            value={formData.price}
-            onChange={handleChange}
-            className={errors.price ? "border-red-500" : ""}
-          />
-          {errors.price && <p className="text-sm text-red-500">{errors.price}</p>}
-        </div>
-
-        {/* 재고 수량 입력 필드 */}
-        <div className="space-y-1">
-          <label htmlFor="quantity" className="block font-medium">재고 수량</label>
-          <Input
-            type="number"
-            id="quantity"
-            name="quantity"
-            placeholder="재고 수량을 입력하세요"
-            value={formData.quantity}
-            onChange={handleChange}
-            className={errors.quantity ? "border-red-500" : ""}
-          />
-          {errors.quantity && <p className="text-sm text-red-500">{errors.quantity}</p>}
-        </div>
-
-        {/* 썸네일 이미지 URL 입력 필드 */}
-        <div className="space-y-1">
-          <label htmlFor="thumbnail" className="block font-medium">썸네일 이미지 URL</label>
-          <Input
-            id="thumbnail"
-            name="thumbnail"
-            placeholder="썸네일 이미지 URL을 입력하세요"
-            value={formData.thumbnail}
-            onChange={handleChange}
-            className={errors.thumbnail ? "border-red-500" : ""}
-          />
-          {errors.thumbnail && <p className="text-sm text-red-500">{errors.thumbnail}</p>}
-        </div>
-
-        {/* 상세 이미지 URL 입력 필드 */}
-        <div className="space-y-1">
-          <label htmlFor="detailImage" className="block font-medium">상세 이미지 URL</label>
-          <Input
-            id="detailImage"
-            name="detailImage"
-            placeholder="상세 이미지 URL을 입력하세요"
-            value={formData.detailImage}
-            onChange={handleChange}
-            className={errors.detailImage ? "border-red-500" : ""}
-          />
-          {errors.detailImage && <p className="text-sm text-red-500">{errors.detailImage}</p>}
-        </div>
-
-        {/* 강도 선택 필드 */}
-        <div className="space-y-1">
-          <label htmlFor="intensityId" className="block font-medium">강도</label>
-          <Select 
-            onValueChange={(value) => handleSelectChange('intensityId', value)}
-            value={formData.intensityId ? String(formData.intensityId) : undefined}
-          >
-            <SelectTrigger className={`w-full ${errors.intensityId ? "border-red-500" : ""}`}>
-              <SelectValue placeholder="강도를 선택하세요" />
-            </SelectTrigger>
-            <SelectContent>
-              {intensities.map((intensity) => (
-                <SelectItem key={intensity.id} value={String(intensity.id)}>
-                  {intensity.name}
-                </SelectItem>
-              ))}
-            </SelectContent>
-          </Select>
-          {errors.intensityId && <p className="text-sm text-red-500">{errors.intensityId}</p>}
-        </div>
-
-        {/* 컵 사이즈 선택 필드 */}
-        <div className="space-y-1">
-          <label htmlFor="cupSizeId" className="block font-medium">컵 사이즈</label>
-          <Select 
-            onValueChange={(value) => handleSelectChange('cupSizeId', value)}
-            value={formData.cupSizeId ? String(formData.cupSizeId) : undefined}
-          >
-            <SelectTrigger className={`w-full ${errors.cupSizeId ? "border-red-500" : ""}`}>
-              <SelectValue placeholder="컵 사이즈를 선택하세요" />
-            </SelectTrigger>
-            <SelectContent>
-              {cupSizes.map((cupSize) => (
-                <SelectItem key={cupSize.id} value={String(cupSize.id)}>
-                  {cupSize.name}
-                </SelectItem>
-              ))}
-            </SelectContent>
-          </Select>
-          {errors.cupSizeId && <p className="text-sm text-red-500">{errors.cupSizeId}</p>}
-        </div>
-
-        <div className="flex gap-4 pt-4">
-          <Button type="submit" disabled={createProductMutation.isPending}>등록</Button>
-          <Button type="button" variant="outline" onClick={handleBackToList}>취소</Button>
-        </div>
-      </form>
-    </div>
-  );
+// 숫자를 천 단위 콤마가 포함된 문자열로 변환
+function formatPrice(value: number | string): string {
+    const num = typeof value === 'string' ? value.replace(/,/g, '') : value.toString();
+    return Number(num).toLocaleString('ko-KR');
 }
 
+// 콤마가 포함된 문자열을 숫자로 변환
+function parsePrice(value: string): number {
+    return Number(value.replace(/,/g, '')) || 0;
+}
 
+export default function ProductForm() {
+    const navigate = useNavigate();
+
+    // 상품 폼 상태 관리
+    const [formData, setFormData] = useState<CreateProductDto>({
+        name: "",
+        price: 0,
+        quantity: 0,
+        thumbnail: "",
+        detailImage: "",
+        intensityId: 0,
+        cupSizeId: 0,
+    });
+
+    // 카테고리 선택 상태 (string으로 관리)
+    const [selectedIntensityId, setSelectedIntensityId] = useState<string>("");
+    const [selectedCupSizeId, setSelectedCupSizeId] = useState<string>("");
+
+    // 가격 표시용 상태 (포맷팅된 문자열)
+    const [priceDisplay, setPriceDisplay] = useState<string>("0");
+
+    // 이미지 업로드 상태 관리
+    const [isThumbnailUploading, setIsThumbnailUploading] = useState(false);
+    const [isDetailImageUploading, setIsDetailImageUploading] = useState(false);
+
+    // 전체 업로드 상태
+    const isAnyImageUploading = isThumbnailUploading || isDetailImageUploading;
+
+    // 에러 메시지 상태 관리
+    const [errors, setErrors] = useState<Record<string, string>>({
+        name: "",
+        price: "",
+        quantity: "",
+        thumbnail: "",
+        detailImage: "",
+        intensityId: "",
+        cupSizeId: "",
+    });
+
+    // 재고 수량 모드 (true: 더하기, false: 빼기)
+    const [isAddMode, setIsAddMode] = useState(true);
+
+    // 카테고리 변경 핸들러
+    const handleIntensityChange = (intensityId: string) => {
+        setSelectedIntensityId(intensityId);
+        setFormData(prev => ({ ...prev, intensityId: Number(intensityId) }));
+
+        // 에러 메시지 초기화
+        if (errors.intensityId) {
+            setErrors(prev => ({ ...prev, intensityId: "" }));
+        }
+    };
+
+    const handleCupSizeChange = (cupSizeId: string) => {
+        setSelectedCupSizeId(cupSizeId);
+        setFormData(prev => ({ ...prev, cupSizeId: Number(cupSizeId) }));
+
+        // 에러 메시지 초기화
+        if (errors.cupSizeId) {
+            setErrors(prev => ({ ...prev, cupSizeId: "" }));
+        }
+    };
+
+    // 입력 필드 변경 핸들러
+    const handleChange = (e: ChangeEvent<HTMLInputElement>) => {
+        const { name, value } = e.target;
+
+        if (name === "price") {
+            // 가격 필드 특별 처리
+            const numericValue = parsePrice(value);
+            setFormData(prev => ({ ...prev, price: numericValue }));
+            setPriceDisplay(formatPrice(numericValue));
+        } else {
+            setFormData((prev: CreateProductDto) => ({
+                ...prev,
+                [name]: name === "quantity" ? Number(value) : value,
+            }));
+        }
+
+        // 에러 메시지 초기화
+        if (errors[name]) {
+            setErrors((prev: Record<string, string>) => ({ ...prev, [name]: "" }));
+        }
+    };
+
+
+
+    // 폼 유효성 검사
+    const validateForm = () => {
+        const newErrors: Record<string, string> = {};
+        let isValid = true;
+
+        // 상품명 검증
+        if (!formData.name || formData.name.length < 2) {
+            newErrors.name = "상품명은 2글자 이상이어야 합니다.";
+            isValid = false;
+        }
+
+        // 가격 검증
+        if (formData.price < 0) {
+            newErrors.price = "가격은 0원 이상이어야 합니다.";
+            isValid = false;
+        }
+
+        // 수량 검증
+        if (formData.quantity < 0) {
+            newErrors.quantity = "재고 수량은 0개 이상이어야 합니다.";
+            isValid = false;
+        }
+
+        // 이미지 업로드 검증
+        if (!formData.thumbnail) {
+            newErrors.thumbnail = "썸네일 이미지를 업로드해주세요.";
+            isValid = false;
+        }
+
+        if (!formData.detailImage) {
+            newErrors.detailImage = "상세 이미지를 업로드해주세요.";
+            isValid = false;
+        }
+
+        // 카테고리 검증
+        if (!formData.intensityId) {
+            newErrors.intensityId = "강도를 선택해주세요.";
+            isValid = false;
+        }
+
+        if (!formData.cupSizeId) {
+            newErrors.cupSizeId = "컵 사이즈를 선택해주세요.";
+            isValid = false;
+        }
+
+        setErrors(newErrors);
+        return isValid;
+    };
+
+    // 상품 등록 뮤테이션
+    const createProductMutation = useMutation({
+        mutationFn: createProduct,
+        onSuccess: () => {
+            toast({
+                title: "상품 등록 성공",
+                description: "새 상품이 성공적으로 등록되었습니다.",
+            });
+            navigate({ to: "/products" });
+        },
+        onError: error => {
+            toast({
+                title: "상품 등록 실패",
+                description: error.message,
+                variant: "destructive",
+            });
+        },
+    });
+
+    // 폼 제출 핸들러
+    const handleSubmit = (e: FormEvent) => {
+        e.preventDefault();
+
+        // 이미지 업로드 중인 경우 제출 방지
+        if (isAnyImageUploading) {
+            toast({
+                title: "업로드 진행 중",
+                description: "이미지 업로드가 완료될 때까지 기다려주세요.",
+                variant: "destructive",
+            });
+            return;
+        }
+
+        if (validateForm()) {
+            createProductMutation.mutate(formData);
+        }
+    };
+
+    // 목록으로 돌아가기
+    const handleBackToList = () => {
+        navigate({ to: "/products" });
+    };
+
+    return (
+        <div className="px-4 py-8 sm:px-6 lg:px-8 space-y-6">
+            <div className="flex justify-between items-center">
+                <h1 className="text-2xl font-semibold">상품 등록</h1>
+            </div>
+
+            <form onSubmit={handleSubmit} className="space-y-4">
+                {/* 상품명 입력 필드 */}
+                <div className="space-y-1">
+                    <label htmlFor="name" className="block font-medium">
+                        상품명
+                    </label>
+                    <Input
+                        id="name"
+                        name="name"
+                        placeholder="상품명을 입력하세요"
+                        value={formData.name}
+                        onChange={handleChange}
+                        className={`w-full ${errors.name ? "border-red-500" : ""}`}
+                    />
+                    {errors.name && <p className="text-sm text-red-500">{errors.name}</p>}
+                </div>
+
+                {/* 가격 입력 필드 */}
+                <div className="space-y-1">
+                    <label htmlFor="price" className="block font-medium">
+                        가격
+                    </label>
+                    <div className="relative w-full">
+                        <Input
+                            type="text"
+                            id="price"
+                            name="price"
+                            placeholder="가격을 입력하세요"
+                            value={priceDisplay}
+                            onChange={handleChange}
+                            className={`w-full pr-10 text-right ${errors.price ? "border-red-500" : ""}`}
+                        />
+                        <span className="absolute right-2 top-1/2 -translate-y-1/2 text-sm text-gray-500">원</span>
+                    </div>
+                    {errors.price && <p className="text-sm text-red-500">{errors.price}</p>}
+                </div>
+
+                {/* 재고 수량 입력 필드 */}
+                <div className="space-y-1">
+                    <label htmlFor="quantity" className="block font-medium">
+                        재고 수량
+                    </label>
+                    <div className="flex gap-2 w-full">
+                        <Input
+                            type="number"
+                            id="quantity"
+                            name="quantity"
+                            placeholder="재고 수량을 입력하세요"
+                            value={formData.quantity}
+                            onChange={handleChange}
+                            className={`flex-1 text-right [&::-webkit-outer-spin-button]:appearance-none [&::-webkit-inner-spin-button]:appearance-none ${errors.quantity ? "border-red-500" : ""}`}
+                            min="0"
+                        />
+                        <div className="flex gap-2">
+                            {/* 모드 선택 버튼 그룹 */}
+                            <div className="flex gap-1 border rounded-md p-1 bg-gray-50">
+                                <Button
+                                    type="button"
+                                    variant={isAddMode ? "default" : "ghost"}
+                                    size="sm"
+                                    onClick={() => setIsAddMode(true)}
+                                    className="h-8 px-3 text-sm"
+                                >
+                                    +
+                                </Button>
+                                <Button
+                                    type="button"
+                                    variant={!isAddMode ? "default" : "ghost"}
+                                    size="sm"
+                                    onClick={() => setIsAddMode(false)}
+                                    className="h-8 px-3 text-sm"
+                                >
+                                    -
+                                </Button>
+                            </div>
+
+                            {/* 숫자 버튼들 */}
+                            <div className="flex gap-1">
+                                <Button
+                                    type="button"
+                                    variant="outline"
+                                    onClick={() => {
+                                        const currentValue = Number(formData.quantity) || 0;
+                                        const newValue = isAddMode ? currentValue + 10 : Math.max(0, currentValue - 10);
+                                        setFormData(prev => ({ ...prev, quantity: newValue }));
+                                    }}
+                                    className="h-10 px-3 text-sm"
+                                >
+                                    10
+                                </Button>
+                                <Button
+                                    type="button"
+                                    variant="outline"
+                                    onClick={() => {
+                                        const currentValue = Number(formData.quantity) || 0;
+                                        const newValue = isAddMode ? currentValue + 100 : Math.max(0, currentValue - 100);
+                                        setFormData(prev => ({ ...prev, quantity: newValue }));
+                                    }}
+                                    className="h-10 px-3 text-sm"
+                                >
+                                    100
+                                </Button>
+                                <Button
+                                    type="button"
+                                    variant="outline"
+                                    onClick={() => {
+                                        const currentValue = Number(formData.quantity) || 0;
+                                        const newValue = isAddMode ? currentValue + 1000 : Math.max(0, currentValue - 1000);
+                                        setFormData(prev => ({ ...prev, quantity: newValue }));
+                                    }}
+                                    className="h-10 px-3 text-sm"
+                                >
+                                    1000
+                                </Button>
+                            </div>
+                        </div>
+                    </div>
+                    {errors.quantity && <p className="text-sm text-red-500">{errors.quantity}</p>}
+                </div>
+
+                {/* 썸네일 이미지 업로드 */}
+                <div className="space-y-1">
+                    <ImageUpload
+                        imageType="thumbnail"
+                        label="썸네일 이미지"
+                        currentImageUrl={formData.thumbnail}
+                        onImageUploaded={imageUrl => {
+                            setFormData(prev => ({ ...prev, thumbnail: imageUrl }));
+                            // 에러 메시지 초기화
+                            if (errors.thumbnail) {
+                                setErrors(prev => ({ ...prev, thumbnail: "" }));
+                            }
+                        }}
+                        onImageRemoved={() => {
+                            setFormData(prev => ({ ...prev, thumbnail: "" }));
+                        }}
+                        onUploadStateChange={setIsThumbnailUploading}
+                    />
+                    {errors.thumbnail && <p className="text-sm text-red-500">{errors.thumbnail}</p>}
+                </div>
+
+                {/* 상세 이미지 업로드 */}
+                <div className="space-y-1">
+                    <ImageUpload
+                        imageType="detail"
+                        label="상세 이미지"
+                        currentImageUrl={formData.detailImage}
+                        onImageUploaded={imageUrl => {
+                            setFormData(prev => ({ ...prev, detailImage: imageUrl }));
+                            // 에러 메시지 초기화
+                            if (errors.detailImage) {
+                                setErrors(prev => ({ ...prev, detailImage: "" }));
+                            }
+                        }}
+                        onImageRemoved={() => {
+                            setFormData(prev => ({ ...prev, detailImage: "" }));
+                        }}
+                        onUploadStateChange={setIsDetailImageUploading}
+                    />
+                    {errors.detailImage && <p className="text-sm text-red-500">{errors.detailImage}</p>}
+                </div>
+
+                {/* 카테고리 선택 (강도, 컵사이즈) */}
+                <div className="space-y-1">
+                    <CategorySelectEnum
+                        selectedIntensityId={selectedIntensityId}
+                        selectedCupSizeId={selectedCupSizeId}
+                        onIntensityChange={handleIntensityChange}
+                        onCupSizeChange={handleCupSizeChange}
+                    />
+                    {(errors.intensityId || errors.cupSizeId) && (
+                        <div className="space-y-1">
+                            {errors.intensityId && <p className="text-sm text-red-500">{errors.intensityId}</p>}
+                            {errors.cupSizeId && <p className="text-sm text-red-500">{errors.cupSizeId}</p>}
+                        </div>
+                    )}
+                </div>
+
+                <div className="flex gap-4 pt-4">
+                    <Button
+                        type="submit"
+                        disabled={createProductMutation.isPending || isAnyImageUploading}
+                    >
+                        {isAnyImageUploading ? "이미지 업로드 중..." : createProductMutation.isPending ? "등록 중..." : "등록"}
+                    </Button>
+                    <Button type="button" variant="outline" onClick={handleBackToList}>
+                        취소
+                    </Button>
+                </div>
+            </form>
+        </div>
+    );
+}

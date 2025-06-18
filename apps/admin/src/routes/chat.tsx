@@ -1,6 +1,6 @@
-import { createFileRoute } from '@tanstack/react-router';
-import ChatManagement from '@/features/chat/pages/ChatManagement';
+import ChatManagement from "@/features/chat/pages/ChatManagement";
+import { createFileRoute } from "@tanstack/react-router";
 
-export const Route = createFileRoute('/chat')({
-  component: ChatManagement,
+export const Route = createFileRoute("/chat")({
+    component: ChatManagement,
 });

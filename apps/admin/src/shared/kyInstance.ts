@@ -1,7 +1,7 @@
+import { router } from "@/main";
 // API 클라이언트 기본 설정
 import ky from "ky";
 import type { Options } from "ky";
-import { router } from "@/main";
 
 // API 응답 타입 정의
 export type ApiResponse<T> = {
