@@ -31,7 +31,7 @@ export default async function OrderDetailPage({ params }: OrderDetailPageParams)
                     phone={shippingInfo.recipientPhone}
                     memo={shippingInfo.deliveryMessage}
                 />
-                <OrderProduct products={items} reviewable={orderDetail.data.reviewable} />
+                <OrderProduct products={items} reviewable={orderDetail.data.reviewable} orderNumber={orderNumber} />
                 <PaymentInfo items={items} discount={0} total={finalTotalPrice} />
             </main>
         </div>

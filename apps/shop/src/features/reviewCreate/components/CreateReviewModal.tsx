@@ -11,6 +11,8 @@ import { useToast } from "@/src/shared/hooks/useToast";
 const MAX_CONTENT_LENGTH = 999;
 interface CreateReviewModalProps {
     isEdit?: boolean;
+    orderNumber?: string; // 주문 번호는 리뷰 작성 시 필요
+    // 리뷰 정보는 수정 시 필요
     reviewInfo?: {
         reviewId: number;
         rating: number;
@@ -24,7 +26,7 @@ interface CreateReviewModalProps {
     isOpen: boolean;
     onClickClose: () => void;
 }
-export default function CreateReviewModal({ isEdit = false, reviewInfo, product, isOpen, onClickClose }: CreateReviewModalProps) {
+export default function CreateReviewModal({ isEdit = false, orderNumber, reviewInfo, product, isOpen, onClickClose }: CreateReviewModalProps) {
     const [rating, setRating] = useState(isEdit ? reviewInfo?.rating || 0 : 0);
     const [content, setContent] = useState(isEdit ? reviewInfo?.content || "" : "");
     const [isAlertOpen, setIsAlertOpen] = useState(false);
@@ -52,7 +54,8 @@ export default function CreateReviewModal({ isEdit = false, reviewInfo, product,
             method: "POST",
             headers: { "Content-Type": "application/json" },
             body: JSON.stringify({
-                productId: product.productId,
+                orderNumber: orderNumber,
+                orderItemId: product.productId,
                 rating,
                 content,
             }),
