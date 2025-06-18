@@ -63,7 +63,7 @@ export default function ReviewsPage() {
                     <h1 className="text-h2 font-bold text-gray-900">리뷰 관리</h1>
                     <p className="mt-2 text-gray-600">리뷰 목록을 확인하고 관리하세요.</p>
                 </div>
-            </div>{" "}
+            </div>
             <div className="bg-white shadow-sm rounded-lg overflow-hidden">
                 <Search placeholder="검색어를 입력하세요" setSearchQuery={setQuery}>
                     <>
