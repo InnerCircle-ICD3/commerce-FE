@@ -8,6 +8,8 @@ import { cn } from "@/src/shared/shadcn";
 
 interface OrderFilterProps {
     onApply: (status: OrderStatus | null, period: 3 | 6 | 12 | null) => void;
+    status: OrderStatus | null;
+    period: 3 | 6 | 12 | null;
 }
 
 const periodList: { label: string; value: 3 | 6 | 12 | null }[] = [
@@ -17,13 +19,13 @@ const periodList: { label: string; value: 3 | 6 | 12 | null }[] = [
     { label: "12개월", value: 12 },
 ];
 
-export const OrderFilter = ({ onApply }: OrderFilterProps) => {
+export const OrderFilter = ({ onApply, status, period }: OrderFilterProps) => {
     const { data: orderStatusList } = useQuery({
         queryKey: ["orderStatusList"],
         queryFn: () => getOrderStatus(),
     });
-    const [selectedStatus, setSelectedStatus] = useState<OrderStatus | null>(null);
-    const [selectedPeriod, setSelectedPeriod] = useState<3 | 6 | 12 | null>(null);
+    const [selectedStatus, setSelectedStatus] = useState<OrderStatus | null>(status);
+    const [selectedPeriod, setSelectedPeriod] = useState<3 | 6 | 12 | null>(period);
 
     const handleStatus = (status: OrderStatus | null) => {
         setSelectedStatus(status);

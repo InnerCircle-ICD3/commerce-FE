@@ -47,6 +47,8 @@ export const OrderHistoryPage = () => {
             <OrderHistoryList status={selectedStatus} period={selectedPeriod} />
             <Modal title="필터">
                 <OrderFilter
+                    status={selectedStatus}
+                    period={selectedPeriod}
                     onApply={(status, period) => {
                         setSelectedStatus(status);
                         setSelectedPeriod(period);

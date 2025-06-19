@@ -94,9 +94,15 @@ export const OrderHistoryList = ({ status, period }: OrderHistoryListProps) => {
                             </div>
                         </div>
 
-                        <div className="grid grid-cols-2 gap-4">
-                            {getButtonsByStatus(order).map(button => (
-                                <Button
+                        <div className="grid grid-cols-2 gap-x-4 gap-y-2">
+                            {order.cancellable ? (
+                                <CancelOrderButton />
+                            ) : order.refundable ? (
+                                <RefundButton />
+                            ) : order.orderStatus === "SHIPPED" || order.orderStatus === "DELIVERED" ? (
+                                <DeliveryButton />
+                            ) : null}
+                            {/* <Button
                                     key={`${order.orderName}-${button.text}`}
                                     variant={button.variant}
                                     className={buttonStyle({ color: button.isGreen ? "green" : "default" })}
@@ -104,8 +110,7 @@ export const OrderHistoryList = ({ status, period }: OrderHistoryListProps) => {
                                     type="button"
                                 >
                                     {button.text}
-                                </Button>
-                            ))}
+                                </Button> */}
                         </div>
                     </div>
                 )),
@@ -122,5 +127,37 @@ export const OrderHistoryList = ({ status, period }: OrderHistoryListProps) => {
             </Button>
             {cancelOrderData && <RefundModal order={cancelOrderData} onClickClose={() => setCancelOrderData(null)} />}
         </div>
+    );
+};
+
+const CancelOrderButton = () => {
+    return (
+        <Button variant="outline" className="w-full">
+            주문 취소
+        </Button>
+    );
+};
+
+const RefundButton = () => {
+    return (
+        <Button variant="outline" className="w-full">
+            반품 신청
+        </Button>
+    );
+};
+
+const DeliveryButton = () => {
+    return (
+        <Button variant="default" className="bg-[#257a57] border-[#257a57] hover:bg-[#1a5f42] hover:border-[#1a5f42]">
+            배송 조회
+        </Button>
+    );
+};
+
+const RefundInfoButton = () => {
+    return (
+        <Button variant="outline" className="w-full">
+            반품 정보
+        </Button>
     );
 };

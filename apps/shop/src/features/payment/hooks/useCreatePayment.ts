@@ -7,9 +7,9 @@ export const useCreatePayment = () => {
     const { mutate, error } = useMutation({
         mutationFn: createPayment,
         onSuccess: ({ data }) => {
-            // if (data) {
-            //     router.push(`/orders/${data.orderNumber}`);
-            // }
+            if (data) {
+                router.push(`/orders/${data.orderNumber}`);
+            }
         },
         retry: 3,
     });
