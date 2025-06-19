@@ -6,26 +6,10 @@ import { useState } from "react";
 import { useOrderList } from "../hooks/useOrderList";
 import { cva } from "class-variance-authority";
 import type { OrderListItem } from "../types/orderListItem";
-import { RefundModal } from "./RefundModal";
+import { CancelOrderModal } from "./CancelOrderModal";
 import Image from "next/image";
 import { getOrderStatusLabel } from "@/src/shared/utils/getOrderStatusLabel";
 import type { OrderStatus } from "../types";
-
-interface ButtonConfig {
-    text: string;
-    variant?: "outline" | "default";
-    isGreen?: boolean;
-    onClick?: () => void;
-}
-// 공통 버튼 스타일 클래스
-const buttonStyle = cva("flex-1 h-10 text-sm font-semibold", {
-    variants: {
-        color: {
-            default: "",
-            green: "bg-[#257a57] border-[#257a57] hover:bg-[#1a5f42] hover:border-[#1a5f42]",
-        },
-    },
-});
 
 interface OrderHistoryListProps {
     status: OrderStatus | null;
@@ -72,13 +56,12 @@ export const OrderHistoryList = ({ status, period }: OrderHistoryListProps) => {
                         </div>
 
                         <div className="grid grid-cols-2 gap-x-4 gap-y-2">
-                            {order.cancellable ? (
-                                <CancelOrderButton />
-                            ) : order.refundable ? (
-                                <RefundButton />
-                            ) : order.orderStatus === "SHIPPED" || order.orderStatus === "DELIVERED" ? (
-                                <DeliveryButton />
-                            ) : null}
+                            {order.cancellable && (
+                                <Button variant="outline" className="w-full" onClick={() => setCancelOrderData(order)}>
+                                    주문 취소
+                                </Button>
+                            )}
+
                             {/* <Button
                                     key={`${order.orderName}-${button.text}`}
                                     variant={button.variant}
@@ -102,39 +85,7 @@ export const OrderHistoryList = ({ status, period }: OrderHistoryListProps) => {
                 더보기
                 <ArrowIcon direction="down" size="sm" strokeWidth={1.5} title="더 많은 주문 내역 보기" />
             </Button>
-            {cancelOrderData && <RefundModal order={cancelOrderData} onClickClose={() => setCancelOrderData(null)} />}
+            {cancelOrderData && <CancelOrderModal order={cancelOrderData} onClickClose={() => setCancelOrderData(null)} />}
         </div>
-    );
-};
-
-const CancelOrderButton = () => {
-    return (
-        <Button variant="outline" className="w-full">
-            주문 취소
-        </Button>
-    );
-};
-
-const RefundButton = () => {
-    return (
-        <Button variant="outline" className="w-full">
-            반품 신청
-        </Button>
-    );
-};
-
-const DeliveryButton = () => {
-    return (
-        <Button variant="default" className="bg-[#257a57] border-[#257a57] hover:bg-[#1a5f42] hover:border-[#1a5f42]">
-            배송 조회
-        </Button>
-    );
-};
-
-const RefundInfoButton = () => {
-    return (
-        <Button variant="outline" className="w-full">
-            반품 정보
-        </Button>
     );
 };
