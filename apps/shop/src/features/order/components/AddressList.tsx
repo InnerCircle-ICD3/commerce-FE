@@ -64,11 +64,13 @@ export default function AddressList({ onSelect, selectMode = false, selectedAddr
                     </li>
                 ))}
             </ul>
-            <div className="py-5">
-                <Button size="full" onClick={handleSumit}>
-                    변경하기
-                </Button>
-            </div>
+            {selectMode && (
+                <div className="py-5">
+                    <Button size="full" onClick={handleSumit}>
+                        변경하기
+                    </Button>
+                </div>
+            )}
             <Modal title="배송지 추가" onClickClose={closeEditAddressModal}>
                 <EditAddress onComplete={closeEditAddressModal} />
             </Modal>
