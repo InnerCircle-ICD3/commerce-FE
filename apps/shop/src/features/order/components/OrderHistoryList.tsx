@@ -1,16 +1,14 @@
 import { Button } from "@/src/shared/components/shared/button";
 import { ArrowIcon } from "@/src/shared/components/shared/Icon";
-import { formatCurrency } from "@/src/shared/utils/formatUtils";
-import Link from "next/link";
 import { useState } from "react";
 import { useOrderList } from "../hooks/useOrderList";
-import { cva } from "class-variance-authority";
 import type { OrderListItem } from "../types/orderListItem";
 import { CancelOrderModal } from "./CancelOrderModal";
-import Image from "next/image";
-import { getOrderStatusLabel } from "@/src/shared/utils/getOrderStatusLabel";
 import type { OrderStatus } from "../types";
 import { useToast } from "@/src/shared/hooks/useToast";
+import { useModal } from "@/src/shared/hooks/useModal";
+import { ShippingTracking } from "./ShippingTracking";
+import { OrderHistoryItem } from "./OrderHistoryItem";
 
 interface OrderHistoryListProps {
     status: OrderStatus | null;
@@ -20,72 +18,20 @@ interface OrderHistoryListProps {
 export const OrderHistoryList = ({ status, period }: OrderHistoryListProps) => {
     const { data: orders, hasNextPage, fetchNextPage } = useOrderList({ status, period });
     const [cancelOrderData, setCancelOrderData] = useState<OrderListItem | null>(null);
-    const { toast, ToastUI } = useToast();
 
+    const { toast, ToastUI } = useToast();
     const onCancelOrder = () => {
         toast({ message: "주문 취소가 완료되었습니다." });
         setCancelOrderData(null);
     };
 
+    const { openModal, closeModal, Modal } = useModal();
     // 주문 상태별 버튼 구성 정의
 
     return (
         <div className="flex flex-col w-full gap-4">
             {orders?.pages.map(({ data }) =>
-                data?.content.map(order => (
-                    <div key={order.orderNumber} className="w-full p-6 border border-gray-300/30 rounded-xl">
-                        <div className="flex justify-between items-center mb-4">
-                            <div className="flex items-center gap-2">
-                                <span className="font-bold text-base">{getOrderStatusLabel(order.orderStatus)}</span>
-                                {order?.orderedAt && <span className="text-emerald-700 text-sm">{order.orderedAt}</span>}
-                            </div>
-                            <Link href={`/order/${order.orderNumber}`}>
-                                <button type="button" className="p-1.5">
-                                    <ArrowIcon direction="right" title="주문 상세 보기" />
-                                </button>
-                            </Link>
-                        </div>
-
-                        <div className="flex gap-4 mb-4">
-                            <div className="w-20 h-20 bg-gray-100 rounded-md overflow-hidden relative">
-                                <Image
-                                    src={order.mainProductThumbnail}
-                                    alt={`${order.orderName} 이미지`}
-                                    fill
-                                    sizes="5rem"
-                                    className="object-cover"
-                                />
-                            </div>
-                            <div className="flex flex-col justify-between">
-                                <h3 className="font-bold text-sm">{order.orderName}</h3>
-                                <div className="text-emerald-700 font-bold text-sm">{formatCurrency(order.finalTotalPrice)}</div>
-                            </div>
-                        </div>
-
-                        <div className="grid grid-cols-2 gap-x-4 gap-y-2">
-                            {order.cancellable && (
-                                <Button variant="outline" className="w-full" onClick={() => setCancelOrderData(order)}>
-                                    주문 취소
-                                </Button>
-                            )}
-                            {order.trackingNumber && (
-                                <Button variant="outline" className="w-full bg-emerald-700 text-white">
-                                    배송 조회
-                                </Button>
-                            )}
-
-                            {/* <Button
-                                    key={`${order.orderName}-${button.text}`}
-                                    variant={button.variant}
-                                    className={buttonStyle({ color: button.isGreen ? "green" : "default" })}
-                                    onClick={button.onClick}
-                                    type="button"
-                                >
-                                    {button.text}
-                                </Button> */}
-                        </div>
-                    </div>
-                )),
+                data?.content.map(order => <OrderHistoryItem key={order.orderNumber} order={order} onClickCancelOrder={setCancelOrderData} />),
             )}
 
             <Button
@@ -101,6 +47,9 @@ export const OrderHistoryList = ({ status, period }: OrderHistoryListProps) => {
                 <CancelOrderModal order={cancelOrderData} onClickClose={() => setCancelOrderData(null)} onCancelOrder={onCancelOrder} />
             )}
             {ToastUI}
+            <Modal title="배송 조회" onClickClose={closeModal}>
+                <ShippingTracking trackingNumber={""} />
+            </Modal>
         </div>
     );
 };
