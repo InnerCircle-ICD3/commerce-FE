@@ -7,10 +7,15 @@ import Link from "next/link";
 import ChatButton from "@/src/features/chat/components/ChatButton";
 import { signOut, useSession } from "next-auth/react";
 import { useRouter } from "next/navigation";
+import { useCart } from "@/src/features/cart/hooks/useCart";
 
 function Header() {
     const router = useRouter();
     const { data: session, status } = useSession();
+    const { data: cartData } = useCart();
+
+    // 장바구니 아이템 총 개수 계산
+    const cartItemCount = cartData?.cartItems?.reduce((total, item) => total + item.quantity, 0) || 0;
 
     // 로그아웃 처리 함수
     const handleLogout = async () => {
@@ -31,12 +36,17 @@ function Header() {
                 <SearchProduct />
 
                 <nav className="flex gap-6 justify-center items-center self-stretch my-auto">
-                    <Link href="/cart">
+                    <Link href="/cart" className="relative">
                         <img
                             src="https://cdn.builder.io/api/v1/image/assets/TEMP/d83c3984fea3767c661c7b9a7ae20f706764920a"
                             alt="장바구니"
                             className="object-contain shrink-0 self-stretch my-auto w-8 aspect-square"
                         />
+                        {cartItemCount > 0 && (
+                            <div className="absolute -top-2 -right-2 bg-red-500 text-white text-xs font-bold rounded-full min-w-[20px] h-5 flex items-center justify-center px-1">
+                                {cartItemCount > 99 ? '99+' : cartItemCount}
+                            </div>
+                        )}
                     </Link>
 
                     {session?.user ? (
