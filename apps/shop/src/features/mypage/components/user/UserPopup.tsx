@@ -15,13 +15,42 @@ export default function UserPopup({ user, onClose, onSave }: UserPopupProps) {
     const [isWithdrawPopupOpen, setIsWithdrawPopupOpen] = useState(false);
     const [nickname, setNickname] = useState(user.nickname);
     const [newNickname, setNewNickname] = useState(user.nickname);
+    const [nicknameError, setNicknameError] = useState<string>("");
 
-    const onNicknameChange = (e: React.ChangeEvent<HTMLInputElement>) => {
-        setNickname(e.target.value);
+    // 완전한 한글(초성,종성 제외), 영문, 숫자만 허용하는 정규식
+    const validateNickname = (value: string): boolean => {
+        // 완전한 한글: 가-힣 (초성, 중성, 종성이 모두 조합된 한글)
+        // 영문: a-zA-Z
+        // 숫자: 0-9
+        const regex = /^[가-힣a-zA-Z0-9]+$/;
+        return regex.test(value);
     };
 
-    const onNicknameEditClick = () => {
-        // todo: 닉네임 유효성 검사 로직
+    const onNicknameChange = (e: React.ChangeEvent<HTMLInputElement>) => {
+        const value = e.target.value;
+        setNickname(value);
+        
+        // 실시간 유효성 검사
+        if (value.trim() === "") {
+            setNicknameError("");
+        } else if (!validateNickname(value)) {
+            setNicknameError("완전한 한글, 영문, 숫자만 사용 가능합니다.");
+        } else {
+            setNicknameError("");
+        }
+    };    const onNicknameEditClick = () => {
+        // 닉네임 유효성 검사
+        if (nickname.trim() === "") {
+            setNicknameError("닉네임을 입력해주세요.");
+            return;
+        }
+        
+        if (!validateNickname(nickname)) {
+            setNicknameError("완전한 한글, 영문, 숫자만 사용 가능합니다.");
+            return;
+        }
+        
+        setNicknameError("");
         setNewNickname(nickname);
     };
 
@@ -68,15 +97,15 @@ export default function UserPopup({ user, onClose, onSave }: UserPopupProps) {
                                     onChange={onNicknameChange}
                                 />
                             </div>
-                            <button
-                                type="button"
-                                className="flex justify-center items-center flex-grow-0 flex-shrink-0 w-24 h-12 relative gap-0.5 px-4 py-3 rounded-lg border border-black"
-                                onClick={onNicknameEditClick}
-                            >
-                                <p className="flex-grow-0 flex-shrink-0 text-base font-bold text-center text-black">닉네임 변경</p>
-                            </button>
                         </div>
-                        <p className="flex-grow-0 flex-shrink-0 text-sm text-left text-blue-500">사용 가능한 닉네임입니다.</p>
+                        {/* 유효성 검사 메시지 */}
+                        {nicknameError ? (
+                            <p className="flex-grow-0 flex-shrink-0 text-sm text-left text-red-500">{nicknameError}</p>
+                        ) : nickname.trim() !== "" ? (
+                            <p className="flex-grow-0 flex-shrink-0 text-sm text-left text-blue-500">사용 가능한 닉네임입니다.</p>
+                        ) : (
+                            <p className="flex-grow-0 flex-shrink-0 text-sm text-left text-gray-400">닉네임을 입력해주세요.</p>
+                        )}
                     </div>
                     <div className="flex flex-col justify-start items-start self-stretch flex-grow-0 flex-shrink-0 relative gap-3">
                         <p className="flex-grow-0 flex-shrink-0 text-sm font-bold text-left text-black">이름</p>
@@ -91,8 +120,9 @@ export default function UserPopup({ user, onClose, onSave }: UserPopupProps) {
                     </button>
                     <button
                         type="button"
-                        className="flex justify-center items-center self-stretch flex-grow-0 flex-shrink-0 h-12 relative gap-2 px-4 py-3 rounded-lg bg-[#257a57]"
+                        className={`${nicknameError ? "bg-gray-400" : "bg-[#257a57]"} flex justify-center items-center self-stretch flex-grow-0 flex-shrink-0 h-12 relative gap-2 px-4 py-3 rounded-lg`}
                         onClick={onSaveClick}
+                        disabled={!!nicknameError || nickname === newNickname}
                     >
                         <p className="flex-grow-0 flex-shrink-0 text-base font-bold text-center text-white">저장하기</p>
                     </button>

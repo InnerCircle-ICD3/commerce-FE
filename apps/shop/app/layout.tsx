@@ -5,6 +5,7 @@ import Providers from "@/app/providers";
 import type React from "react";
 import { Suspense } from "react";
 import { metadata } from "@/app/metadata";
+import Loading from "@/src/shared/components/shared/Loading";
 
 const geistSans = Geist({
     variable: "--font-geist-sans",
@@ -48,7 +49,7 @@ export default function RootLayout({
         <html lang="ko">
             <body className={`${geistSans.variable} ${geistMono.variable} ${pretendard.variable} antialiased`}>
                 <Providers>
-                    <Suspense fallback={<div>페이지를 로드 중입니다...</div>}>{children}</Suspense>
+                    <Suspense fallback={<Loading />}>{children}</Suspense>
                 </Providers>
             </body>
         </html>
