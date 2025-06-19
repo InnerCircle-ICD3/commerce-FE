@@ -20,6 +20,7 @@ export const OrderHistoryPage = () => {
                 <button type="button" className="p-1" onClick={() => router.back()}>
                     <ArrowIcon direction="left" size="lg" strokeWidth={2} title="뒤로 가기" />
                 </button>
+                <h2 className="text-2xl font-bold">주문내역</h2>
             </div>
             <div className="mb-6">
                 {/* <div className="relative mb-4">
@@ -34,7 +35,6 @@ export const OrderHistoryPage = () => {
                 </div> */}
 
                 <div>
-                    <h2 className="text-2xl font-bold mb-4">주문내역</h2>
                     <div className="flex items-center gap-2">
                         <button
                             type="button"
