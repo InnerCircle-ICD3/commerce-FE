@@ -17,6 +17,7 @@ export default async function OrderDetailPage({ params }: OrderDetailPageParams)
 
     // API를 통해 주문 정보 가져오기
     const orderDetail = await getOrderDetail(orderId);
+
     if (!orderDetail.data) return null;
     const { orderStatus, orderedAt, items, shippingInfo, finalTotalPrice, orderNumber } = orderDetail.data;
 

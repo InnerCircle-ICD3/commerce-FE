@@ -71,7 +71,7 @@ export const OrderHistoryList = ({ status, period }: OrderHistoryListProps) => {
                                 <span className="font-bold text-base">{getOrderStatusLabel(order.orderStatus)}</span>
                                 {order?.orderedAt && <span className="text-emerald-700 text-sm">{order.orderedAt}</span>}
                             </div>
-                            <Link href="/order/123456456789">
+                            <Link href={`/order/${order.orderNumber}`}>
                                 <button type="button" className="p-1.5">
                                     <ArrowIcon direction="right" title="주문 상세 보기" />
                                 </button>
