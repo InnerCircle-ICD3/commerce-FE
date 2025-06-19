@@ -17,25 +17,9 @@ export type ShippingProduct = {
 
 const menuInfos = [
     { title: "주문내역", href: "/order" },
-    { title: "취소/교환/반품 내역", href: "/order" },
+    // { title: "취소/교환/반품 내역", href: "/order" },
     { title: "리뷰 관리", href: "/review/my" },
     { title: "배송지 관리", href: "/address" },
-];
-
-const shippingProducts: ShippingProduct[] = [
-    {
-        orderNumber: "1234567890",
-        image: "https://cdn.builder.io/api/v1/image/assets/TEMP/4c7bfa7b14aca451340208bfc07390f055298c80",
-        mainProductName: "스페셜 리저브 하와이 코나",
-        status: "배송 준비 중",
-        remainingProductCount: 2,
-    },
-    {
-        orderNumber: "1234567891",
-        image: "https://cdn.builder.io/api/v1/image/assets/TEMP/4c7bfa7b14aca451340208bfc07390f055298c80",
-        mainProductName: "액티브",
-        status: "배송 중",
-    },
 ];
 
 export default function Page() {
