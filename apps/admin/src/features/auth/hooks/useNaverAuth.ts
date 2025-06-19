@@ -1,5 +1,5 @@
 import { useCallback } from "react";
-import type { AuthInfo, UserProfile, Tokens } from "../types/auth";
+import type { AuthInfo, Tokens, UserProfile } from "../types/auth";
 
 const NAVER_CLIENT_ID = import.meta.env.VITE_NAVER_CLIENT_ID;
 const NAVER_AUTH_URL = "https://nid.naver.com/oauth2.0/authorize";

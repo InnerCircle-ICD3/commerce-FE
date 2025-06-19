@@ -1,7 +1,7 @@
-import { useState } from "react";
-import ChatList from "../components/ChatList";
-import ChatConversation from "../components/ChatConversation";
 import type { ChatRoom } from "@/lib/supabase";
+import { useState } from "react";
+import ChatConversation from "../components/ChatConversation";
+import ChatList from "../components/ChatList";
 
 /**
  * 관리자 채팅 관리 페이지

@@ -1,8 +1,8 @@
 import type { Review } from "@/features/review/types/type";
 import { TableCell, TableRow } from "@/shared";
 import { createStars } from "@/shared/utils/createStars";
-import ReplyPending from "./ReplyPending";
 import Reply from "./Reply";
+import ReplyPending from "./ReplyPending";
 
 export default function ReviewDetail({ review }: { review: Review }) {
     return (

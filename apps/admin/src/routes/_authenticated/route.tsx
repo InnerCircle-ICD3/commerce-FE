@@ -1,5 +1,5 @@
-import { createFileRoute, redirect } from "@tanstack/react-router";
 import RootLayout from "@/features/common/layout/RootLayout";
+import { createFileRoute, redirect } from "@tanstack/react-router";
 
 // 인증 상태 확인 함수
 const isAuthenticated = () => {

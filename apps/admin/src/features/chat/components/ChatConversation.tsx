@@ -1,7 +1,7 @@
-import { useState, useRef, useEffect, useCallback, memo } from "react";
+import { ADMIN_ID, type ChatMessage, type ChatRoom, supabase } from "@/lib/supabase";
+import { memo, useCallback, useEffect, useRef, useState } from "react";
 import type { KeyboardEvent } from "react";
 import { v4 as uuidv4 } from "uuid";
-import { supabase, type ChatRoom, type ChatMessage, ADMIN_ID } from "@/lib/supabase";
 
 interface ChatConversationProps {
     room: ChatRoom | null;
@@ -66,9 +66,7 @@ export default function ChatConversation({ room }: ChatConversationProps) {
                 setMessages(loadedMessages);
 
                 // 관리자가 채팅방을 열었을 때, 사용자가 보낸 모든 메시지의 is_read_by_admin을 TRUE로 업데이트
-                const unreadUserMessages = loadedMessages.filter(
-                    (msg) => !msg.is_admin && !msg.is_read_by_admin
-                );
+                const unreadUserMessages = loadedMessages.filter(msg => !msg.is_admin && !msg.is_read_by_admin);
 
                 if (unreadUserMessages.length > 0) {
                     const { error: updateError } = await supabase
@@ -76,7 +74,7 @@ export default function ChatConversation({ room }: ChatConversationProps) {
                         .update({ is_read_by_admin: true })
                         .in(
                             "id",
-                            unreadUserMessages.map((msg) => msg.id)
+                            unreadUserMessages.map(msg => msg.id),
                         );
 
                     if (updateError) {

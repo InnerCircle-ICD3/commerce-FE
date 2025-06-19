@@ -1,7 +1,7 @@
-import { createFileRoute } from "@tanstack/react-router";
-import { useEffect } from "react";
 import { useAuth } from "@/features/auth/hooks/useAuth";
+import { createFileRoute } from "@tanstack/react-router";
 import { useNavigate } from "@tanstack/react-router";
+import { useEffect } from "react";
 
 // 콜백 컴포넌트
 function AuthCallback() {

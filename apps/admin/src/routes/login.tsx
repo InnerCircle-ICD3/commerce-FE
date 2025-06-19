@@ -1,6 +1,6 @@
-import { createFileRoute, redirect } from "@tanstack/react-router";
 import AuthLayout from "@/features/common/layout/AuthLayout";
 import LoginComponent from "@/features/login/LoginComponent";
+import { createFileRoute, redirect } from "@tanstack/react-router";
 
 // 인증 상태 확인 함수 (새로운 zustand 기반)
 const isAuthenticated = () => {
