@@ -33,6 +33,7 @@ export interface OrderDetailData {
     itemsSubTotal: number;
     shippingFee: number;
     finalTotalPrice: number;
+    trackingNumber: string | null;
     items: {
         orderItemId: string;
         productSnapshotId: number;

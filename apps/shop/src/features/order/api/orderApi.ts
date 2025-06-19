@@ -17,6 +17,7 @@ export const emptyOrderDetail: OrderDetailData = {
     itemsSubTotal: 0,
     shippingFee: 0,
     finalTotalPrice: 0,
+    trackingNumber: null,
     items: [],
     shippingInfo: {
         recipientName: "",

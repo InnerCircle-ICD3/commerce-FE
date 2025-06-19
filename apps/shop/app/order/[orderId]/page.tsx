@@ -32,7 +32,12 @@ export default async function OrderDetailPage({ params }: OrderDetailPageParams)
                     phone={shippingInfo.recipientPhone}
                     memo={shippingInfo.deliveryMessage}
                 />
-                <OrderProduct products={items} reviewable={orderDetail.data.reviewable} orderNumber={orderNumber} />
+                <OrderProduct
+                    products={items}
+                    reviewable={orderDetail.data.reviewable}
+                    orderNumber={orderNumber}
+                    trackingNumber={orderDetail.data.trackingNumber}
+                />
                 <PaymentInfo items={items} discount={0} total={finalTotalPrice} />
             </main>
         </div>

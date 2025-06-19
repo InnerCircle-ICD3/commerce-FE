@@ -15,9 +15,10 @@ interface OrderProductProps {
     products: OrderDetailItem[];
     reviewable: boolean;
     orderNumber: string;
+    trackingNumber: string | null;
 }
 
-export const OrderProduct = ({ products, reviewable, orderNumber }: OrderProductProps) => {
+export const OrderProduct = ({ products, reviewable, orderNumber, trackingNumber }: OrderProductProps) => {
     const [reviewingProduct, setReviewingProduct] = useState<OrderDetailItem | null>(null);
 
     return (
@@ -77,14 +78,16 @@ export const OrderProduct = ({ products, reviewable, orderNumber }: OrderProduct
                         </div>
                     ))}
                 </div>
-                <div className="mt-6">
-                    <button
-                        type="button"
-                        className="w-full py-3 border border-gray-300 text-gray-700 rounded-lg font-semibold hover:bg-gray-50 transition-colors"
-                    >
-                        배송 조회
-                    </button>
-                </div>
+                {trackingNumber && (
+                    <div className="mt-6">
+                        <button
+                            type="button"
+                            className="w-full py-3 border border-gray-300 text-gray-700 rounded-lg font-semibold hover:bg-gray-50 transition-colors"
+                        >
+                            배송 조회
+                        </button>
+                    </div>
+                )}
             </div>
             {reviewingProduct && (
                 <CreateReviewModal
