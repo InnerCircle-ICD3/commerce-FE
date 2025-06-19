@@ -9,4 +9,5 @@ export type OrderListItem = {
     refundable: boolean;
     orderedAt: string;
     mainProductThumbnail: string;
+    trackingNumber: string | null;
 };

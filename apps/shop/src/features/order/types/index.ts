@@ -94,6 +94,7 @@ export type AddressType = {
 export type OrderStatus =
     | "WAITING_FOR_PAYMENT"
     | "PAID"
+    | "PREPARING_SHIPMENT"
     | "SHIPPED"
     | "DELIVERED"
     | "CANCELLED"

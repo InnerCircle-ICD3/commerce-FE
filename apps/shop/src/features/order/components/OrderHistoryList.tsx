@@ -61,6 +61,11 @@ export const OrderHistoryList = ({ status, period }: OrderHistoryListProps) => {
                                     주문 취소
                                 </Button>
                             )}
+                            {order.trackingNumber && (
+                                <Button variant="outline" className="w-full">
+                                    배송 조회
+                                </Button>
+                            )}
 
                             {/* <Button
                                     key={`${order.orderName}-${button.text}`}

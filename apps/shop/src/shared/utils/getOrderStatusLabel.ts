@@ -6,6 +6,8 @@ export const getOrderStatusLabel = (status: OrderStatus) => {
             return "결제대기";
         case "PAID":
             return "결제완료";
+        case "PREPARING_SHIPMENT":
+            return "배송 준비중";
         case "SHIPPED":
             return "배송중";
         case "DELIVERED":
