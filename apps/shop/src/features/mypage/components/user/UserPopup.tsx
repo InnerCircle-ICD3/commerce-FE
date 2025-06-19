@@ -103,7 +103,8 @@ export default function UserPopup({ user, onClose, onSave }: UserPopupProps) {
                     </div>
                     {/* <button type="button" className="flex-grow-0 flex-shrink-0 text-base text-left text-[#2e2f33]/[0.88]" onClick={onWithdrawClick}>
                         회원 탈퇴하기
-                    </button> */}                    <button
+                    </button> */}
+                    <button
                         type="button"
                         className={`${nicknameError || nickname.trim() === "" || nickname.trim() === user.nickname ? "bg-gray-400" : "bg-[#257a57]"} flex justify-center items-center self-stretch flex-grow-0 flex-shrink-0 h-12 relative gap-2 px-4 py-3 rounded-lg`}
                         onClick={onSaveClick}
