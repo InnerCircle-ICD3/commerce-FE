@@ -154,3 +154,7 @@ export async function getCupSizes(): Promise<CupSize[]> {
         name: item.label,
     }));
 }
+
+// 별칭 함수들 (기존 코드 호환성)
+export const getAllCupSizes = getCupSizes;
+export const getAllIntensities = getIntensities;
