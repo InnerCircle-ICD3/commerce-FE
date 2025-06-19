@@ -62,7 +62,7 @@ export const OrderHistoryList = ({ status, period }: OrderHistoryListProps) => {
                                 </Button>
                             )}
                             {order.trackingNumber && (
-                                <Button variant="outline" className="w-full">
+                                <Button variant="outline" className="w-full bg-emerald-700 text-white">
                                     배송 조회
                                 </Button>
                             )}
