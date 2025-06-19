@@ -87,6 +87,8 @@ export default function UserPopup({ user, onClose, onSave }: UserPopupProps) {
                         {/* 유효성 검사 메시지 */}
                         {nicknameError ? (
                             <p className="flex-grow-0 flex-shrink-0 text-sm text-left text-red-500">{nicknameError}</p>
+                        ) : nickname.trim() === user.nickname ? (
+                            <p className="flex-grow-0 flex-shrink-0 text-sm text-left text-gray-500">현재 닉네임과 동일합니다.</p>
                         ) : nickname.trim() !== "" ? (
                             <p className="flex-grow-0 flex-shrink-0 text-sm text-left text-blue-500">사용 가능한 닉네임입니다.</p>
                         ) : (
