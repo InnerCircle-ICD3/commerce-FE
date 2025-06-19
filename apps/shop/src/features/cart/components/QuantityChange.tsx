@@ -29,6 +29,10 @@ export default function QuantityChange({ cartItemId, initQuantity, stockQuantity
     }, [initQuantity]);
     
       // 디바운싱된 API 호출 함수
+    const changeQuantity = useCallback((newQuantity: number) => {
+        // Logic for updating quantity (e.g., API call)
+        // Placeholder for actual implementation
+    }, []);
     const debouncedChangeQuantity = useCallback((newQuantity: number) => {
         // 이전 타이머 클리어
         if (debounceTimeoutRef.current) {
