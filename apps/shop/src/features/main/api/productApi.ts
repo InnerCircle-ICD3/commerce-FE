@@ -64,7 +64,7 @@ function convertApiProductToRegularProduct(apiProduct: ApiProduct): RegularProdu
     const roastingLevel = getRoastingLevel(intensity);
 
     if (roastingLevel === "Dark" || roastingLevel === "Extra Dark") {
-        badges.push({ text: "진한 로스팅", variant: "red" as const });
+        badges.push({ text: "다크 로스팅", variant: "red" as const });
     } else if (roastingLevel === "Light") {
         badges.push({ text: "라이트 로스팅", variant: "green" as const });
     }

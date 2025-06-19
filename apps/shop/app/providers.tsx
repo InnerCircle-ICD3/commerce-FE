@@ -6,7 +6,7 @@ import Header from "@/src/shared/components/layout/Header";
 import Footer from "@/src/shared/components/layout/Footer";
 import UserIdInitializer from "@/src/shared/components/UserIdInitializer";
 import { ChatNotificationProvider } from "@/src/features/chat/components/ChatNotificationProvider";
-import ChatButton from "@/src/features/chat/components/ChatButton";
+import ConditionalChatButton from "@/src/features/chat/components/ConditionalChatButton";
 
 // 모든 Provider들을 하나로 통합한 클라이언트 컴포넌트
 export default function Providers({
@@ -22,7 +22,7 @@ export default function Providers({
                     <Header />
                     <main className="min-h-[calc(100vh-200px)]">{children}</main>
                     <Footer />
-                    <ChatButton isFloating={true} />
+                    <ConditionalChatButton />
                 </ChatNotificationProvider>
             </TanstackQueryProviders>
         </SessionProvider>

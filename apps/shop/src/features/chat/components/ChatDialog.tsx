@@ -1,6 +1,7 @@
 "use client";
 
 import { useState, useRef, useEffect, useCallback } from "react";
+import { usePathname } from "next/navigation";
 import { v4 as uuidv4 } from "uuid";
 import { supabase } from "@/src/lib/supabase";
 import type { ChatMessage as SupabaseChatMessage } from "@/src/lib/supabase";
@@ -23,6 +24,7 @@ interface Message extends SupabaseChatMessage {
 }
 
 const ChatDialog = ({ onClose, productInfo: initialProductInfo }: ChatDialogProps) => {
+    const pathname = usePathname();
     const [userId, setUserId] = useState<string>("");
     const [messages, setMessages] = useState<Message[]>([]);
     const [message, setMessage] = useState("");
@@ -38,6 +40,9 @@ const ChatDialog = ({ onClose, productInfo: initialProductInfo }: ChatDialogProp
 
     // 전역 채팅 알림 관리
     const { addToHistory, markAsRead, openChatRoom, closeChatRoom } = useChatNotificationContext();
+
+    // 현재 페이지가 상품 상세페이지인지 확인
+    const isProductDetailPage = pathname?.includes('/product/') && !pathname?.includes('/products');
 
     const handleCloseClick = useCallback(() => {
         console.log("[ChatDialog] 채팅창 닫기 시작, roomId:", roomId);
@@ -259,18 +264,18 @@ const ChatDialog = ({ onClose, productInfo: initialProductInfo }: ChatDialogProp
                         initialMessages.length > 0
                             ? initialMessages
                             : [
-                                  {
-                                      id: uuidv4(),
-                                      room_id: existingRoom?.id || uuidv4(),
-                                      sender_id: "system",
-                                      message: "무엇을 도와드릴까요?",
-                                      created_at: new Date().toISOString(),
-                                      is_admin: true,
-                                      is_read_by_admin: true,
-                                      is_read_by_user: false,
-                                      type: "system",
-                                  },
-                              ],
+                                {
+                                    id: uuidv4(),
+                                    room_id: existingRoom?.id || uuidv4(),
+                                    sender_id: "system",
+                                    message: "무엇을 도와드릴까요?",
+                                    created_at: new Date().toISOString(),
+                                    is_admin: true,
+                                    is_read_by_admin: true,
+                                    is_read_by_user: false,
+                                    type: "system",
+                                },
+                            ],
                     );
 
                     // 채팅창을 열었으므로 최신 관리자 메시지까지 읽음 처리
@@ -383,6 +388,33 @@ const ChatDialog = ({ onClose, productInfo: initialProductInfo }: ChatDialogProp
         }
     };
 
+    const sendProductInfo = async () => {
+        if (!productInfo || !userId || !roomId) return;
+
+        const productMessage = `안녕하세요! 다음 상품에 대해 문의드립니다.
+
+상품명: ${productInfo.title}
+가격: ${productInfo.price.toLocaleString()}원
+
+궁금한 점이 있어서 문의드립니다.`;
+
+        try {
+            const { error } = await supabase.from("chat_messages").insert({
+                room_id: roomId,
+                sender_id: userId,
+                message: productMessage,
+            });
+
+            if (error) {
+                console.error("Error sending product info:", error);
+                alert("상품 정보 전송에 실패했습니다. 다시 시도해주세요.");
+            }
+        } catch (error) {
+            console.error("Unexpected error sending product info:", error);
+            alert("상품 정보 전송 중 오류가 발생했습니다.");
+        }
+    };
+
     const handleKeyDown = (event: React.KeyboardEvent<HTMLInputElement>) => {
         if (event.key === "Enter" && !event.nativeEvent.isComposing) {
             event.preventDefault();
@@ -486,6 +518,20 @@ const ChatDialog = ({ onClose, productInfo: initialProductInfo }: ChatDialogProp
 
             {inquiryType && (
                 <footer className="w-full border-t border-[#EEEEEE] p-4">
+                    {/* 상품 문의하기 버튼 - 상품 상세페이지에서만 표시 */}
+                    {isProductDetailPage && productInfo && inquiryType === "general" && (
+                        <div className="mb-3">
+                            <button
+                                type="button"
+                                onClick={sendProductInfo}
+                                className="w-full bg-[#257A57] hover:bg-[#1f6347] text-white py-3 px-4 rounded-lg font-medium transition-colors disabled:opacity-50"
+                                disabled={!isConnected || isLoading}
+                            >
+                                🛍️ 이 상품 문의하기
+                            </button>
+                        </div>
+                    )}
+
                     <div className="flex items-center">
                         <div className="flex-grow relative">
                             <input
