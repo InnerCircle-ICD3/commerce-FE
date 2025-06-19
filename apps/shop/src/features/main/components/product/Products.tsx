@@ -5,7 +5,7 @@ import { getMockProducts } from "@/src/features/main/mocks/productMock";
 const Products = async () => {
     // API가 변경되어 { new, best }로 구성된 객체를 반환합니다.
     const productData = await getMainProducts();
-    
+    console.log(productData);
     // 목 데이터 가져오기
     const mockProducts = getMockProducts();
 

@@ -11,13 +11,11 @@ export const ProductFeature = ({
     label,
     strength,
 }: ProductFeatureProps) => {
-    if (strength) {
+    if (strength !== undefined && strength > 0) {
         return (
             <div className="flex flex-col items-center self-stretch my-auto w-12">
-                <div className="w-10 text-base font-semibold tracking-tight">
-                    <div className="px-1 w-full h-10 rounded-full bg-neutral-100 fill-neutral-100">
-                        {strength}
-                    </div>
+                <div className="w-10 h-10 flex items-center justify-center text-base font-semibold tracking-tight bg-neutral-100 rounded-full">
+                    {strength}
                 </div>
                 <div className="mt-1.5 text-xs tracking-tight leading-snug text-neutral-700">
                     강도

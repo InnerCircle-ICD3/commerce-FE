@@ -19,6 +19,20 @@ export type BannerProduct = {
     description: string;
 };
 
+// API 응답 타입 (백엔드에서 오는 데이터)
+export type ApiProduct = {
+    id: number;
+    name: string;
+    price: number;
+    quantity: number;
+    thumbnail: string;
+    detailImage: string;
+    intensity: string;
+    cupSize: string;
+    isSoldOut: boolean;
+};
+
+// 기존 UI 컴포넌트용 타입 (기존 컴포넌트와 호환성 유지)
 export type RegularProduct = {
     productId: number;
     type: "product";
