@@ -435,3 +435,30 @@ export const QuantityDecreaseIcon = ({ size = "md", title = "수량 감소 아�
         </svg>
     );
 };
+
+export const CloseIcon = ({ size = "md", title = "닫기 아이콘", ...props }: Omit<IconProps, "direction" | "strokeWidth">) => {
+    const uniqueId = useId();
+    const titleId = `close-icon-${uniqueId}`;
+
+    const width = ICON_DIMENSIONS[size];
+    const height = ICON_DIMENSIONS[size];
+
+    return (
+        <svg
+            width={width}
+            height={height}
+            viewBox="0 0 32 32"
+            fill="none"
+            xmlns="http://www.w3.org/2000/svg"
+            role="img"
+            aria-labelledby={titleId}
+            {...props}
+        >
+            <title id={titleId}>{title}</title>
+            <path
+                d="M6.74206 27L5 25.2579L14.2579 16L5 6.74206L6.74206 5L16 14.2579L25.2579 5L27 6.74206L17.7421 16L27 25.2579L25.2579 27L16 17.7421L6.74206 27Z"
+                fill="black"
+            />
+        </svg>
+    );
+};

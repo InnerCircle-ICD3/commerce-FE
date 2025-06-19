@@ -37,29 +37,6 @@ export const OrderHistoryList = ({ status, period }: OrderHistoryListProps) => {
     const [cancelOrderData, setCancelOrderData] = useState<OrderListItem | null>(null);
 
     // 주문 상태별 버튼 구성 정의
-    const getButtonsByStatus = (order: OrderListItem): ButtonConfig[] => {
-        switch (order.orderStatus) {
-            case "WAITING_FOR_PAYMENT":
-                return [
-                    { text: "주문 취소", variant: "outline", onClick: () => setCancelOrderData(order) },
-                    { text: "배송 조회", isGreen: true },
-                ];
-            case "SHIPPED":
-                return [{ text: "배송 조회", isGreen: true }];
-            case "DELIVERED":
-                return [
-                    { text: "반품 신청", variant: "outline", onClick: () => setCancelOrderData(order) },
-                    { text: "배송 조회", variant: "outline" },
-                ];
-            case "REFUNDED":
-                return [
-                    { text: "반품 정보", variant: "outline" },
-                    { text: "장바구니 담기", variant: "outline" },
-                ];
-            default:
-                return [];
-        }
-    };
 
     return (
         <div className="flex flex-col w-full gap-4">
