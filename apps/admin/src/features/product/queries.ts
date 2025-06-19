@@ -1,6 +1,6 @@
 import { queryOptions } from "@tanstack/react-query";
 import { deleteProduct, getProductById, getProducts, updateProductStatus, getAdminProductById } from "./api";
-import type { Product, ProductListParams, AdminProduct } from "./api";
+import type { Product, ProductListParams } from "./api";
 
 // Product 형식을 프론트엔드용으로 변환
 export function mapProductFromApi(apiProduct: Product): Product & { sellingStatus: "SELLING" | "SOLD_OUT"; stock: number } {

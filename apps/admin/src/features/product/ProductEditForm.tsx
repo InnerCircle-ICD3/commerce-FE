@@ -446,6 +446,7 @@ export default function ProductEditForm() {
                         label="썸네일 이미지"
                         imageType="thumbnail"
                         currentImageUrl={formData.thumbnail}
+                        onImageUploaded={handleThumbnailUpload}
                         onUploadComplete={handleThumbnailUpload}
                         onUploadStart={() => setIsThumbnailUploading(true)}
                         onUploadEnd={() => setIsThumbnailUploading(false)}
@@ -455,6 +456,7 @@ export default function ProductEditForm() {
                         label="상세 이미지"
                         imageType="detail"
                         currentImageUrl={formData.detailImage}
+                        onImageUploaded={handleDetailImageUpload}
                         onUploadComplete={handleDetailImageUpload}
                         onUploadStart={() => setIsDetailImageUploading(true)}
                         onUploadEnd={() => setIsDetailImageUploading(false)}

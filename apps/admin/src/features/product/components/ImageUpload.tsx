@@ -16,6 +16,11 @@ interface ImageUploadProps {
     onUploadStateChange?: (isUploading: boolean) => void;
     accept?: string;
     maxSize?: number; // MB 단위
+    // 이전 버전 호환성
+    onUploadComplete?: (imageUrl: string) => void;
+    onUploadStart?: () => void;
+    onUploadEnd?: () => void;
+    error?: string;
 }
 
 export default function ImageUpload({
@@ -27,6 +32,11 @@ export default function ImageUpload({
     onUploadStateChange,
     accept = "image/*",
     maxSize = 5, // 5MB 기본값
+    // 이전 버전 호환성
+    onUploadComplete,
+    onUploadStart,
+    onUploadEnd,
+    error,
 }: ImageUploadProps) {
     const [previewUrl, setPreviewUrl] = useState<string | null>(currentImageUrl || null);
     const [selectedFile, setSelectedFile] = useState<File | null>(null);
@@ -48,9 +58,11 @@ export default function ImageUpload({
         onMutate: () => {
             // 업로드 시작 시 상태 전달
             onUploadStateChange?.(true);
+            onUploadStart?.();
         },
         onSuccess: imageUrl => {
             onImageUploaded(imageUrl);
+            onUploadComplete?.(imageUrl); // 이전 버전 호환성
             setUrlInput(imageUrl); // 업로드 완료 시 URL 입력폼에 자동 입력
             setSelectedFile(null);
             toast({
@@ -68,6 +80,7 @@ export default function ImageUpload({
         onSettled: () => {
             // 업로드 완료/실패 시 상태 전달
             onUploadStateChange?.(false);
+            onUploadEnd?.();
         },
     });
 
@@ -280,8 +293,9 @@ export default function ImageUpload({
                     value={urlInput}
                     onChange={handleUrlChange}
                     placeholder="이미지 URL을 입력하거나 위에서 파일을 업로드하세요"
-                    className="w-full text-sm font-mono"
+                    className={`w-full text-sm font-mono ${error ? "border-red-500" : ""}`}
                 />
+                {error && <p className="text-sm text-red-500">{error}</p>}
                 <p className="text-xs text-gray-500">
                     직접 URL을 입력하거나 위에서 파일을 업로드하면 자동으로 입력됩니다.
                 </p>

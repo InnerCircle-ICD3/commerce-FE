@@ -13,6 +13,10 @@ interface CategorySelectEnumProps {
     selectedCupSizeId?: string;
     onIntensityChange: (intensityId: string) => void;
     onCupSizeChange: (cupSizeId: string) => void;
+    errors?: {
+        intensityId?: string;
+        cupSizeId?: string;
+    };
 }
 
 export default function CategorySelectEnum({
@@ -20,6 +24,7 @@ export default function CategorySelectEnum({
     selectedCupSizeId,
     onIntensityChange,
     onCupSizeChange,
+    errors,
 }: CategorySelectEnumProps) {
     // 유효한 옵션들만 필터링 (빈 값 제거)
     const validIntensityOptions = intensityOptions.filter(option => option.id && option.id.trim() !== '');
@@ -36,7 +41,7 @@ export default function CategorySelectEnum({
                     value={selectedIntensityId && selectedIntensityId.trim() !== '' ? selectedIntensityId : undefined}
                     onValueChange={onIntensityChange}
                 >
-                    <SelectTrigger id="intensity-select">
+                    <SelectTrigger id="intensity-select" className={errors?.intensityId ? "border-red-500" : ""}>
                         <SelectValue placeholder="강도를 선택해주세요 (1-9)" />
                     </SelectTrigger>
                     <SelectContent>
@@ -47,6 +52,7 @@ export default function CategorySelectEnum({
                         ))}
                     </SelectContent>
                 </Select>
+                {errors?.intensityId && <p className="text-sm text-red-500">{errors.intensityId}</p>}
             </div>
 
             {/* 컵사이즈 선택 */}
@@ -58,7 +64,7 @@ export default function CategorySelectEnum({
                     value={selectedCupSizeId && selectedCupSizeId.trim() !== '' ? selectedCupSizeId : undefined}
                     onValueChange={onCupSizeChange}
                 >
-                    <SelectTrigger id="cupsize-select">
+                    <SelectTrigger id="cupsize-select" className={errors?.cupSizeId ? "border-red-500" : ""}>
                         <SelectValue placeholder="컵사이즈를 선택해주세요" />
                     </SelectTrigger>
                     <SelectContent>
@@ -69,6 +75,7 @@ export default function CategorySelectEnum({
                         ))}
                     </SelectContent>
                 </Select>
+                {errors?.cupSizeId && <p className="text-sm text-red-500">{errors.cupSizeId}</p>}
             </div>
         </div>
     );
