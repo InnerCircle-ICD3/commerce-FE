@@ -3,14 +3,19 @@ import { useEffect } from "react";
 import { Button } from "@/src/shared/components/shared/button";
 import { useToast } from "@/src/shared/hooks/useToast";
 import { useCancelOrder } from "../hooks/useCancelOrder";
+import type { OrderListItem } from "../types/orderListItem";
 
-export const CancelOrderModal = ({ order, onClickClose }: { order: { orderNumber: string }; onClickClose: () => void }) => {
+export const CancelOrderModal = ({
+    order,
+    onClickClose,
+    onCancelOrder,
+}: { order: { orderNumber: string }; onClickClose: () => void; onCancelOrder: () => void }) => {
     const { openModal, closeModal, Modal } = useModal();
     const { toast, ToastUI } = useToast();
 
     const { mutate: cancelOrder } = useCancelOrder({
         onSuccess: () => {
-            onClickClose();
+            onCancelOrder();
             closeModal();
         },
         onError: () => {

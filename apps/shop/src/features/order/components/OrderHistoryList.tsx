@@ -10,6 +10,7 @@ import { CancelOrderModal } from "./CancelOrderModal";
 import Image from "next/image";
 import { getOrderStatusLabel } from "@/src/shared/utils/getOrderStatusLabel";
 import type { OrderStatus } from "../types";
+import { useToast } from "@/src/shared/hooks/useToast";
 
 interface OrderHistoryListProps {
     status: OrderStatus | null;
@@ -19,6 +20,12 @@ interface OrderHistoryListProps {
 export const OrderHistoryList = ({ status, period }: OrderHistoryListProps) => {
     const { data: orders, hasNextPage, fetchNextPage } = useOrderList({ status, period });
     const [cancelOrderData, setCancelOrderData] = useState<OrderListItem | null>(null);
+    const { toast, ToastUI } = useToast();
+
+    const onCancelOrder = () => {
+        toast({ message: "주문 취소가 완료되었습니다." });
+        setCancelOrderData(null);
+    };
 
     // 주문 상태별 버튼 구성 정의
 
@@ -90,7 +97,10 @@ export const OrderHistoryList = ({ status, period }: OrderHistoryListProps) => {
                 더보기
                 <ArrowIcon direction="down" size="sm" strokeWidth={1.5} title="더 많은 주문 내역 보기" />
             </Button>
-            {cancelOrderData && <CancelOrderModal order={cancelOrderData} onClickClose={() => setCancelOrderData(null)} />}
+            {cancelOrderData && (
+                <CancelOrderModal order={cancelOrderData} onClickClose={() => setCancelOrderData(null)} onCancelOrder={onCancelOrder} />
+            )}
+            {ToastUI}
         </div>
     );
 };
