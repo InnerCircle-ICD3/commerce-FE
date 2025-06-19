@@ -35,7 +35,6 @@ const emptyProduct: ProductType = {
     detailImage: "",
     intensity: "Unknown",
     cupSize: "Unknown",
-    isSoldOut: true,
 };
 
 /**

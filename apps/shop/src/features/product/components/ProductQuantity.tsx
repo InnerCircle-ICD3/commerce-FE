@@ -31,9 +31,11 @@ export default function ProductQuantity({ product }: { product: ProductType }) {
             setQuantity(0);
         } else {
             let numValue = Number.parseInt(value, 10);
+
             if (numValue > 999) {
                 numValue = 999;
             }
+
             setQuantity(numValue);
         }
         setSelectedButton(null); // 직접 입력 시 선택된 버튼 초기화
@@ -79,7 +81,7 @@ export default function ProductQuantity({ product }: { product: ProductType }) {
             <div className="flex flex-col gap-2">
                 <span className="text-sm text-gray-600">빠른 선택</span>
                 <div className="flex flex-wrap gap-2">
-                    {[10, 20, 30, 40, 50, 60]
+                    {[1, 2, 3, 5, 10, 20]
                         .filter(qty => qty <= productQuantity)
                         .map(qty => (
                             <button

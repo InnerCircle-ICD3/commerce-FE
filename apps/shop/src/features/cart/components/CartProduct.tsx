@@ -36,7 +36,7 @@ export default function CartProduct({ cartItems }: { cartItems: CartItem[] }) {
 
     const deleteCartItems = useMutation({
         mutationFn: async (cartItemIds: number[]) => {
-            await fetch(`/cart-items?cartItems=${cartItemIds.join(",")}`, {
+            await fetch(`/cart-items?cartItemIds=${cartItemIds.join(",")}`, {
                 method: "DELETE",
                 headers: { "Content-Type": "application/json" },
             });
@@ -58,6 +58,7 @@ export default function CartProduct({ cartItems }: { cartItems: CartItem[] }) {
     const onDelete = (id: number) => {
         deleteCartItems.mutate([id]);
     };
+
     const onDeleteAll = () => {
         if (selectedItemIds.length === 0) return;
         deleteCartItems.mutate(selectedItemIds);
@@ -99,7 +100,7 @@ export default function CartProduct({ cartItems }: { cartItems: CartItem[] }) {
                 />
             ))}
             <div className="flex-grow-0 flex-shrink-0 text-xs text-gray-400 gap-2">
-                <p>*수량은 각 제품 캡슐 단위로 변경이 가능합니다.</p>
+                <p>*수량은 1슬리브(10캡슐) 단위로 변경이 가능합니다.</p>
             </div>
             {ToastUI}
         </>

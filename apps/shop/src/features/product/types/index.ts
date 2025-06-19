@@ -11,7 +11,6 @@ export interface ProductType {
     detailImage: string;
     intensity: string;
     cupSize: string;
-    isSoldOut: boolean;
 }
 
 export interface ProductDetails {

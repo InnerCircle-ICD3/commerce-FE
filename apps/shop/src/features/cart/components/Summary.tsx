@@ -5,6 +5,8 @@ import type { CartItem } from "@/src/features/cart/types/cart";
 import { formatNumber } from "@/src/shared/utils/formatUtils";
 import { useCheckoutCartStore } from "@/src/features/cart/stores/checkoutCartStore";
 
+const SLEEVE_CAPSULE_COUNT = 10;
+
 export default function Summary({ cartItems }: { cartItems: CartItem[] }) {
     const totalPrice = cartItems.reduce((acc, item) => acc + item.price * item.quantity, 0);
     const router = useRouter();
@@ -25,9 +27,9 @@ export default function Summary({ cartItems }: { cartItems: CartItem[] }) {
             {cartItems.map(item => (
                 <div key={item.cartItemId} className="flex justify-between w-full items-center mt-2">
                     <p className="text-sm text-left text-[#47484C]">
-                        {item.productName}(x{item.quantity})
+                        {item.productName}(x{item.quantity}슬리브, {item.quantity * SLEEVE_CAPSULE_COUNT}캡슐)
                     </p>
-                    <p>&#8361; {formatNumber(item.price)}</p>
+                    <p>&#8361; {formatNumber(item.price * item.quantity)}</p>
                 </div>
             ))}
             <hr className="border-t border-gray-300 my-4" />

@@ -16,6 +16,8 @@ interface ItemProps {
     onDelete: () => void;
 }
 
+const SLEEVE_CAPSULE_COUNT = 10; // 1슬리브 = 10캡슐
+
 export default function Item({ cartItemId, name, price, quantity, stockQuantity, image, selected, onSelectChange, onDelete }: ItemProps) {
     const totalPrice = quantity * price;
 
@@ -39,14 +41,22 @@ export default function Item({ cartItemId, name, price, quantity, stockQuantity,
                 <img src={image} alt={name} className="w-16 h-16 object-cover" />
                 <div className="flex flex-col flex-grow">
                     <div className="flex flex-col justify-start items-start flex-grow gap-2">
-                        <h2 className="flex-grow-0 flex-shrink-0 text-sm font-bold text-left text-black">{name}</h2>
-                        <div className="flex gap-1 items-center">
-                            <p className="flex-grow-0 flex-shrink-0 text-sm font-bold text-center text-[#257a57]">
-                                &#8361; {formatNumber(totalPrice)}
-                            </p>
-                            <p className="flex-grow-0 flex-shrink-0 text-xs text-center text-[#257a57]">
-                                ({quantity} x &#8361;{formatNumber(price)})
-                            </p>
+                        <h2 className="flex-grow-0 flex-shrink-0 text-sm font-bold text-left text-black">{name}</h2>                        <div className="flex flex-col gap-1">
+                            {/* 총 가격 (메인 표시) */}
+                            <div className="flex items-baseline gap-2">
+                                <span className="text-lg font-bold text-[#257a57]">
+                                    ₩{formatNumber(totalPrice)}
+                                </span>
+                                
+                            </div>
+                            
+                            {/* 단가 정보 */}
+                            <div className="flex items-center gap-1 text-xs text-[#257A57]">
+                                <span>₩{formatNumber(price)} x {quantity}슬리브</span>
+                                <span className="text-xs text-gray-500">
+                                    ({quantity * SLEEVE_CAPSULE_COUNT}캡슐, 캡슐당 ₩{formatNumber(price / SLEEVE_CAPSULE_COUNT)})
+                                </span>
+                            </div>
                         </div>
                         <QuantityChange cartItemId={cartItemId} initQuantity={quantity} stockQuantity={stockQuantity} />
                     </div>

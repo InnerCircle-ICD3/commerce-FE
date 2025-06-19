@@ -14,7 +14,6 @@ const mockProduct: ProductType = {
     quantity: 100,
     thumbnail: "https://cdn.builder.io/api/v1/image/assets/TEMP/4c7bfa7b14aca451340208bfc07390f055298c80",
     cupSize: "Large",
-    isSoldOut: false,
 };
 
 export default function ReviewCreatePage() {

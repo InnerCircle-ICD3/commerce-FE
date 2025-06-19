@@ -1,15 +1,31 @@
 import { notFound } from "next/navigation";
 import { ProductPage } from "@/src/features/product/components/ProductPage";
 import { getProduct, getProductReviews, getProductReviewStats } from "@/src/features/product/api/productApi";
-
-export const metadata = {
-    title: "상품 상세 페이지",
-    description: "선택한 상품의 상세 정보와 리뷰를 확인할 수 있습니다.",
-};
+import type { Metadata } from "next";
 
 interface ProductDetailPageProps {
     params: Promise<{ id: string }>;
     searchParams: Promise<{ [key: string]: string | string[] | undefined }>;
+}
+
+export async function generateMetadata({ params }: ProductDetailPageProps): Promise<Metadata> {
+    const resolvedParams = await params;
+    const id = resolvedParams.id;
+
+    try {
+        const product = await getProduct(id);
+        
+        return {
+            title: product.name,
+            description: `${product.name}의 상세 정보와 리뷰를 확인할 수 있습니다. ${product.intensity ? `강도: ${product.intensity}` : ''}`,
+        };
+    } catch (error) {
+        // 상품을 찾을 수 없는 경우 기본 메타데이터 반환
+        return {
+            title: "상품 상세 정보",
+            description: "선택한 상품의 상세 정보와 리뷰를 확인할 수 있습니다.",
+        };
+    }
 }
 
 export default async function ProductDetailPage({ params, searchParams }: ProductDetailPageProps) {
