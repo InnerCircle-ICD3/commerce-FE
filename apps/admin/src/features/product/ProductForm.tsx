@@ -1,6 +1,7 @@
 import { Button } from "@/shared/components/ui/button";
 import { Input } from "@/shared/components/ui/input";
 import { toast } from "@/shared/components/ui/use-toast";
+import { Dialog, DialogContent, DialogHeader, DialogTitle, DialogDescription, DialogFooter } from "@/shared/components/ui/dialog";
 import { useMutation } from "@tanstack/react-query";
 import { useNavigate } from "@tanstack/react-router";
 import { useState, useEffect } from "react";
@@ -509,24 +510,24 @@ export default function ProductForm() {
             </form>
 
             {/* 임시저장 복원 확인 다이얼로그 */}
-            {showRestoreDialog && (
-                <div className="fixed inset-0 bg-gray-900 bg-opacity-25 flex items-center justify-center z-50">
-                    <div className="bg-white rounded-lg p-6 max-w-md w-full mx-4">
-                        <h3 className="text-lg font-semibold mb-2">임시저장 데이터 발견</h3>
-                        <p className="text-gray-600 mb-6">
+            <Dialog open={showRestoreDialog} onOpenChange={setShowRestoreDialog}>
+                <DialogContent>
+                    <DialogHeader>
+                        <DialogTitle>임시저장 데이터 발견</DialogTitle>
+                        <DialogDescription>
                             이전에 작성하던 상품 정보가 있습니다. 불러오시겠습니까?
-                        </p>
-                        <div className="flex gap-3 justify-end">
-                            <Button variant="outline" onClick={rejectDraftData}>
-                                아니오
-                            </Button>
-                            <Button onClick={restoreDraftData}>
-                                예
-                            </Button>
-                        </div>
-                    </div>
-                </div>
-            )}
+                        </DialogDescription>
+                    </DialogHeader>
+                    <DialogFooter>
+                        <Button variant="outline" onClick={rejectDraftData}>
+                            아니오
+                        </Button>
+                        <Button onClick={restoreDraftData}>
+                            예
+                        </Button>
+                    </DialogFooter>
+                </DialogContent>
+            </Dialog>
         </div>
     );
 }
