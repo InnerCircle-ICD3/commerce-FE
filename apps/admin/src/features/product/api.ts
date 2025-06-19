@@ -26,12 +26,12 @@ export interface ProductListParams extends PaginationParams {
 
 // 상품 목록 조회
 export async function getProducts(params: ProductListParams = {}): Promise<PageResponse<Product>> {
-    return get<PageResponse<Product>>("products", params);
+    return get<PageResponse<Product>>("admin/products", params);
 }
 
 // 상품 상세 조회
 export async function getProductById(id: number): Promise<Product> {
-    return get<Product>(`products/${id}`);
+    return get<Product>(`admin/products/${id}`);
 }
 
 // 상품 삭제
