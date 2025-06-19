@@ -12,9 +12,8 @@ type UserPopupProps = {
 };
 
 export default function UserPopup({ user, onClose, onSave }: UserPopupProps) {
-    const [isWithdrawPopupOpen, setIsWithdrawPopupOpen] = useState(false);
+// const [isWithdrawPopupOpen, setIsWithdrawPopupOpen] = useState(false);
     const [nickname, setNickname] = useState(user.nickname);
-    const [newNickname, setNewNickname] = useState(user.nickname);
     const [nicknameError, setNicknameError] = useState<string>("");
 
     // 완전한 한글(초성,종성 제외), 영문, 숫자만 허용하는 정규식
@@ -38,37 +37,24 @@ export default function UserPopup({ user, onClose, onSave }: UserPopupProps) {
         } else {
             setNicknameError("");
         }
-    };    const onNicknameEditClick = () => {
-        // 닉네임 유효성 검사
-        if (nickname.trim() === "") {
-            setNicknameError("닉네임을 입력해주세요.");
-            return;
-        }
-        
-        if (!validateNickname(nickname)) {
-            setNicknameError("완전한 한글, 영문, 숫자만 사용 가능합니다.");
-            return;
-        }
-        
-        setNicknameError("");
-        setNewNickname(nickname);
     };
 
-    const onWithdrawClick = () => {
-        setIsWithdrawPopupOpen(true);
-    };
+    // const onWithdrawClick = () => {
+    //     setIsWithdrawPopupOpen(true);
+    // };
 
-    const onCloseClick = () => {
-        setIsWithdrawPopupOpen(false);
-    };
+    // const onCloseClick = () => {
+    //     setIsWithdrawPopupOpen(false);    // };
 
-    const handleWithDraw = () => {
-        // todo: 탈퇴 로직
-        setIsWithdrawPopupOpen(false);
-    };
+    // const handleWithDraw = () => {
+    //     // todo: 탈퇴 로직
+    //     setIsWithdrawPopupOpen(false);
+    // };
 
     const onSaveClick = () => {
-        onSave(newNickname);
+        if (!nicknameError && nickname.trim() !== "") {
+            onSave(nickname);
+        }
     };
 
     const handleClose = () => {
@@ -115,20 +101,19 @@ export default function UserPopup({ user, onClose, onSave }: UserPopupProps) {
                         <p className="flex-grow-0 flex-shrink-0 text-sm font-bold text-left text-black">이메일</p>
                         <p className="flex-grow-0 flex-shrink-0 text-sm text-left text-[#171719]">{user.email}</p>
                     </div>
-                    <button type="button" className="flex-grow-0 flex-shrink-0 text-base text-left text-[#2e2f33]/[0.88]" onClick={onWithdrawClick}>
+                    {/* <button type="button" className="flex-grow-0 flex-shrink-0 text-base text-left text-[#2e2f33]/[0.88]" onClick={onWithdrawClick}>
                         회원 탈퇴하기
-                    </button>
-                    <button
+                    </button> */}                    <button
                         type="button"
-                        className={`${nicknameError ? "bg-gray-400" : "bg-[#257a57]"} flex justify-center items-center self-stretch flex-grow-0 flex-shrink-0 h-12 relative gap-2 px-4 py-3 rounded-lg`}
+                        className={`${nicknameError || nickname.trim() === "" || nickname.trim() === user.nickname ? "bg-gray-400" : "bg-[#257a57]"} flex justify-center items-center self-stretch flex-grow-0 flex-shrink-0 h-12 relative gap-2 px-4 py-3 rounded-lg`}
                         onClick={onSaveClick}
-                        disabled={!!nicknameError || nickname === newNickname}
+                        disabled={!!nicknameError || nickname.trim() === "" || nickname.trim() === user.nickname}
                     >
                         <p className="flex-grow-0 flex-shrink-0 text-base font-bold text-center text-white">저장하기</p>
                     </button>
                 </div>
             </div>
-            {isWithdrawPopupOpen && <WithDrawPopup onClose={onCloseClick} onWithDraw={handleWithDraw} />}
+            {/* {isWithdrawPopupOpen && <WithDrawPopup onClose={onCloseClick} onWithDraw={handleWithDraw} />} */}
         </div>
     );
 }

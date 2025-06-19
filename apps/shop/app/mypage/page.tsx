@@ -1,5 +1,4 @@
 import LinkedMenu from "@/src/features/mypage/components/LinkedMenu";
-import ShippingProductInfo from "@/src/features/mypage/components/ShippingProductInfo";
 import UserInfo from "@/src/features/mypage/components/UserInfo";
 
 export const metadata = {
