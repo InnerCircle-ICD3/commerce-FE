@@ -84,20 +84,22 @@ export default function CartProduct({ cartItems }: { cartItems: CartItem[] }) {
                     전체 삭제
                 </button>
             </div>
-            {cartItems.map(item => (
-                <Item
-                    key={item.cartItemId}
-                    cartItemId={item.cartItemId}
-                    name={item.productName}
-                    price={item.price}
-                    quantity={item.quantity}
-                    stockQuantity={item.stockQuantity}
-                    image={item.thumbnail}
-                    selected={selectedItemIds.includes(item.cartItemId)}
-                    onSelectChange={() => onItemSelectChange(item.cartItemId)}
-                    onDelete={() => onDelete(item.cartItemId)}
-                />
-            ))}
+            {cartItems
+                .sort((a, b) => b.cartItemId - a.cartItemId) // 최근 추가된 상품 우선 (cartItemId 내림차순)
+                .map(item => (
+                    <Item
+                        key={item.cartItemId}
+                        cartItemId={item.cartItemId}
+                        name={item.productName}
+                        price={item.price}
+                        quantity={item.quantity}
+                        stockQuantity={item.stockQuantity}
+                        image={item.thumbnail}
+                        selected={selectedItemIds.includes(item.cartItemId)}
+                        onSelectChange={() => onItemSelectChange(item.cartItemId)}
+                        onDelete={() => onDelete(item.cartItemId)}
+                    />
+                ))}
             <div className="flex-grow-0 flex-shrink-0 text-xs text-gray-400 gap-2">
                 <p>*수량은 각 제품 캡슐 단위로 변경이 가능합니다.</p>
             </div>
