@@ -6,8 +6,6 @@ import type { OrderListItem } from "../types/orderListItem";
 import { CancelOrderModal } from "./CancelOrderModal";
 import type { OrderStatus } from "../types";
 import { useToast } from "@/src/shared/hooks/useToast";
-import { useModal } from "@/src/shared/hooks/useModal";
-import { ShippingTracking } from "./ShippingTracking";
 import { OrderHistoryItem } from "./OrderHistoryItem";
 
 interface OrderHistoryListProps {
@@ -25,7 +23,6 @@ export const OrderHistoryList = ({ status, period }: OrderHistoryListProps) => {
         setCancelOrderData(null);
     };
 
-    const { openModal, closeModal, Modal } = useModal();
     // 주문 상태별 버튼 구성 정의
 
     return (
@@ -47,9 +44,6 @@ export const OrderHistoryList = ({ status, period }: OrderHistoryListProps) => {
                 <CancelOrderModal order={cancelOrderData} onClickClose={() => setCancelOrderData(null)} onCancelOrder={onCancelOrder} />
             )}
             {ToastUI}
-            <Modal title="배송 조회" onClickClose={closeModal}>
-                <ShippingTracking trackingNumber={""} />
-            </Modal>
         </div>
     );
 };
