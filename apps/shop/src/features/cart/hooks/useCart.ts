@@ -6,9 +6,9 @@ export function useCart() {
     return useQuery<GetCartResponse>({
         queryKey: ["cart"],
         queryFn: () => fetchCart(),
-        staleTime: 0, // 데이터를 즉시 stale로 처리
-        refetchOnWindowFocus: true, // 창에 포커스될 때 재조회
-        refetchOnMount: true, // 컴포넌트 마운트 시 재조회
+        refetchOnWindowFocus: false, // 창 포커스 시 자동 재조회 비활성화
+        refetchOnMount: "always", // 마운트 시 항상 재조회
+        retry: 2, // 실패 시 2번 재시도
     });
 }
 

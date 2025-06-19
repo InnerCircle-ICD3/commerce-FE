@@ -64,7 +64,9 @@ export default function QuantityChange({ cartItemId, initQuantity, stockQuantity
             setPendingQuantity(newQuantity);
             debouncedChangeQuantity(newQuantity);
         }
-    };    const changeQuantity = (newQuantity: number) => {
+    };    
+    
+    const changeQuantity = (newQuantity: number) => {
         // 이미 업데이트 중이면 무시
         if (isUpdatingRef.current) {
             return;
