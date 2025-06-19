@@ -1,13 +1,13 @@
-import type { Review, ReviewData } from "@/features/review/types/type";
-import { Table, TableBody, TableCell, TableHead, TableHeader, TableRow } from "@/shared/components/ui/table/table";
-import { useQuery } from "@tanstack/react-query";
-import { Fragment, useEffect, useState } from "react";
-import { createStars } from "@/shared/utils/createStars";
 import ReviewDetail from "@/features/review/components/ReviewDetail";
+import type { Review, ReviewData } from "@/features/review/types/type";
 import Search from "@/shared/components/shared/Search";
 import { Pagination } from "@/shared/components/ui/pagination";
-import { formatDateTime } from "@commerce-fe/utils";
+import { Table, TableBody, TableCell, TableHead, TableHeader, TableRow } from "@/shared/components/ui/table/table";
 import { fetcher } from "@/shared/kyInstance";
+import { createStars } from "@/shared/utils/createStars";
+import { formatDateTime } from "@commerce-fe/utils";
+import { useQuery } from "@tanstack/react-query";
+import { Fragment, useEffect, useState } from "react";
 
 export default function ReviewsPage() {
     const [currentPage, setCurrentPage] = useState(1);

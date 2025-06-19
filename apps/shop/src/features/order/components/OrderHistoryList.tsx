@@ -4,9 +4,11 @@ import { useState } from "react";
 import { useOrderList } from "../hooks/useOrderList";
 import type { OrderListItem } from "../types/orderListItem";
 import { CancelOrderModal } from "./CancelOrderModal";
+
 import type { OrderStatus } from "../types";
 import { useToast } from "@/src/shared/hooks/useToast";
 import { OrderHistoryItem } from "./OrderHistoryItem";
+
 
 interface OrderHistoryListProps {
     status: OrderStatus | null;
@@ -22,6 +24,7 @@ export const OrderHistoryList = ({ status, period }: OrderHistoryListProps) => {
         toast({ message: "주문 취소가 완료되었습니다." });
         setCancelOrderData(null);
     };
+
 
     // 주문 상태별 버튼 구성 정의
 
@@ -44,6 +47,7 @@ export const OrderHistoryList = ({ status, period }: OrderHistoryListProps) => {
                 <CancelOrderModal order={cancelOrderData} onClickClose={() => setCancelOrderData(null)} onCancelOrder={onCancelOrder} />
             )}
             {ToastUI}
+
         </div>
     );
 };

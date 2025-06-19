@@ -10,11 +10,13 @@ export const CancelOrderModal = ({
     onClickClose,
     onCancelOrder,
 }: { order: { orderNumber: string }; onClickClose: () => void; onCancelOrder: () => void }) => {
+
     const { openModal, closeModal, Modal } = useModal();
     const { toast, ToastUI } = useToast();
 
     const { mutate: cancelOrder } = useCancelOrder({
         onSuccess: () => {
+
             onCancelOrder();
             closeModal();
         },

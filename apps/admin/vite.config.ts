@@ -21,4 +21,49 @@ export default defineConfig({
             "@": path.resolve(__dirname, "./src"),
         },
     },
+    build: {
+        rollupOptions: {
+            output: {
+                manualChunks: {
+                    'react-vendor': ['react', 'react-dom'],
+                    'router-vendor': ['@tanstack/react-router'],
+                    'ui-vendor': ['@radix-ui/react-dialog', '@radix-ui/react-dropdown-menu', 'lucide-react'],
+                    'form-vendor': ['react-hook-form', '@hookform/resolvers', 'zod'],
+                    'table-vendor': ['@tanstack/react-table'],
+                },
+            },
+        },
+        target: 'esnext',
+        minify: 'esbuild',
+        cssCodeSplit: true,
+        sourcemap: false,
+        chunkSizeWarningLimit: 1000,
+    },
+    optimizeDeps: {
+        include: [
+            'react',
+            'react-dom',
+            '@tanstack/react-router',
+            '@tanstack/react-query',
+            'zustand',
+            'clsx',
+            'tailwind-merge',
+        ],
+        esbuildOptions: {
+            target: 'esnext',
+        },
+    },
+    server: {
+        strictPort: false,
+        hmr: {
+            overlay: false,
+        },
+        fs: {
+            strict: false,
+        },
+    },
+    esbuild: {
+        target: 'esnext',
+        logOverride: { 'this-is-undefined-in-esm': 'silent' },
+    },
 });

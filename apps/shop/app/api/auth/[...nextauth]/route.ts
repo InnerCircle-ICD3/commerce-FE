@@ -25,6 +25,42 @@ const handler = NextAuth({
     // 디버그 모드 설정 (개발 환경에서만 활성화)
     debug: process.env.NODE_ENV === "development",
 
+    // Safari 호환성을 위한 쿠키 설정
+    cookies: {
+        sessionToken: {
+            name: "next-auth.session-token",
+            options: {
+                httpOnly: true,
+                sameSite: "lax",
+                path: "/",
+                secure: process.env.NODE_ENV === "production", // HTTPS에서만 secure 쿠키 사용
+            },
+        },
+        callbackUrl: {
+            name: "next-auth.callback-url",
+            options: {
+                sameSite: "lax",
+                path: "/",
+                secure: process.env.NODE_ENV === "production",
+            },
+        },
+        csrfToken: {
+            name: "next-auth.csrf-token",
+            options: {
+                httpOnly: true,
+                sameSite: "lax",
+                path: "/",
+                secure: process.env.NODE_ENV === "production",
+            },
+        },
+    },
+
+    // JWT 설정
+    session: {
+        strategy: "jwt",
+        maxAge: 30 * 24 * 60 * 60, // 30 days
+    },
+
     // 에러 처리 페이지 경로 설정 (커스텀 에러 페이지를 만들 경우)
     pages: {
         error: "/auth/error", // 에러 발생 시 이동할 커스텀 에러 페이지

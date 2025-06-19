@@ -1,4 +1,4 @@
-import { LayoutDashboard, ShoppingBag, FileText, Settings, Users, MessageSquareText, MessagesSquare } from "lucide-react";
+import { FileText, LayoutDashboard, MessageSquareText, MessagesSquare, Settings, ShoppingBag, Users } from "lucide-react";
 
 export const sidebarData = {
     navGroups: [

@@ -1,6 +1,6 @@
-import { NaverIcon } from "@/shared/components/shared/Icon";
 import { useAuth } from "@/features/auth/hooks/useAuth";
 import { useIsLoading } from "@/features/auth/stores/authStore";
+import { NaverIcon } from "@/shared/components/shared/Icon";
 
 export default function LoginComponent() {
     const { startNaverLogin } = useAuth();

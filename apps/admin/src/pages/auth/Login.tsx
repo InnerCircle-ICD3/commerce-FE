@@ -1,5 +1,5 @@
+import { GoogleIcon, KakaoIcon, NaverIcon } from "@/shared/components/shared/Icon";
 import { useNavigate } from "@tanstack/react-router";
-import { KakaoIcon, NaverIcon, GoogleIcon } from "@/shared/components/shared/Icon";
 
 export default function LoginPage() {
     const navigate = useNavigate();
@@ -21,8 +21,8 @@ export default function LoginPage() {
 
                 <div className="space-y-2">
                     {/* 카카오 로그인 버튼 */}
-                    <button 
-                        type="button" 
+                    <button
+                        type="button"
                         className="w-full h-12 rounded-lg bg-[#fee500] flex items-center justify-center gap-2"
                         onClick={handleLogin}
                     >
@@ -33,8 +33,8 @@ export default function LoginPage() {
                     </button>
 
                     {/* 네이버 로그인 버튼 */}
-                    <button 
-                        type="button" 
+                    <button
+                        type="button"
                         className="w-full h-12 rounded-lg bg-[#00c73c] flex items-center justify-center gap-2"
                         onClick={handleLogin}
                     >

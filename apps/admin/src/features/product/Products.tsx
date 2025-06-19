@@ -1,18 +1,18 @@
-import { Table, TableBody, TableCaption, TableCell, TableHead, TableHeader, TableRow } from "@/shared/components/ui/table/table";
-import { Pagination } from "@/shared/components/ui/pagination";
-import { productsQueryOptions, deleteProduct, updateProductStatus } from "@/features/product/queries";
 import type { Product as ApiProduct } from "@/features/product/api";
+import { deleteProduct, productsQueryOptions, updateProductStatus } from "@/features/product/queries";
+import { Route } from "@/routes/_authenticated/products";
+import { Badge } from "@/shared/components/ui/badge";
+import { Button } from "@/shared/components/ui/button";
+import { Dialog, DialogContent, DialogDescription, DialogFooter, DialogHeader, DialogTitle } from "@/shared/components/ui/dialog";
+import { Input } from "@/shared/components/ui/input";
+import { Pagination } from "@/shared/components/ui/pagination";
+import { Select, SelectContent, SelectGroup, SelectItem, SelectTrigger, SelectValue } from "@/shared/components/ui/select";
+import { Table, TableBody, TableCaption, TableCell, TableHead, TableHeader, TableRow } from "@/shared/components/ui/table/table";
+import { toast } from "@/shared/components/ui/use-toast";
 import { useSuspenseQuery, useMutation, useQueryClient } from "@tanstack/react-query";
 import { useNavigate } from "@tanstack/react-router";
-import { Route } from "@/routes/_authenticated/products";
-import { Input } from "@/shared/components/ui/input";
-import { Select, SelectContent, SelectGroup, SelectItem, SelectTrigger, SelectValue } from "@/shared/components/ui/select";
-import { Button } from "@/shared/components/ui/button";
 import { Plus, Search } from "lucide-react";
 import { useState } from "react";
-import { Dialog, DialogContent, DialogDescription, DialogFooter, DialogHeader, DialogTitle } from "@/shared/components/ui/dialog";
-import { toast } from "@/shared/components/ui/use-toast";
-import { Badge } from "@/shared/components/ui/badge";
 
 // 프론트엔드에서 사용할 상품 타입
 type Product = ApiProduct & { sellingStatus: "SELLING" | "SOLD_OUT"; stock: number };
@@ -26,7 +26,7 @@ export default function ProductsPage() {
     const [isDeleteDialogOpen, setIsDeleteDialogOpen] = useState(false);
     const [productToDelete, setProductToDelete] = useState<Product | null>(null);
     const [searchKeyword, setSearchKeyword] = useState("");
-    const [statusFilter, setStatusFilter] = useState<"SELLING" | "SOLD_OUT" | "">("");
+    const [statusFilter, setStatusFilter] = useState<"SELLING" | "SOLD_OUT" | "ALL">("ALL");
 
     // 상품 목록 조회 쿼리
     const { data } = useSuspenseQuery(
@@ -34,7 +34,7 @@ export default function ProductsPage() {
             page: page - 1,
             size,
             keyword: searchKeyword || undefined,
-            sellingStatus: statusFilter || undefined,
+            sellingStatus: statusFilter === "ALL" ? undefined : statusFilter,
         }),
     );
 
@@ -130,8 +130,8 @@ export default function ProductsPage() {
                     <Input
                         placeholder="상품명 검색"
                         value={searchKeyword}
-                        onChange={e => setSearchKeyword(e.target.value)}
-                        onKeyDown={e => e.key === "Enter" && handleSearch()}
+                        onChange={(e) => setSearchKeyword(e.target.value)}
+                        onKeyDown={(e) => e.key === 'Enter' && handleSearch()}
                         className="max-w-xs"
                     />
                     <Button variant="outline" onClick={handleSearch}>
@@ -140,11 +140,11 @@ export default function ProductsPage() {
                 </div>
                 <Select
                     value={statusFilter}
-                    onValueChange={value => {
+                    onValueChange={(value) => {
                         // 타입 안전을 위한 검증
-                        const typedValue = value as "SELLING" | "SOLD_OUT" | "";
+                        const typedValue = value as 'SELLING' | 'SOLD_OUT' | 'ALL';
                         setStatusFilter(typedValue);
-                        navigate({ search: prev => ({ ...prev, page: 1 }) });
+                        navigate({ search: (prev) => ({ ...prev, page: 1 }) });
                     }}
                 >
                     <SelectTrigger className="w-[180px]">
@@ -152,7 +152,7 @@ export default function ProductsPage() {
                     </SelectTrigger>
                     <SelectContent>
                         <SelectGroup>
-                            <SelectItem value="">전체</SelectItem>
+                            <SelectItem value="ALL">전체</SelectItem>
                             <SelectItem value="SELLING">판매중</SelectItem>
                             <SelectItem value="SOLD_OUT">품절</SelectItem>
                         </SelectGroup>
@@ -229,25 +229,47 @@ export default function ProductsPage() {
             </div>
 
             {/* 페이지네이션 */}
-            <Pagination currentPage={page} totalPages={data.totalPages} onPageChange={handlePageChange} />
+            <Pagination
+                currentPage={page}
+                totalPages={data.totalPages}
+                onPageChange={handlePageChange}
+            />
 
             {/* 삭제 확인 대화 상자 */}
             <Dialog open={isDeleteDialogOpen} onOpenChange={setIsDeleteDialogOpen}>
-                <DialogContent>
-                    <DialogHeader>
-                        <DialogTitle>상품 삭제</DialogTitle>
-                        <DialogDescription>정말로 "{productToDelete?.name}" 상품을 삭제하시겠습니까? 이 작업은 되돌릴 수 없습니다.</DialogDescription>
+                <DialogContent className="sm:max-w-md">
+                    <DialogHeader className="text-center space-y-4">
+                        <div className="mx-auto w-12 h-12 bg-red-100 rounded-full flex items-center justify-center">
+                            <svg className="w-6 h-6 text-red-600" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+                                <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M19 7l-.867 12.142A2 2 0 0116.138 21H7.862a2 2 0 01-1.995-1.858L5 7m5 4v6m4-6v6m1-10V4a1 1 0 00-1-1h-4a1 1 0 00-1 1v3M4 7h16" />
+                            </svg>
+                        </div>
+                        <DialogTitle className="text-xl font-semibold text-gray-900">
+                            상품을 삭제하시겠습니까?
+                        </DialogTitle>
+                        <DialogDescription className="text-gray-600">
+                            <div className="space-y-2">
+                                <p className="font-medium">"{productToDelete?.name}"</p>
+                                <p className="text-sm">이 작업은 되돌릴 수 없습니다.</p>
+                            </div>
+                        </DialogDescription>
                     </DialogHeader>
-                    <DialogFooter>
-                        <Button variant="outline" onClick={() => setIsDeleteDialogOpen(false)} disabled={deleteMutation.isPending}>
+                    <DialogFooter className="flex-col-reverse sm:flex-row gap-2 sm:gap-0">
+                        <Button
+                            variant="outline"
+                            onClick={() => setIsDeleteDialogOpen(false)}
+                            disabled={deleteMutation.isPending}
+                            className="w-full sm:w-auto"
+                        >
                             취소
                         </Button>
                         <Button
                             variant="destructive"
                             onClick={() => productToDelete && deleteMutation.mutate(productToDelete.id)}
                             disabled={deleteMutation.isPending}
+                            className="w-full sm:w-auto"
                         >
-                            {deleteMutation.isPending ? "삭제 중..." : "삭제"}
+                            {deleteMutation.isPending ? "삭제 중..." : "삭제하기"}
                         </Button>
                     </DialogFooter>
                 </DialogContent>
