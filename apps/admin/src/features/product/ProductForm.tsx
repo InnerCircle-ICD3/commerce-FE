@@ -510,7 +510,7 @@ export default function ProductForm() {
 
             {/* 임시저장 복원 확인 다이얼로그 */}
             {showRestoreDialog && (
-                <div className="fixed inset-0 bg-black bg-opacity-50 flex items-center justify-center z-50">
+                <div className="fixed inset-0 bg-gray-900 bg-opacity-25 flex items-center justify-center z-50">
                     <div className="bg-white rounded-lg p-6 max-w-md w-full mx-4">
                         <h3 className="text-lg font-semibold mb-2">임시저장 데이터 발견</h3>
                         <p className="text-gray-600 mb-6">

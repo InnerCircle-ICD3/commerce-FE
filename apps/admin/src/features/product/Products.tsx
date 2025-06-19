@@ -26,7 +26,7 @@ export default function ProductsPage() {
     const [isDeleteDialogOpen, setIsDeleteDialogOpen] = useState(false);
     const [productToDelete, setProductToDelete] = useState<Product | null>(null);
     const [searchKeyword, setSearchKeyword] = useState("");
-    const [statusFilter, setStatusFilter] = useState<"SELLING" | "SOLD_OUT" | "">("");
+    const [statusFilter, setStatusFilter] = useState<"SELLING" | "SOLD_OUT" | "ALL">("ALL");
 
     // 상품 목록 조회 쿼리
     const { data } = useSuspenseQuery(
@@ -34,7 +34,7 @@ export default function ProductsPage() {
             page: page - 1,
             size,
             keyword: searchKeyword || undefined,
-            sellingStatus: statusFilter || undefined,
+            sellingStatus: statusFilter === "ALL" ? undefined : statusFilter,
         }),
     );
 
@@ -142,7 +142,7 @@ export default function ProductsPage() {
                     value={statusFilter}
                     onValueChange={(value) => {
                         // 타입 안전을 위한 검증
-                        const typedValue = value as 'SELLING' | 'SOLD_OUT' | '';
+                        const typedValue = value as 'SELLING' | 'SOLD_OUT' | 'ALL';
                         setStatusFilter(typedValue);
                         navigate({ search: (prev) => ({ ...prev, page: 1 }) });
                     }}
@@ -152,7 +152,7 @@ export default function ProductsPage() {
                     </SelectTrigger>
                     <SelectContent>
                         <SelectGroup>
-                            <SelectItem value="">전체</SelectItem>
+                            <SelectItem value="ALL">전체</SelectItem>
                             <SelectItem value="SELLING">판매중</SelectItem>
                             <SelectItem value="SOLD_OUT">품절</SelectItem>
                         </SelectGroup>
@@ -237,18 +237,29 @@ export default function ProductsPage() {
 
             {/* 삭제 확인 대화 상자 */}
             <Dialog open={isDeleteDialogOpen} onOpenChange={setIsDeleteDialogOpen}>
-                <DialogContent>
-                    <DialogHeader>
-                        <DialogTitle>상품 삭제</DialogTitle>
-                        <DialogDescription>
-                            정말로 "{productToDelete?.name}" 상품을 삭제하시겠습니까? 이 작업은 되돌릴 수 없습니다.
+                <DialogContent className="sm:max-w-md">
+                    <DialogHeader className="text-center space-y-4">
+                        <div className="mx-auto w-12 h-12 bg-red-100 rounded-full flex items-center justify-center">
+                            <svg className="w-6 h-6 text-red-600" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+                                <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M19 7l-.867 12.142A2 2 0 0116.138 21H7.862a2 2 0 01-1.995-1.858L5 7m5 4v6m4-6v6m1-10V4a1 1 0 00-1-1h-4a1 1 0 00-1 1v3M4 7h16" />
+                            </svg>
+                        </div>
+                        <DialogTitle className="text-xl font-semibold text-gray-900">
+                            상품을 삭제하시겠습니까?
+                        </DialogTitle>
+                        <DialogDescription className="text-gray-600">
+                            <div className="space-y-2">
+                                <p className="font-medium">"{productToDelete?.name}"</p>
+                                <p className="text-sm">이 작업은 되돌릴 수 없습니다.</p>
+                            </div>
                         </DialogDescription>
                     </DialogHeader>
-                    <DialogFooter>
+                    <DialogFooter className="flex-col-reverse sm:flex-row gap-2 sm:gap-0">
                         <Button
                             variant="outline"
                             onClick={() => setIsDeleteDialogOpen(false)}
                             disabled={deleteMutation.isPending}
+                            className="w-full sm:w-auto"
                         >
                             취소
                         </Button>
@@ -256,8 +267,9 @@ export default function ProductsPage() {
                             variant="destructive"
                             onClick={() => productToDelete && deleteMutation.mutate(productToDelete.id)}
                             disabled={deleteMutation.isPending}
+                            className="w-full sm:w-auto"
                         >
-                            {deleteMutation.isPending ? "삭제 중..." : "삭제"}
+                            {deleteMutation.isPending ? "삭제 중..." : "삭제하기"}
                         </Button>
                     </DialogFooter>
                 </DialogContent>
