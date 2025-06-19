@@ -8,7 +8,7 @@ export const useCreatePayment = () => {
         mutationFn: createPayment,
         onSuccess: ({ data }) => {
             if (data) {
-                router.push(`/orders/${data.orderNumber}`);
+                router.push(`/order/${data.orderNumber}`);
             }
         },
         retry: 3,
