@@ -51,45 +51,39 @@ export function ProductInfo({ product }: ProductInfoProps) {
                 <h1 className="text-3xl font-bold leading-9 tracking-tight">{product?.name || "제품명 없음"}</h1>
                 <p className="text-base text-gray-900">{description}</p>
             </div>
-            
+
             {/* 가격 정보 */}
             <div className="bg-gradient-to-r from-emerald-50 to-green-50 p-6 rounded-2xl border border-emerald-100 shadow-sm">
                 <div className="space-y-3">
                     {/* 메인 가격 */}
                     <div className="flex items-baseline gap-2">
-                        <span className="text-3xl font-bold text-emerald-700 tracking-tight">
-                            {formatCurrency(productPrice)}
-                        </span>
-                        <span className="text-lg text-emerald-600 font-medium">
-                            / 슬리브
-                        </span>
+                        <span className="text-3xl font-bold text-emerald-700 tracking-tight">{formatCurrency(productPrice)}</span>
+                        <span className="text-lg text-emerald-600 font-medium">/ 슬리브</span>
                     </div>
-                    
+
                     {/* 상세 정보 */}
                     <div className="flex items-center justify-between">
                         <div className="flex items-center gap-2">
-                            <div className="w-2 h-2 bg-emerald-500 rounded-full"></div>
-                            <span className="text-sm text-gray-700 font-medium">
-                                1슬리브 = 10캡슐
-                            </span>
+                            <span className="text-sm text-gray-700 font-medium">1슬리브 = 10캡슐</span>
                         </div>
                         <div className="text-right">
                             <p className="text-sm text-gray-600">캡슐당</p>
-                            <p className="text-lg font-semibold text-emerald-600">
-                                {formatCurrency(Math.round(productPrice / 10))}
-                            </p>
+                            <p className="text-lg font-semibold text-emerald-600">{formatCurrency(Math.round(productPrice / 10))}</p>
                         </div>
                     </div>
-                    
+
                     {/* 절약 정보 (선택사항) */}
                     <div className="bg-white/70 p-3 rounded-lg border border-emerald-200">
                         <div className="flex items-center gap-2">
                             <svg className="w-4 h-4 text-emerald-600" fill="currentColor" viewBox="0 0 20 20">
-                                <path fillRule="evenodd" d="M10 18a8 8 0 100-16 8 8 0 000 16zm3.707-9.293a1 1 0 00-1.414-1.414L9 10.586 7.707 9.293a1 1 0 00-1.414 1.414l2 2a1 1 0 001.414 0l4-4z" clipRule="evenodd" />
+                                <title>절약 정보 아이콘</title>
+                                <path
+                                    fillRule="evenodd"
+                                    d="M10 18a8 8 0 100-16 8 8 0 000 16zm3.707-9.293a1 1 0 00-1.414-1.414L9 10.586 7.707 9.293a1 1 0 00-1.414 1.414l2 2a1 1 0 001.414 0l4-4z"
+                                    clipRule="evenodd"
+                                />
                             </svg>
-                            <span className="text-sm text-emerald-700 font-medium">
-                                편리한 캡슐 포장으로 언제든 신선한 커피
-                            </span>
+                            <span className="text-sm text-emerald-700 font-medium">편리한 캡슐 포장으로 언제든 신선한 커피</span>
                         </div>
                     </div>
                 </div>

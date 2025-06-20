@@ -7,6 +7,7 @@ import ProductList from "./ProductList";
 import { searchProducts } from "@/src/features/search/api/searchProductApi";
 import { getProductCategories, type CategoriesResponse, type CategoryItem } from "@/src/features/search/api/categoriesApi";
 import type { SearchResultResponse, Product } from "@/src/features/search/types";
+import Loading from "@/src/shared/components/shared/Loading";
 
 // 그룹핑 로직 제거 - 개별 선택 방식으로 변경
 
@@ -81,7 +82,7 @@ export default function SearchPage({ initialProducts = [], initialTotalElements 
         return (
             <div className="w-full min-h-screen flex items-center justify-center">
                 <div className="text-center">
-                    <p className="text-lg">{!categories ? "카테고리 로딩 중..." : "검색 중..."}</p>
+                    <Loading message="검색 결과를 불러오는 중..." />
                 </div>
             </div>
         );

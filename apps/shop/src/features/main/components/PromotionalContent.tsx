@@ -1,42 +1,8 @@
-"use client";
-
-import { useEffect, useRef, useState } from "react";
+import Link from "next/link";
 
 export default function CoffeeLetter() {
-    const [isVisible, setIsVisible] = useState(false);
-    const ref = useRef<HTMLElement>(null);
-
-    useEffect(() => {
-        const observer = new IntersectionObserver(
-            ([entry]) => {
-                if (entry.isIntersecting) {
-                    setIsVisible(true);
-                }
-            },
-            {
-                threshold: 0.1,
-                rootMargin: "0px 0px -50px 0px",
-            },
-        );
-
-        if (ref.current) {
-            observer.observe(ref.current);
-        }
-
-        return () => {
-            if (ref.current) {
-                observer.unobserve(ref.current);
-            }
-        };
-    }, []);
-
     return (
-        <article
-            ref={ref}
-            className={`flex flex-col md:flex-row items-center gap-10 py-16 px-6 transition-all duration-300 ${
-                isVisible ? "animate-fade-in animate-slide-up opacity-100" : "opacity-0 translate-y-8"
-            }`}
-        >
+        <article className="flex flex-col md:flex-row items-center gap-10 py-16 pt-48 pb-12 transition-all duration-300 animate-fade-in animate-slide-up opacity-100">
             <section className="overflow-hidden grow shrink self-stretch my-auto leading-snug text-black whitespace-nowrap rounded-xl min-w-60 w-[35rem] max-md:max-w-full">
                 <div className="flex relative flex-col items-start px-14 py-24 w-full min-h-[23rem] max-md:px-5 max-md:pt-24 max-md:max-w-full">
                     <img
@@ -60,17 +26,18 @@ export default function CoffeeLetter() {
                 <div className="flex flex-col justify-center">
                     <h2 className="text-base font-semibold tracking-tight leading-snug text-neutral-700">커피레터</h2>
                     <h3 className="mt-3 text-3xl font-bold tracking-tight leading-9 text-black">
-                        잠시 걸음을 멈추고
+                        언제든지 편안하게,
                         <br />
-                        여유를 찾아 떠나 보시는 건 어떨까요?
+                        카페인 걱정 없는 여유로운 시간은 어떨까요?
                     </h3>
+                    <p className="mt-4 text-sm font-medium text-neutral-600">하루 중 언제라도 따뜻한 한 잔으로 여유를 즐기세요</p>
                 </div>
-                <button
-                    type="button"
-                    className="gap-2.5 self-start mt-6 text-base font-semibold tracking-tight text-black whitespace-nowrap border-b-2 border-solid border-b-[color:var(--Normal-Strong,#000)] min-h-12 w-14"
+                <Link
+                    href="/search?q=%EB%94%94%EC%B9%B4%ED%8E%98%EC%9D%B8"
+                    className="gap-2.5 self-start mt-6 text-base font-semibold tracking-tight text-black whitespace-nowrap border-b-2 border-solid border-b-[color:var(--Normal-Strong,#000)] min-h-9 w-14"
                 >
                     보러가기
-                </button>
+                </Link>
             </section>
         </article>
     );

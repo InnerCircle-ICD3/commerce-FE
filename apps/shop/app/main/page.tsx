@@ -13,9 +13,9 @@ export default function TempMainPage() {
         <main className="flex flex-col bg-white">
             <HeroBanner />
             <div className="flex flex-col mx-auto w-full max-w-7xl">
-                <div className="animate-fade-in animate-slide-up">
+                {/* <div className="animate-fade-in animate-slide-up">
                     <CategoryGrid />
-                </div>
+                </div> */}
                 <CoffeeLetter />
                 <Products />
             </div>
