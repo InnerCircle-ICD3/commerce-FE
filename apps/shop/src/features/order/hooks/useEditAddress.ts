@@ -12,11 +12,10 @@ type UseEditAddressOption = {
 };
 
 export const useEditAddress = (options?: UseEditAddressOption) => {
+    const fetch = fetchClient();
     const editAddress = async ({ address }: EditAddressDto) => {
         try {
-            const url = address.addressId
-                ? `http://localhost:3000/api/users/addresses/${address.addressId}`
-                : "http://localhost:3000/api/users/addresses";
+            const url = address.addressId ? `/users/addresses/${address.addressId}` : "/users/addresses";
             const response = await fetch(url, {
                 method: address.addressId ? "PUT" : "POST",
                 body: JSON.stringify(address),
@@ -25,7 +24,7 @@ export const useEditAddress = (options?: UseEditAddressOption) => {
                     Authorization: "Bearer Simeple-Token",
                 },
             });
-            return response.json();
+            return response;
         } catch (e) {
             console.log(e);
             throw e;

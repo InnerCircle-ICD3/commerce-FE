@@ -19,9 +19,10 @@ const createAddressSchema = z.object({
     address1: z.string().min(1, { message: "주소를 입력해주세요." }),
     address2: z.string().min(1, { message: "상세주소를 입력해주세요." }),
     zipCode: z.string().min(1, { message: "우편번호를 입력해주세요." }),
+    isDefault: z.boolean(),
 });
 export default function EditAddress({ address, onComplete }: EditAddressProps) {
-    const { inputs, setInputs, handleChange, errors, validate } = useZodForm(
+    const { inputs, setInputs, handleChange, errors } = useZodForm(
         createAddressSchema,
         {
             alias: address?.alias || "",
@@ -30,6 +31,7 @@ export default function EditAddress({ address, onComplete }: EditAddressProps) {
             address1: address?.address1 || "",
             address2: address?.address2 || "",
             zipCode: address?.zipCode || "",
+            isDefault: address?.isDefault || false,
         },
         { validateOnChange: true },
     );
@@ -47,7 +49,7 @@ export default function EditAddress({ address, onComplete }: EditAddressProps) {
     const handleSubmit = (e: React.FormEvent<HTMLFormElement>) => {
         e.preventDefault();
         // validate();
-        mutate({ address: { ...inputs, isDefault: false, addressId: address?.addressId } });
+        mutate({ address: { ...inputs, addressId: address?.addressId } });
     };
 
     const handleComplete = (data: { address: string; zonecode: string }) => {
@@ -121,7 +123,15 @@ export default function EditAddress({ address, onComplete }: EditAddressProps) {
                     </div>
                 </div>
                 <div className="flex items-center gap-1 my-6">
-                    <input type="checkbox" name="isDefault" id="isDefault" defaultChecked={address?.isDefault} />
+                    <input
+                        type="checkbox"
+                        name="isDefault"
+                        id="isDefault"
+                        defaultChecked={address?.isDefault}
+                        onChange={e => {
+                            setInputs({ ...inputs, isDefault: e.target.checked });
+                        }}
+                    />
                     <label htmlFor="isDefault">기본 배송지로 설정</label>
                 </div>
                 <Button size="full" type="submit">

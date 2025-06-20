@@ -11,7 +11,7 @@ export default function AddressPage() {
 
     return (
         <div className="my-16 px-8 py-7">
-            <h2>배송지 관리</h2>
+            <h2 className="mb-4">배송지 관리</h2>
 
             <AddressList addresses={addresses} />
         </div>

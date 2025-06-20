@@ -14,13 +14,14 @@ import PaymentSummary from "./PaymentSummary";
 import { ErrorBoundary } from "next/dist/client/components/error-boundary";
 import ErrorComponent from "@/src/shared/components/shared/ErrorComponent";
 import { useAddressQuery } from "../hooks/useAddressesQuery";
+import Loading from "@/src/shared/components/shared/Loading";
 
 export default function OrderCheckoutPage() {
     const { toast, ToastUI } = useToast();
     const params = useSearchParams();
     const cartItemIds = params.get("cartItemIds") as string;
     const [shippingInfo, setShippingInfo] = useState<AddressType | null>(null);
-    const { data: orderPrepareData } = useOrderPrepare({
+    const { data: orderPrepareData, isLoading: isOrderPrepareLoading } = useOrderPrepare({
         cartItemIds: cartItemIds,
     });
     const [deliveryMessage, setDeliveryMessage] = useState<string>("");
@@ -82,6 +83,9 @@ export default function OrderCheckoutPage() {
         }
     }, [addresses, isAddressLoading]);
 
+    if (isOrderPrepareLoading) {
+        return <Loading />;
+    }
     return (
         <ErrorBoundary errorComponent={ErrorComponent}>
             <form onSubmit={handlePayment}>
