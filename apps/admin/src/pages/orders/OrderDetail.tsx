@@ -5,21 +5,36 @@ import { Route } from "@/routes/_authenticated/orders/$orderId";
 import { Button } from "@/shared/components/ui/button";
 import { Input } from "@/shared/components/ui/input";
 import { Table, TableBody, TableCell, TableHead, TableHeader, TableRow } from "@/shared/components/ui/table/table";
+import { useRouter } from "@tanstack/react-router";
 import { useState } from "react";
 
 export default function OrderDetailPage() {
     const { orderId } = Route.useParams();
+    const router = useRouter();
 
     const { order } = useOrderDetail(Number(orderId));
     const [inputTrackingNumber, setInputTrackingNumber] = useState<string>("");
 
     const { cancelOrderMutation } = useCancelOrder(Number(orderId));
     const { updateTrackingNumberMutation } = useUpdateTrackingNumber(Number(orderId));
+
+    const handleBack = () => {
+        if (router.history.canGoBack()) router.history.back();
+    };
+
     return (
         <div>
-            <h2 className="text-h2 font-bold text-gray-900">주문 상세보기</h2>
+            <div className="flex items-center">
+                <div onClick={handleBack}>
+                    <svg width={32} height={32} viewBox="0 0 32 32" fill="none" xmlns="http://www.w3.org/2000/svg" role="img">
+                        <title>뒤로가기</title>
+                        <path d="M20 24L12 16L20 8" stroke="currentColor" strokeWidth={2} strokeLinecap="round" strokeLinejoin="round" />
+                    </svg>
+                </div>
+                <h2 className="text-h2 font-bold text-gray-900">주문 상세보기</h2>
+            </div>
             <div className="bg-white shadow-sm rounded-lg mt-4">
-                <Table>
+                <Table className="[&_th]:w-50">
                     <TableBody>
                         <TableRow>
                             <TableHead>주문번호</TableHead>
@@ -93,13 +108,19 @@ export default function OrderDetailPage() {
             <div className="mt-10">
                 <h2 className="text-h2 font-bold text-gray-900">결제 정보</h2>
                 <div className="bg-white shadow-sm rounded-lg mt-4">
-                    <Table>
+                    <Table className="[&_th]:w-50">
                         <TableBody>
                             <TableRow>
                                 <TableHead>결제번호</TableHead>
                                 <TableCell>{order?.paymentNumber}</TableCell>
                                 <TableHead>결제일시</TableHead>
                                 <TableCell>{order?.paidAt}</TableCell>
+                            </TableRow>
+                            <TableRow>
+                                <TableHead>결제방법</TableHead>
+                                <TableCell>{order?.paymentMethod}</TableCell>
+                                <TableHead>결제상태</TableHead>
+                                <TableCell>{order?.paymentStatus}</TableCell>
                             </TableRow>
                             <TableRow>
                                 <TableHead>주문금액</TableHead>
@@ -118,7 +139,7 @@ export default function OrderDetailPage() {
             <div className="mt-10">
                 <h2 className="text-h2 font-bold text-gray-900">주문 상품</h2>
                 <div className="bg-white shadow-sm rounded-lg mt-4">
-                    <Table>
+                    <Table className="[&_th]:w-50">
                         <TableHeader>
                             <TableRow>
                                 <TableHead>상품번호</TableHead>

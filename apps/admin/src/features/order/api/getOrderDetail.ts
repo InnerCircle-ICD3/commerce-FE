@@ -7,6 +7,7 @@ interface GetOrderDetailResponse {
     trackingNumber: string;
     paymentNumber: string;
     paymentMethod: string;
+    paymentStatus: string;
     itemsSubTotal: number;
     shippingFee: number;
     finalTotalPrice: number;
