@@ -47,14 +47,18 @@ export const productQueries = {
 };
 
 // 상품 목록 조회를 위한 react-query 쿼리 옵션
-export const productsQueryOptions = (params: ProductListParams) =>
+export const productsQueryOptions = (params: ProductListParams & { sellingStatus?: "SELLING" | "SOLD_OUT" }) =>
     queryOptions({
         queryKey: productQueries.list(params),
         queryFn: async () => {
             const apiParams = {
                 ...params,
-                isSoldOut: params.sellingStatus === "SOLD_OUT" ? true : params.sellingStatus === "SELLING" ? false : undefined,
+                // sellingStatus가 있으면 isSoldOut으로 변환 (기존 호환성)
+                isSoldOut: params.sellingStatus === "SOLD_OUT" ? true : params.sellingStatus === "SELLING" ? false : params.isSoldOut,
             };
+
+            // sellingStatus는 API 파라미터에서 제거 (백엔드에는 없는 파라미터)
+            delete (apiParams as any).sellingStatus;
 
             // API 응답을 기존 형태로 변환
             const response = await getProducts(apiParams);
