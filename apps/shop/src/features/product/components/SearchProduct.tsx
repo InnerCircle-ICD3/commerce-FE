@@ -22,6 +22,11 @@ export default function SearchProduct() {
         [router],
     );
 
+    const getRandomKeyword = useCallback((): string => {
+        const keywords = ["라떼", "아메리카노", "카푸치노", "콜드브루", "바닐라"];
+        return keywords[Math.floor(Math.random() * keywords.length)];
+    }, []);
+
     return (
         <form
             ref={formRef}
@@ -37,7 +42,7 @@ export default function SearchProduct() {
             </button>
             <input
                 type="text"
-                placeholder="'라떼'를 검색해 보세요  (빈값을 넣으면 전체상품을 조회합니다)"
+                placeholder={`'${getRandomKeyword()}'를 검색해 보세요  (빈값을 넣으면 전체상품을 조회합니다)`}
                 className="flex-1 bg-transparent border-none outline-none text-gray-900 placeholder-gray-500 w-full"
                 name="searchQuery"
             />
