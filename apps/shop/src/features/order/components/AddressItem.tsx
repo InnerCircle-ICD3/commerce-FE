@@ -4,6 +4,7 @@ import { Button } from "@/src/shared/components/shared/button";
 import { useModal } from "@/src/shared/hooks/useModal";
 import EditAddress from "./EditAddress";
 import { useDeleteAddress } from "../hooks/useDeleteAddress";
+import { useQueryClient } from "@tanstack/react-query";
 interface AddressItemProps {
     address: AddressType;
     onClick: (id: number) => void;
@@ -14,8 +15,10 @@ interface AddressItemProps {
 export default function AddressItem({ address, onClick, checked, selectMode = false }: AddressItemProps) {
     const { openModal, closeModal, Modal } = useModal();
 
+    const queryClient = useQueryClient();
     const { mutate, isPending } = useDeleteAddress({
         onSuccess: () => {
+            queryClient.invalidateQueries({ queryKey: ["addresses"] });
             closeModal();
         },
     });
