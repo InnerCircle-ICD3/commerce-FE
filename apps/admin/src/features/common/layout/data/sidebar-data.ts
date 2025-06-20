@@ -29,13 +29,6 @@ export const sidebarData = {
                     icon: MessageSquareText,
                     variant: "ghost",
                 },
-
-                {
-                    title: "설정",
-                    href: "/settings",
-                    icon: Settings,
-                    variant: "ghost",
-                },
             ],
         },
     ],
