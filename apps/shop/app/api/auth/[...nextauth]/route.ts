@@ -28,7 +28,7 @@ const handler = NextAuth({
     // Safari 호환성을 위한 쿠키 설정
     cookies: {
         sessionToken: {
-            name: "next-auth.session-token",
+            name: "__Secure-next-auth.session-token",
             options: {
                 httpOnly: true,
                 sameSite: "lax",
@@ -37,7 +37,7 @@ const handler = NextAuth({
             },
         },
         callbackUrl: {
-            name: "next-auth.callback-url",
+            name: "__Secure-next-auth.callback-url",
             options: {
                 sameSite: "lax",
                 path: "/",
@@ -45,7 +45,7 @@ const handler = NextAuth({
             },
         },
         csrfToken: {
-            name: "next-auth.csrf-token",
+            name: "__Host-next-auth.csrf-token",
             options: {
                 httpOnly: true,
                 sameSite: "lax",
