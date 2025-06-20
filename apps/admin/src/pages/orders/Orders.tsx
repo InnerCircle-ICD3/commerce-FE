@@ -2,46 +2,23 @@ import { useState } from "react";
 import { Table, TableBody, TableCaption, TableCell, TableHead, TableHeader, TableRow } from "@/shared/components/ui/table/table";
 import { Pagination } from "@/shared/components/ui/pagination";
 import { Link } from "@tanstack/react-router";
-
-interface Order {
-    orderNumber: string;
-    orderName: string;
-    orderStatus: string;
-    finalTotalPrice: number;
-    cancellable: boolean;
-    refundable: boolean;
-    orderedAt: string;
-    userName: string;
-}
+import { useOrders } from "@/features/order/hooks/useOrders";
+import type { GetOrdersRequestDto } from "@/features/order/api/getOrders";
 
 export default function OrdersPage() {
-    const [currentPage, setCurrentPage] = useState(1);
-    const orders: Order[] = [
-        {
-            orderNumber: "ORD123412441422",
-            orderName: "스페셜 리저브 외 3건",
-            orderStatus: "배송 준비중",
-            finalTotalPrice: 13000,
-            cancellable: true,
-            refundable: true,
-            orderedAt: "2025-06-01T15:00:11.123Z",
-            userName: "홍길동",
-        },
-        {
-            orderNumber: "ORD123412441422",
-            orderName: "스페셜 리저브 외 5건",
-            orderStatus: "배송 준비중",
-            finalTotalPrice: 13000,
-            cancellable: true,
-            refundable: true,
-            orderedAt: "2025-06-01T15:00:11.123Z",
-            userName: "홍길동",
-        },
-    ];
-
+    const [query, setQuery] = useState<GetOrdersRequestDto>({
+        page: 1,
+        productName: "",
+        orderNumber: "",
+        status: "",
+        nickname: "",
+        dateTo: "",
+        dateFrom: "",
+    });
+    const { orders, totalPages } = useOrders(query);
     // 페이지 변경 핸들러
     const handlePageChange = (page: number) => {
-        setCurrentPage(page);
+        setQuery({ ...query, page });
     };
 
     return (
@@ -97,7 +74,7 @@ export default function OrdersPage() {
             {/* 상품 테이블 */}
             <div className="bg-white shadow-sm rounded-lg overflow-hidden">
                 <Table>
-                    <TableCaption>총 {orders.length}개의 주문이 있습니다.</TableCaption>
+                    <TableCaption>총 {orders?.length}개의 주문이 있습니다.</TableCaption>
                     <TableHeader>
                         <TableRow>
                             <TableHead className="w-[100px]">주문번호</TableHead>
@@ -109,14 +86,14 @@ export default function OrdersPage() {
                         </TableRow>
                     </TableHeader>
                     <TableBody>
-                        {orders.map(order => (
+                        {orders?.map(order => (
                             <TableRow key={order.orderNumber}>
                                 <TableCell className="font-medium">
                                     <Link to="/orders/$orderNumber" params={{ orderNumber: order.orderNumber }} className="underline">
                                         {order.orderNumber}
                                     </Link>
                                 </TableCell>
-                                <TableCell>{order.userName}</TableCell>
+                                <TableCell>{order.customerName}</TableCell>
                                 <TableCell>{order.orderName}</TableCell>
                                 <TableCell>₩{order.finalTotalPrice.toLocaleString()}</TableCell>
                                 <TableCell>
@@ -135,7 +112,7 @@ export default function OrdersPage() {
                 </Table>
             </div>
             {/* 페이지네이션 */}
-            <Pagination currentPage={currentPage} totalItems={orders.length} onPageChange={handlePageChange} />
+            <Pagination currentPage={query.page} totalPages={totalPages || 0} onPageChange={handlePageChange} />
         </div>
     );
 }

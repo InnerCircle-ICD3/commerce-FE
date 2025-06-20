@@ -1,28 +1,6 @@
 import { Route } from "@/routes/_authenticated/orders/$orderNumber";
 import { Table, TableBody, TableCell, TableHead, TableHeader, TableRow } from "@/shared/components/ui/table/table";
 
-type OrderDetail = {
-    orderNumber: string;
-    orderName: string;
-    orderStatus: string;
-    finalTotalPrice: number;
-    cancellable: boolean;
-    refundable: boolean;
-    orderedAt: string;
-    items: {
-        productName: string;
-        productPrice: number;
-        productQuantity: number;
-        productImage: string;
-    }[];
-    shippingInfo: {
-        address1: string;
-        address2: string;
-        recipientName: string;
-        recipientPhone: string;
-        zipCode: string;
-    };
-};
 export default function OrderDetailPage() {
     const { orderNumber } = Route.useParams();
     return (

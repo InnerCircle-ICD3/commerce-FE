@@ -19,10 +19,10 @@ export const Route = createFileRoute("/_authenticated")({
     component: RootLayout,
     beforeLoad: () => {
         // 로그인되지 않은 경우 로그인 페이지로 리디렉션
-        if (!isAuthenticated()) {
-            throw redirect({
-                to: "/login",
-            });
-        }
+        // if (!isAuthenticated()) {
+        //     throw redirect({
+        //         to: "/login",
+        //     });
+        // }
     },
 });
