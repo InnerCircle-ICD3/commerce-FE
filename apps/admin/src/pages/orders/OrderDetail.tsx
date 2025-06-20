@@ -1,5 +1,6 @@
 import { useCancelOrder } from "@/features/order/hooks/useCancelOrder";
 import { useOrderDetail } from "@/features/order/hooks/useOrderDetail";
+import { useUpdateShipment } from "@/features/order/hooks/useUpdateShipment";
 import { useUpdateTrackingNumber } from "@/features/order/hooks/useUpdateTrackingNumber";
 import { Route } from "@/routes/_authenticated/orders/$orderId";
 import { Button } from "@/shared/components/ui/button";
@@ -13,6 +14,7 @@ export default function OrderDetailPage() {
     const router = useRouter();
 
     const { order } = useOrderDetail(Number(orderId));
+    const { mutate: updateShipmentMutation } = useUpdateShipment(Number(orderId));
     const [inputTrackingNumber, setInputTrackingNumber] = useState<string>("");
 
     const { cancelOrderMutation } = useCancelOrder(Number(orderId));
@@ -22,6 +24,7 @@ export default function OrderDetailPage() {
         if (router.history.canGoBack()) router.history.back();
     };
 
+    console.log(order?.orderStatus);
     return (
         <div>
             <div className="flex items-center">
@@ -74,7 +77,7 @@ export default function OrderDetailPage() {
                             <TableHead>운송장번호</TableHead>
                             <TableCell colSpan={3}>
                                 {order?.trackingNumber ||
-                                    (order?.orderStatus === "PAID" && (
+                                    (order?.orderStatus === "결제완료" && (
                                         <>
                                             <Input
                                                 type="text"
@@ -160,6 +163,18 @@ export default function OrderDetailPage() {
                         </TableBody>
                     </Table>
                 </div>
+            </div>
+            <div className="mt-4">
+                {order?.orderStatus === "배송 준비중" && (
+                    <Button onClick={() => updateShipmentMutation("shipped")} className="bg-emerald-500 hover:bg-emerald-600">
+                        배송 준비
+                    </Button>
+                )}
+                {order?.orderStatus === "배송 중" && (
+                    <Button onClick={() => updateShipmentMutation("delivered")} className="bg-emerald-600 hover:bg-emerald-700">
+                        배송 완료
+                    </Button>
+                )}
             </div>
         </div>
     );
