@@ -1,6 +1,6 @@
-import DashboardPage from "@/pages/dashboard/Dashboard";
+import ChatManagementPage from "@/features/chat/pages/ChatManagement";
 import { createFileRoute } from "@tanstack/react-router";
 
 export const Route = createFileRoute("/_authenticated/")({
-    component: DashboardPage,
+    component: ChatManagementPage,
 });
