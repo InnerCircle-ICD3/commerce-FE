@@ -21,7 +21,7 @@ import { Route as AuthenticatedChatManagementImport } from './routes/_authentica
 import { Route as AuthenticatedProductsIndexImport } from './routes/_authenticated/products/index'
 import { Route as AuthenticatedOrdersIndexImport } from './routes/_authenticated/orders/index'
 import { Route as AuthenticatedProductsNewImport } from './routes/_authenticated/products/new'
-import { Route as AuthenticatedOrdersOrderNumberImport } from './routes/_authenticated/orders/$orderNumber'
+import { Route as AuthenticatedOrdersOrderIdImport } from './routes/_authenticated/orders/$orderId'
 import { Route as AuthenticatedProductsProductIdEditImport } from './routes/_authenticated/products/$productId.edit'
 
 // Create/Update Routes
@@ -88,12 +88,13 @@ const AuthenticatedProductsNewRoute = AuthenticatedProductsNewImport.update({
   getParentRoute: () => AuthenticatedRouteRoute,
 } as any)
 
-const AuthenticatedOrdersOrderNumberRoute =
-  AuthenticatedOrdersOrderNumberImport.update({
-    id: '/orders/$orderNumber',
-    path: '/orders/$orderNumber',
+const AuthenticatedOrdersOrderIdRoute = AuthenticatedOrdersOrderIdImport.update(
+  {
+    id: '/orders/$orderId',
+    path: '/orders/$orderId',
     getParentRoute: () => AuthenticatedRouteRoute,
-  } as any)
+  } as any,
+)
 
 const AuthenticatedProductsProductIdEditRoute =
   AuthenticatedProductsProductIdEditImport.update({
@@ -155,11 +156,11 @@ declare module '@tanstack/react-router' {
       preLoaderRoute: typeof AuthenticatedIndexImport
       parentRoute: typeof AuthenticatedRouteImport
     }
-    '/_authenticated/orders/$orderNumber': {
-      id: '/_authenticated/orders/$orderNumber'
-      path: '/orders/$orderNumber'
-      fullPath: '/orders/$orderNumber'
-      preLoaderRoute: typeof AuthenticatedOrdersOrderNumberImport
+    '/_authenticated/orders/$orderId': {
+      id: '/_authenticated/orders/$orderId'
+      path: '/orders/$orderId'
+      fullPath: '/orders/$orderId'
+      preLoaderRoute: typeof AuthenticatedOrdersOrderIdImport
       parentRoute: typeof AuthenticatedRouteImport
     }
     '/_authenticated/products/new': {
@@ -199,7 +200,7 @@ interface AuthenticatedRouteRouteChildren {
   AuthenticatedChatManagementRoute: typeof AuthenticatedChatManagementRoute
   AuthenticatedReviewsRoute: typeof AuthenticatedReviewsRoute
   AuthenticatedIndexRoute: typeof AuthenticatedIndexRoute
-  AuthenticatedOrdersOrderNumberRoute: typeof AuthenticatedOrdersOrderNumberRoute
+  AuthenticatedOrdersOrderIdRoute: typeof AuthenticatedOrdersOrderIdRoute
   AuthenticatedProductsNewRoute: typeof AuthenticatedProductsNewRoute
   AuthenticatedOrdersIndexRoute: typeof AuthenticatedOrdersIndexRoute
   AuthenticatedProductsIndexRoute: typeof AuthenticatedProductsIndexRoute
@@ -210,7 +211,7 @@ const AuthenticatedRouteRouteChildren: AuthenticatedRouteRouteChildren = {
   AuthenticatedChatManagementRoute: AuthenticatedChatManagementRoute,
   AuthenticatedReviewsRoute: AuthenticatedReviewsRoute,
   AuthenticatedIndexRoute: AuthenticatedIndexRoute,
-  AuthenticatedOrdersOrderNumberRoute: AuthenticatedOrdersOrderNumberRoute,
+  AuthenticatedOrdersOrderIdRoute: AuthenticatedOrdersOrderIdRoute,
   AuthenticatedProductsNewRoute: AuthenticatedProductsNewRoute,
   AuthenticatedOrdersIndexRoute: AuthenticatedOrdersIndexRoute,
   AuthenticatedProductsIndexRoute: AuthenticatedProductsIndexRoute,
@@ -229,7 +230,7 @@ export interface FileRoutesByFullPath {
   '/reviews': typeof AuthenticatedReviewsRoute
   '/auth/callback': typeof AuthCallbackRoute
   '/': typeof AuthenticatedIndexRoute
-  '/orders/$orderNumber': typeof AuthenticatedOrdersOrderNumberRoute
+  '/orders/$orderId': typeof AuthenticatedOrdersOrderIdRoute
   '/products/new': typeof AuthenticatedProductsNewRoute
   '/orders': typeof AuthenticatedOrdersIndexRoute
   '/products': typeof AuthenticatedProductsIndexRoute
@@ -243,7 +244,7 @@ export interface FileRoutesByTo {
   '/reviews': typeof AuthenticatedReviewsRoute
   '/auth/callback': typeof AuthCallbackRoute
   '/': typeof AuthenticatedIndexRoute
-  '/orders/$orderNumber': typeof AuthenticatedOrdersOrderNumberRoute
+  '/orders/$orderId': typeof AuthenticatedOrdersOrderIdRoute
   '/products/new': typeof AuthenticatedProductsNewRoute
   '/orders': typeof AuthenticatedOrdersIndexRoute
   '/products': typeof AuthenticatedProductsIndexRoute
@@ -259,7 +260,7 @@ export interface FileRoutesById {
   '/_authenticated/reviews': typeof AuthenticatedReviewsRoute
   '/auth/callback': typeof AuthCallbackRoute
   '/_authenticated/': typeof AuthenticatedIndexRoute
-  '/_authenticated/orders/$orderNumber': typeof AuthenticatedOrdersOrderNumberRoute
+  '/_authenticated/orders/$orderId': typeof AuthenticatedOrdersOrderIdRoute
   '/_authenticated/products/new': typeof AuthenticatedProductsNewRoute
   '/_authenticated/orders/': typeof AuthenticatedOrdersIndexRoute
   '/_authenticated/products/': typeof AuthenticatedProductsIndexRoute
@@ -276,7 +277,7 @@ export interface FileRouteTypes {
     | '/reviews'
     | '/auth/callback'
     | '/'
-    | '/orders/$orderNumber'
+    | '/orders/$orderId'
     | '/products/new'
     | '/orders'
     | '/products'
@@ -289,7 +290,7 @@ export interface FileRouteTypes {
     | '/reviews'
     | '/auth/callback'
     | '/'
-    | '/orders/$orderNumber'
+    | '/orders/$orderId'
     | '/products/new'
     | '/orders'
     | '/products'
@@ -303,7 +304,7 @@ export interface FileRouteTypes {
     | '/_authenticated/reviews'
     | '/auth/callback'
     | '/_authenticated/'
-    | '/_authenticated/orders/$orderNumber'
+    | '/_authenticated/orders/$orderId'
     | '/_authenticated/products/new'
     | '/_authenticated/orders/'
     | '/_authenticated/products/'
@@ -347,7 +348,7 @@ export const routeTree = rootRoute
         "/_authenticated/chat-management",
         "/_authenticated/reviews",
         "/_authenticated/",
-        "/_authenticated/orders/$orderNumber",
+        "/_authenticated/orders/$orderId",
         "/_authenticated/products/new",
         "/_authenticated/orders/",
         "/_authenticated/products/",
@@ -375,8 +376,8 @@ export const routeTree = rootRoute
       "filePath": "_authenticated/index.tsx",
       "parent": "/_authenticated"
     },
-    "/_authenticated/orders/$orderNumber": {
-      "filePath": "_authenticated/orders/$orderNumber.tsx",
+    "/_authenticated/orders/$orderId": {
+      "filePath": "_authenticated/orders/$orderId.tsx",
       "parent": "/_authenticated"
     },
     "/_authenticated/products/new": {

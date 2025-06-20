@@ -15,7 +15,7 @@ export default function OrdersPage() {
         dateTo: "",
         dateFrom: "",
     });
-    const { orders, totalPages } = useOrders(query);
+    const { orders, totalPages, totalElements } = useOrders(query);
     // 페이지 변경 핸들러
     const handlePageChange = (page: number) => {
         setQuery({ ...query, page });
@@ -74,7 +74,7 @@ export default function OrdersPage() {
             {/* 상품 테이블 */}
             <div className="bg-white shadow-sm rounded-lg overflow-hidden">
                 <Table>
-                    <TableCaption>총 {orders?.length}개의 주문이 있습니다.</TableCaption>
+                    <TableCaption>총 {totalElements}개의 주문이 있습니다.</TableCaption>
                     <TableHeader>
                         <TableRow>
                             <TableHead className="w-[100px]">주문번호</TableHead>
@@ -89,13 +89,13 @@ export default function OrdersPage() {
                         {orders?.map(order => (
                             <TableRow key={order.orderNumber}>
                                 <TableCell className="font-medium">
-                                    <Link to="/orders/$orderNumber" params={{ orderNumber: order.orderNumber }} className="underline">
+                                    <Link to="/orders/$orderId" params={{ orderId: order.orderId.toString() }} className="underline">
                                         {order.orderNumber}
                                     </Link>
                                 </TableCell>
                                 <TableCell>{order.customerName}</TableCell>
                                 <TableCell>{order.orderName}</TableCell>
-                                <TableCell>₩{order.finalTotalPrice.toLocaleString()}</TableCell>
+                                <TableCell>₩{order.finalTotalPrice?.toLocaleString()}</TableCell>
                                 <TableCell>
                                     <span
                                         className={`inline-flex items-center rounded-full px-2.5 py-0.5 text-xs font-medium ${

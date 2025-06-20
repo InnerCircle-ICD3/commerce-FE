@@ -1,46 +1,61 @@
-import { Route } from "@/routes/_authenticated/orders/$orderNumber";
+import { useCancelOrder } from "@/features/order/hooks/useCancelOrder";
+import { useOrderDetail } from "@/features/order/hooks/useOrderDetail";
+import { Route } from "@/routes/_authenticated/orders/$orderId";
+import { Button } from "@/shared/components/ui/button";
 import { Table, TableBody, TableCell, TableHead, TableHeader, TableRow } from "@/shared/components/ui/table/table";
 
 export default function OrderDetailPage() {
-    const { orderNumber } = Route.useParams();
+    const { orderId } = Route.useParams();
+
+    const { order } = useOrderDetail(Number(orderId));
+
+    const { cancelOrderMutation } = useCancelOrder(Number(orderId));
+
     return (
         <div>
-            <div className="flex justify-between items-center">
-                <h2 className="text-h2 font-bold text-gray-900">주문 상세보기</h2>
-                <div>
-                    <button type="button" className="rounded-md bg-red-500 px-4 py-2 text-sm font-medium text-white shadow-sm hover:bg-red-600">
-                        주문 취소
-                    </button>
-                </div>
-            </div>
+            <h2 className="text-h2 font-bold text-gray-900">주문 상세보기</h2>
             <div className="bg-white shadow-sm rounded-lg mt-4">
                 <Table>
-                    <TableRow>
-                        <TableHead>주문번호</TableHead>
-                        <TableCell>{orderNumber}</TableCell>
-                        <TableHead rowSpan={2}>배송주소</TableHead>
-                        <TableCell rowSpan={2}>{orderNumber}</TableCell>
-                    </TableRow>
-                    <TableRow>
-                        <TableHead>주문일자</TableHead>
-                        <TableCell>2025-01-01</TableCell>
-                    </TableRow>
-                    <TableRow>
-                        <TableHead>주문자명</TableHead>
-                        <TableCell>홍길동</TableCell>
-                        <TableHead>연락처</TableHead>
-                        <TableCell>010-1234-5678</TableCell>
-                    </TableRow>
-                    <TableRow>
-                        <TableHead>주문상태</TableHead>
-                        <TableCell colSpan={3}>주문완료</TableCell>
-                    </TableRow>
-                    <TableRow>
-                        <TableHead>택배사</TableHead>
-                        <TableCell>우체국택배</TableCell>
-                        <TableHead>운송장번호</TableHead>
-                        <TableCell>1234567890</TableCell>
-                    </TableRow>
+                    <TableBody>
+                        <TableRow>
+                            <TableHead>주문번호</TableHead>
+                            <TableCell>{order?.orderNumber}</TableCell>
+                            <TableHead rowSpan={2}>배송주소</TableHead>
+                            <TableCell rowSpan={2}>{`${order?.shippingInfo.address1} ${order?.shippingInfo.address2}`}</TableCell>
+                        </TableRow>
+                        <TableRow>
+                            <TableHead>주문일자</TableHead>
+                            <TableCell>{order?.orderedAt}</TableCell>
+                        </TableRow>
+                        <TableRow>
+                            <TableHead>주문자명</TableHead>
+                            <TableCell>{order?.shippingInfo.recipientName}</TableCell>
+                            <TableHead>연락처</TableHead>
+                            <TableCell>{order?.shippingInfo.recipientPhone}</TableCell>
+                        </TableRow>
+                        <TableRow>
+                            <TableHead>주문상태</TableHead>
+                            <TableCell colSpan={3}>
+                                {order?.orderStatus}
+                                {order?.cancellable && (
+                                    <Button
+                                        type="button"
+                                        className="rounded-md bg-red-500 text-sm font-medium text-white shadow-sm hover:bg-red-600 ml-4"
+                                        size="sm"
+                                        onClick={() => {
+                                            cancelOrderMutation();
+                                        }}
+                                    >
+                                        주문 취소
+                                    </Button>
+                                )}
+                            </TableCell>
+                        </TableRow>
+                        <TableRow>
+                            <TableHead>운송장번호</TableHead>
+                            <TableCell>{order?.trackingNumber}</TableCell>
+                        </TableRow>
+                    </TableBody>
                 </Table>
             </div>
             <div className="mt-10">
@@ -50,21 +65,19 @@ export default function OrderDetailPage() {
                         <TableBody>
                             <TableRow>
                                 <TableHead>결제번호</TableHead>
-                                <TableCell>{orderNumber}</TableCell>
+                                <TableCell>{order?.paymentNumber}</TableCell>
                                 <TableHead>결제일시</TableHead>
-                                <TableCell>2025-01-01 12:00:00</TableCell>
+                                <TableCell>{order?.paidAt}</TableCell>
                             </TableRow>
                             <TableRow>
                                 <TableHead>주문금액</TableHead>
-                                <TableCell>₩{(10000).toLocaleString()}</TableCell>
+                                <TableCell>₩{order?.finalTotalPrice?.toLocaleString()}</TableCell>
                                 <TableHead>배송비</TableHead>
-                                <TableCell>₩3,000</TableCell>
+                                <TableCell>₩{order?.shippingFee?.toLocaleString()}</TableCell>
                             </TableRow>
                             <TableRow>
                                 <TableHead>총 결제 금액</TableHead>
-                                <TableCell>₩{(10000 + 3000).toLocaleString()}</TableCell>
-                                <TableHead>결제 상태</TableHead>
-                                <TableCell>결제 완료</TableCell>
+                                <TableCell>₩{order?.finalTotalPrice?.toLocaleString()}</TableCell>
                             </TableRow>
                         </TableBody>
                     </Table>
@@ -79,18 +92,18 @@ export default function OrderDetailPage() {
                                 <TableHead>상품번호</TableHead>
                                 <TableHead>상품명</TableHead>
                                 <TableHead>수량</TableHead>
-                                <TableHead>수량</TableHead>
                                 <TableHead>가격</TableHead>
                             </TableRow>
                         </TableHeader>
                         <TableBody>
-                            <TableRow>
-                                <TableCell>1</TableCell>
-                                <TableCell>상품명</TableCell>
-                                <TableCell>1</TableCell>
-                                <TableCell>1</TableCell>
-                                <TableCell>₩{(10000).toLocaleString()}</TableCell>
-                            </TableRow>
+                            {order?.items.map(item => (
+                                <TableRow key={item.orderItemId}>
+                                    <TableCell>{item.productId}</TableCell>
+                                    <TableCell>{item.name}</TableCell>
+                                    <TableCell>{item.quantity}</TableCell>
+                                    <TableCell>{(item.unitPrice * item.quantity).toLocaleString()}</TableCell>
+                                </TableRow>
+                            ))}
                         </TableBody>
                     </Table>
                 </div>
