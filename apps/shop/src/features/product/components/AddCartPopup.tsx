@@ -11,7 +11,7 @@ type AddToCartPopupProps = {
 
 export default function AddToCartPopup({ stockQuantity, onClose, onAddToCart }: AddToCartPopupProps) {
     const [selectedSleeveQuantity, setSelectedSleeveQuantity] = useState<number | "">("");
-      // 재고를 슬리브 단위로 계산 (10캡슐 = 1슬리브)
+    // 재고를 슬리브 단위로 계산 (10캡슐 = 1슬리브)
     const maxSleeveQuantity = Math.floor(stockQuantity / 10);
     const sleeveQuantities = [1, 2, 3, 5, 10, 20].filter(quantity => quantity <= maxSleeveQuantity);
 
@@ -48,18 +48,23 @@ export default function AddToCartPopup({ stockQuantity, onClose, onAddToCart }: 
                         <CancelIcon className="w-8 h-8 relative" />
                     </button>
                 </div>
-                <div className="flex flex-col justify-start items-start self-stretch flex-grow-0 flex-shrink-0 gap-10 px-6 pt-6 pb-10 bg-white">                    <div className="flex flex-col justify-start items-start self-stretch flex-grow-0 flex-shrink-0 gap-4">
+                <div className="flex flex-col justify-start items-start self-stretch flex-grow-0 flex-shrink-0 gap-10 px-6 pt-6 pb-10 bg-white">
+                    {" "}
+                    <div className="flex flex-col justify-start items-start self-stretch flex-grow-0 flex-shrink-0 gap-4">
                         <div className="flex justify-start items-center self-stretch flex-grow-0 flex-shrink-0 relative gap-2">
                             <p className="flex-grow-0 flex-shrink-0 text-xl font-bold text-left text-black">수량 선택</p>
                             <div className="flex items-center gap-2 text-sm text-gray-600">
                                 <span className="px-2 py-1 bg-gray-100 rounded text-xs">1슬리브 = 10캡슐</span>
                             </div>
                         </div>
-                        
+
                         <div className="flex flex-col gap-3 w-full">
                             <div className="flex items-center gap-3">
-                                <label className="text-sm font-medium text-gray-700 min-w-[60px]">슬리브:</label>
+                                <label htmlFor="sleeve-quantity-input" className="text-sm font-medium text-gray-700 min-w-[60px]">
+                                    슬리브:
+                                </label>
                                 <input
+                                    id="sleeve-quantity-input"
                                     type="number"
                                     min="1"
                                     max={maxSleeveQuantity}
@@ -68,11 +73,9 @@ export default function AddToCartPopup({ stockQuantity, onClose, onAddToCart }: 
                                     value={selectedSleeveQuantity}
                                     onChange={handleSleeveQuantityChange}
                                 />
-                                <span className="text-sm text-gray-600 min-w-[80px]">
-                                    = {totalCapsules}캡슐
-                                </span>
+                                <span className="text-sm text-gray-600 min-w-[80px]">= {totalCapsules}캡슐</span>
                             </div>
-                            
+
                             {sleeveQuantities.length > 0 && (
                                 <div className="flex flex-col gap-2">
                                     <p className="text-sm text-gray-600">빠른 선택:</p>
@@ -82,26 +85,26 @@ export default function AddToCartPopup({ stockQuantity, onClose, onAddToCart }: 
                                                 key={sleeveQuantity}
                                                 type="button"
                                                 className={`flex flex-col justify-center items-center px-4 py-3 rounded-lg border transition-all ${
-                                                    selectedSleeveQuantity === sleeveQuantity 
-                                                        ? "border-[#257a57] bg-[#257a57]/5 shadow-sm" 
+                                                    selectedSleeveQuantity === sleeveQuantity
+                                                        ? "border-[#257a57] bg-[#257a57]/5 shadow-sm"
                                                         : "border-gray-200 hover:border-gray-300"
                                                 }`}
                                                 onClick={() => handleSleeveQuantitySelect(sleeveQuantity)}
                                             >
-                                                <span className={`text-lg font-semibold ${
-                                                    selectedSleeveQuantity === sleeveQuantity ? "text-[#257a57]" : "text-gray-800"
-                                                }`}>
+                                                <span
+                                                    className={`text-lg font-semibold ${
+                                                        selectedSleeveQuantity === sleeveQuantity ? "text-[#257a57]" : "text-gray-800"
+                                                    }`}
+                                                >
                                                     {sleeveQuantity}슬리브
                                                 </span>
-                                                <span className="text-xs text-gray-500 mt-1">
-                                                    {sleeveQuantity * 10}캡슐
-                                                </span>
+                                                <span className="text-xs text-gray-500 mt-1">{sleeveQuantity * 10}캡슐</span>
                                             </button>
                                         ))}
                                     </div>
                                 </div>
                             )}
-                            
+
                             {maxSleeveQuantity === 0 && (
                                 <div className="text-sm text-red-500 bg-red-50 p-3 rounded-md">
                                     재고가 부족합니다. (현재 재고: {stockQuantity}캡슐)
@@ -119,10 +122,9 @@ export default function AddToCartPopup({ stockQuantity, onClose, onAddToCart }: 
                         onClick={handleAddToCart}
                         disabled={!selectedSleeveQuantity || selectedSleeveQuantity <= 0}
                     >
-                        {selectedSleeveQuantity && selectedSleeveQuantity > 0 
+                        {selectedSleeveQuantity && selectedSleeveQuantity > 0
                             ? `장바구니 담기 (${selectedSleeveQuantity}슬리브 / ${totalCapsules}캡슐)`
-                            : "수량을 선택해주세요"
-                        }
+                            : "수량을 선택해주세요"}
                     </button>
                 </div>
             </div>

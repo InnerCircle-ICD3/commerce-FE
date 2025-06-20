@@ -6,6 +6,9 @@ import { type CustomError, fetchClient } from "@/src/shared/fetcher";
 import { useToast } from "@/src/shared/hooks/useToast";
 import { useState } from "react";
 import type { AddCartItemResponse } from "../../cart/types/cart";
+import { useSession } from "next-auth/react";
+import ConfirmDialog from "@/src/shared/components/shared/ConfirmDialog";
+import { set } from "zod";
 
 type AddToCartProps = {
     productId: number;
@@ -16,11 +19,18 @@ type AddToCartProps = {
 };
 
 export default function AddToCart({ productId, title, stockQuantity, withPopup = false, quantity }: AddToCartProps) {
+    const { data: session } = useSession();
     const { toast, ToastUI } = useToast();
     const [isPopupOpen, setIsPopupOpen] = useState(false);
+    const [isLoginAlertOpen, setIsLoginAlertOpen] = useState(false);
     const inStock = stockQuantity > 0;
 
     const onButtonClick = () => {
+        if (!session) {
+            setIsLoginAlertOpen(true);
+            return;
+        }
+
         if (!inStock) {
             return;
         }
@@ -106,11 +116,32 @@ export default function AddToCart({ productId, title, stockQuantity, withPopup =
         setIsPopupOpen(false);
     };
 
+    const handleConfirmLoginAlert = () => {
+        setIsLoginAlertOpen(false);
+        window.location.href = "/login"; // 로그인 페이지로 이동
+    };
+
     return (
         <>
             <AddToCartButton inStock={inStock} onClick={onButtonClick} />
             {isPopupOpen && <AddCartPopup stockQuantity={stockQuantity} onClose={handlePopupClose} onAddToCart={onAddToCartInPopup} />}
             {ToastUI}
+            {isLoginAlertOpen && (
+                <ConfirmDialog
+                    open={isLoginAlertOpen}
+                    title={"장바구니 담기"}
+                    description={
+                        <>
+                            <span className="block mb-1">로그인 후 장바구니에 상품을 추가할 수 있습니다.</span>
+                            <span>로그인 페이지로 이동하시겠습니까?</span>
+                        </>
+                    }
+                    cancelText="취소"
+                    confirmText="확인"
+                    onCancel={() => setIsLoginAlertOpen(false)}
+                    onConfirm={handleConfirmLoginAlert}
+                />
+            )}
         </>
     );
 }

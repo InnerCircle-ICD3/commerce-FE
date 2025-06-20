@@ -32,11 +32,7 @@ export default function ConfirmDialog({ open, title, description, confirmText = 
                             {cancelText}
                         </button>
                     )}
-                    <button
-                        type="button"
-                        className="flex-1 py-2 rounded bg-[#257A57] text-white font-semibold hover:bg-[#1f5c44] transition"
-                        onClick={onConfirm}
-                    >
+                    <button type="button" className="flex-1 py-2 rounded bg-[#257A57] text-white font-semibold transition" onClick={onConfirm}>
                         {confirmText}
                     </button>
                 </div>
