@@ -40,6 +40,8 @@ interface GetOrderDetailResponse {
     refundRequestedAt: string;
     refunded: boolean;
     refundedAt: string;
+    customerName: string;
+    customerId: string;
 }
 
 export const getOrderDetail = async (orderId: number) => {

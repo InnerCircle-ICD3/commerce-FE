@@ -24,7 +24,6 @@ export default function OrderDetailPage() {
         if (router.history.canGoBack()) router.history.back();
     };
 
-    console.log(order?.orderStatus);
     return (
         <div>
             <div className="flex items-center">
@@ -37,27 +36,33 @@ export default function OrderDetailPage() {
                 <h2 className="text-h2 font-bold text-gray-900">주문 상세보기</h2>
             </div>
             <div className="bg-white shadow-sm rounded-lg mt-4">
-                <Table className="[&_th]:w-50">
+                <Table>
+                    <colgroup>
+                        <col className="w-50" />
+                        <col />
+                        <col className="w-50" />
+                        <col />
+                    </colgroup>
                     <TableBody>
                         <TableRow>
                             <TableHead>주문번호</TableHead>
-                            <TableCell>{order?.orderNumber}</TableCell>
-                            <TableHead rowSpan={2}>배송주소</TableHead>
-                            <TableCell rowSpan={2}>{`${order?.shippingInfo.address1} ${order?.shippingInfo.address2}`}</TableCell>
+                            <TableCell colSpan={3}>{order?.orderNumber}</TableCell>
                         </TableRow>
                         <TableRow>
                             <TableHead>주문일자</TableHead>
                             <TableCell>{order?.orderedAt}</TableCell>
+                            <TableHead>배송주소</TableHead>
+                            <TableCell>{`${order?.shippingInfo.address1} ${order?.shippingInfo.address2}`}</TableCell>
                         </TableRow>
                         <TableRow>
                             <TableHead>주문자명</TableHead>
+                            <TableCell>{order?.customerName}</TableCell>
+                            <TableHead>받는 사람</TableHead>
                             <TableCell>{order?.shippingInfo.recipientName}</TableCell>
-                            <TableHead>연락처</TableHead>
-                            <TableCell>{order?.shippingInfo.recipientPhone}</TableCell>
                         </TableRow>
                         <TableRow>
                             <TableHead>주문상태</TableHead>
-                            <TableCell colSpan={3}>
+                            <TableCell>
                                 {order?.orderStatus}
                                 {order?.cancellable && (
                                     <Button
@@ -72,6 +77,8 @@ export default function OrderDetailPage() {
                                     </Button>
                                 )}
                             </TableCell>
+                            <TableHead>연락처</TableHead>
+                            <TableCell>{order?.shippingInfo.recipientPhone}</TableCell>
                         </TableRow>
                         <TableRow>
                             <TableHead>운송장번호</TableHead>
@@ -111,7 +118,13 @@ export default function OrderDetailPage() {
             <div className="mt-10">
                 <h2 className="text-h2 font-bold text-gray-900">결제 정보</h2>
                 <div className="bg-white shadow-sm rounded-lg mt-4">
-                    <Table className="[&_th]:w-50">
+                    <Table>
+                        <colgroup>
+                            <col className="w-50" />
+                            <col />
+                            <col className="w-50" />
+                            <col />
+                        </colgroup>
                         <TableBody>
                             <TableRow>
                                 <TableHead>결제번호</TableHead>
@@ -142,7 +155,13 @@ export default function OrderDetailPage() {
             <div className="mt-10">
                 <h2 className="text-h2 font-bold text-gray-900">주문 상품</h2>
                 <div className="bg-white shadow-sm rounded-lg mt-4">
-                    <Table className="[&_th]:w-50">
+                    <Table>
+                        <colgroup>
+                            <col className="w-50" />
+                            <col />
+                            <col className="w-50" />
+                            <col />
+                        </colgroup>
                         <TableHeader>
                             <TableRow>
                                 <TableHead>상품번호</TableHead>
