@@ -8,8 +8,6 @@ import { useState } from "react";
 import type { AddCartItemResponse } from "../../cart/types/cart";
 import { useSession } from "next-auth/react";
 import ConfirmDialog from "@/src/shared/components/shared/ConfirmDialog";
-import { set } from "zod";
-
 type AddToCartProps = {
     productId: number;
     title: string;
