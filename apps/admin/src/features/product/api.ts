@@ -2,24 +2,25 @@ import { del, get, post, put } from "@/shared/kyInstance";
 import type { PageResponse, PaginationParams } from "@/shared/types";
 import { logger } from "@/shared/utils/logger";
 
-// 상품 정보 타입 정의
+// 상품 정보 타입 정의 (실제 서버 응답 구조)
 export interface Product {
     id: number;
     name: string;
     price: number;
-    quantity: number; // 재고 (API 응답에서는 quantity로 제공)
+    quantity: number; // 재고
     thumbnail: string;
-    detailImage: string;
     intensity: string;
     cupSize: string;
-    isSoldOut: boolean; // 판매 상태 (API 응답에서는 isSoldOut으로 제공)
-    createdAt?: string;
-    updatedAt?: string;
+    status: "ON_SALE" | "UNAVAILABLE"; // 판매 상태
 }
 
 // 상품 목록 조회 API 요청 파라미터
 export interface ProductListParams extends PaginationParams {
-    isSoldOut?: boolean; // 품절 상태 필터
+    name?: string; // 상품명 검색
+    intensityId?: number; // 강도 ID로 필터링
+    cupSizeId?: number; // 컵사이즈 ID로 필터링
+    status?: string; // 상태로 필터링
+    isSoldOut?: boolean; // 품절 상태 필터 (기존 호환성)
 }
 
 // 상품 API 함수들
