@@ -130,8 +130,8 @@ export default function ProductsPage() {
                     <Input
                         placeholder="상품명 검색"
                         value={searchKeyword}
-                        onChange={(e) => setSearchKeyword(e.target.value)}
-                        onKeyDown={(e) => e.key === 'Enter' && handleSearch()}
+                        onChange={e => setSearchKeyword(e.target.value)}
+                        onKeyDown={e => e.key === "Enter" && handleSearch()}
                         className="max-w-xs"
                     />
                     <Button variant="outline" onClick={handleSearch}>
@@ -140,11 +140,11 @@ export default function ProductsPage() {
                 </div>
                 <Select
                     value={statusFilter}
-                    onValueChange={(value) => {
+                    onValueChange={(value: string) => {
                         // 타입 안전을 위한 검증
-                        const typedValue = value as 'SELLING' | 'SOLD_OUT' | 'ALL';
+                        const typedValue = value as "SELLING" | "SOLD_OUT" | "ALL";
                         setStatusFilter(typedValue);
-                        navigate({ search: (prev) => ({ ...prev, page: 1 }) });
+                        navigate({ search: prev => ({ ...prev, page: 1 }) });
                     }}
                 >
                     <SelectTrigger className="w-[180px]">
@@ -229,11 +229,7 @@ export default function ProductsPage() {
             </div>
 
             {/* 페이지네이션 */}
-            <Pagination
-                currentPage={page}
-                totalPages={data.totalPages}
-                onPageChange={handlePageChange}
-            />
+            <Pagination currentPage={page} totalPages={data.totalPages} onPageChange={handlePageChange} />
 
             {/* 삭제 확인 대화 상자 */}
             <Dialog open={isDeleteDialogOpen} onOpenChange={setIsDeleteDialogOpen}>
@@ -241,12 +237,15 @@ export default function ProductsPage() {
                     <DialogHeader className="text-center space-y-4">
                         <div className="mx-auto w-12 h-12 bg-red-100 rounded-full flex items-center justify-center">
                             <svg className="w-6 h-6 text-red-600" fill="none" viewBox="0 0 24 24" stroke="currentColor">
-                                <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M19 7l-.867 12.142A2 2 0 0116.138 21H7.862a2 2 0 01-1.995-1.858L5 7m5 4v6m4-6v6m1-10V4a1 1 0 00-1-1h-4a1 1 0 00-1 1v3M4 7h16" />
+                                <path
+                                    strokeLinecap="round"
+                                    strokeLinejoin="round"
+                                    strokeWidth={2}
+                                    d="M19 7l-.867 12.142A2 2 0 0116.138 21H7.862a2 2 0 01-1.995-1.858L5 7m5 4v6m4-6v6m1-10V4a1 1 0 00-1-1h-4a1 1 0 00-1 1v3M4 7h16"
+                                />
                             </svg>
                         </div>
-                        <DialogTitle className="text-xl font-semibold text-gray-900">
-                            상품을 삭제하시겠습니까?
-                        </DialogTitle>
+                        <DialogTitle className="text-xl font-semibold text-gray-900">상품을 삭제하시겠습니까?</DialogTitle>
                         <DialogDescription className="text-gray-600">
                             <div className="space-y-2">
                                 <p className="font-medium">"{productToDelete?.name}"</p>
