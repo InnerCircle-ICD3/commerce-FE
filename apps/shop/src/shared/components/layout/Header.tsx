@@ -80,7 +80,10 @@ function Header() {
                                     />
                                 </Link>
                                 {status !== "loading" && (
-                                    <Link href="/login" className="px-4 py-1.5 text-sm bg-black text-white rounded-md transition-colors">
+                                    <Link
+                                        href="/login"
+                                        className="px-4 py-1.5 text-sm bg-black text-white rounded-md hover:bg-gray-700 transition-colors"
+                                    >
                                         로그인
                                     </Link>
                                 )}
@@ -145,7 +148,7 @@ function Header() {
                                     {status !== "loading" && (
                                         <Link
                                             href="/login"
-                                            className="px-2 py-1 text-xs bg-[#257A57] text-white rounded-md hover:bg-[#1f6a4b] transition-colors"
+                                            className="px-2 py-1 text-xs bg-black text-white rounded-md hover:bg-gray-700 transition-colors"
                                         >
                                             로그인
                                         </Link>
