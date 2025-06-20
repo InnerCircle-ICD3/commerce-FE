@@ -2,7 +2,7 @@ import Link from "next/link";
 
 export default function CoffeeLetter() {
     return (
-        <article className="flex flex-col md:flex-row items-center gap-10 py-16 pt-48 pb-12 transition-all duration-300 animate-fade-in animate-slide-up opacity-100">
+        <article className="flex flex-col md:flex-row items-center gap-10 py-16 px-6 pt-48 pb-12 transition-all duration-300 animate-fade-in animate-slide-up opacity-100">
             <section className="overflow-hidden grow shrink self-stretch my-auto leading-snug text-black whitespace-nowrap rounded-xl min-w-60 w-[35rem] max-md:max-w-full">
                 <div className="flex relative flex-col items-start px-14 py-24 w-full min-h-[23rem] max-md:px-5 max-md:pt-24 max-md:max-w-full">
                     <img
@@ -24,11 +24,21 @@ export default function CoffeeLetter() {
             </section>
             <section className="flex flex-col justify-center self-stretch my-auto min-w-60">
                 <div className="flex flex-col justify-center">
-                    <h2 className="text-base font-semibold tracking-tight leading-snug text-neutral-700">커피레터</h2>
-                    <h3 className="mt-3 text-3xl font-bold tracking-tight leading-9 text-black">
-                        언제든지 편안하게,
-                        <br />
-                        카페인 걱정 없는 여유로운 시간은 어떨까요?
+                    <h2 className="text-base font-semibold tracking-tight leading-snug text-neutral-700">커피레터</h2>                    <h3 className="mt-3 text-3xl font-bold tracking-tight leading-9 text-black">
+                        {/* Desktop version */}
+                        <span className="hidden md:block">
+                            언제든지 편안하게,
+                            <br />
+                            카페인 걱정 없는 여유로운 시간은 어떨까요?
+                        </span>
+                        {/* Mobile version */}
+                        <span className="block md:hidden">
+                            언제든지 편안하게,
+                            <br />
+                            카페인 걱정 없는 여유로운 시간은
+                            <br />
+                            어떨까요?
+                        </span>
                     </h3>
                     <p className="mt-4 text-sm font-medium text-neutral-600">하루 중 언제라도 따뜻한 한 잔으로 여유를 즐기세요</p>
                 </div>
