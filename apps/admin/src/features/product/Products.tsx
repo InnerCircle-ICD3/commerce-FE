@@ -1,5 +1,5 @@
 import type { Product as ApiProduct } from "@/features/product/api";
-import { deleteProduct, updateProductStatus } from "@/features/product/queries";
+import { deleteProduct } from "@/features/product/queries";
 import { Route } from "@/routes/_authenticated/products";
 import { Badge } from "@/shared/components/ui/badge";
 import { Button } from "@/shared/components/ui/button";
@@ -80,35 +80,6 @@ export default function ProductsPage() {
         },
     });
 
-    // 상품 상태 변경 뮤테이션
-    const updateStatusMutation = useMutation({
-        mutationFn: async ({ id, status }: { id: number; status: "ON_SALE" | "UNAVAILABLE" }) => {
-            // 현재 상품 정보를 가져와서 상태만 변경
-            const currentProduct = await fetcher(`admin/products/${id}`) as Product;
-            return fetcher(`admin/products/${id}`, {
-                method: 'PUT',
-                json: {
-                    ...currentProduct,
-                    status: status
-                }
-            });
-        },
-        onSuccess: () => {
-            queryClient.invalidateQueries({ queryKey: ["products"] });
-            toast({
-                title: "상태 변경 완료",
-                description: "상품 상태가 변경되었습니다.",
-            });
-        },
-        onError: error => {
-            toast({
-                title: "상태 변경 실패",
-                description: error.message,
-                variant: "destructive",
-            });
-        },
-    });
-
     // 페이지 변경 핸들러
     const handlePageChange = (page: number) => {
         setCurrentPage(page);
@@ -118,12 +89,6 @@ export default function ProductsPage() {
     const handleDeleteClick = (product: Product) => {
         setProductToDelete(product);
         setIsDeleteDialogOpen(true);
-    };
-
-    // 상태 변경 핸들러
-    const handleToggleStatus = (product: Product) => {
-        const newStatus = product.status === "ON_SALE" ? "UNAVAILABLE" : "ON_SALE";
-        updateStatusMutation.mutate({ id: product.id, status: newStatus });
     };
 
     // 검색 타입 변경 핸들러

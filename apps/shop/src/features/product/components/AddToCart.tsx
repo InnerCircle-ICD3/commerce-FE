@@ -32,7 +32,6 @@ export default function AddToCart({ productId, title, stockQuantity, withPopup =
         if (!inStock) {
             return;
         }
-
         if (withPopup) {
             setIsPopupOpen(true);
         } else {

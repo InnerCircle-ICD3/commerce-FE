@@ -6,7 +6,7 @@ import type { Product, ProductListParams } from "./api";
 export function mapProductFromApi(apiProduct: Product): Product & { sellingStatus: "SELLING" | "SOLD_OUT"; stock: number } {
     return {
         ...apiProduct,
-        sellingStatus: apiProduct.isSoldOut ? "SOLD_OUT" : "SELLING",
+        sellingStatus: apiProduct.status === "UNAVAILABLE" ? "SOLD_OUT" : "SELLING",
         stock: apiProduct.quantity,
     };
 }
@@ -23,7 +23,6 @@ export function mapProductToApi(product: Product & { sellingStatus: "SELLING" | 
     const { sellingStatus, stock, ...rest } = product;
     return {
         ...rest,
-        isSoldOut: sellingStatus === "SOLD_OUT",
         quantity: stock,
     };
 }
