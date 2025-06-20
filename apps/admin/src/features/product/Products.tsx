@@ -1,42 +1,63 @@
 import type { Product as ApiProduct } from "@/features/product/api";
-import { deleteProduct, productsQueryOptions, updateProductStatus } from "@/features/product/queries";
+import { deleteProduct, updateProductStatus } from "@/features/product/queries";
 import { Route } from "@/routes/_authenticated/products";
 import { Badge } from "@/shared/components/ui/badge";
 import { Button } from "@/shared/components/ui/button";
 import { Dialog, DialogContent, DialogDescription, DialogFooter, DialogHeader, DialogTitle } from "@/shared/components/ui/dialog";
-import { Input } from "@/shared/components/ui/input";
 import { Pagination } from "@/shared/components/ui/pagination";
-import { Select, SelectContent, SelectGroup, SelectItem, SelectTrigger, SelectValue } from "@/shared/components/ui/select";
 import { Table, TableBody, TableCaption, TableCell, TableHead, TableHeader, TableRow } from "@/shared/components/ui/table/table";
 import { toast } from "@/shared/components/ui/use-toast";
-import { useSuspenseQuery, useMutation, useQueryClient } from "@tanstack/react-query";
+import Search from "@/shared/components/shared/Search";
+import { fetcher } from "@/shared/kyInstance";
+import { useMutation, useQueryClient, useQuery } from "@tanstack/react-query";
 import { useNavigate } from "@tanstack/react-router";
-import { Plus, Search } from "lucide-react";
-import { useState } from "react";
+import { Plus } from "lucide-react";
+import { useState, useEffect } from "react";
 
-// 프론트엔드에서 사용할 상품 타입
-type Product = ApiProduct & { sellingStatus: "SELLING" | "SOLD_OUT"; stock: number };
+// 프론트엔드에서 사용할 상품 타입 (서버 응답 그대로 사용)
+type Product = ApiProduct;
+
+// 상품 목록 응답 타입
+interface ProductData {
+    content: Product[];
+    totalPages: number;
+    totalElements: number;
+    page: number;
+    size: number;
+}
 
 export default function ProductsPage() {
-    const { page = 1, size = 10 } = Route.useSearch();
     const navigate = useNavigate({ from: Route.fullPath });
     const queryClient = useQueryClient();
 
-    // 상태 관리
+    // 상태 관리 (리뷰관리 페이지와 동일한 방식)
+    const [currentPage, setCurrentPage] = useState(1);
+    const [query, setQuery] = useState<string>("");
+    const [searchType, setSearchType] = useState<string>("name"); // "name", "intensity", "cupSize", "status"
+    const [statusFilter, setStatusFilter] = useState<string>("ALL"); // "ALL", "SELLING", "SOLD_OUT"
     const [isDeleteDialogOpen, setIsDeleteDialogOpen] = useState(false);
     const [productToDelete, setProductToDelete] = useState<Product | null>(null);
-    const [searchKeyword, setSearchKeyword] = useState("");
-    const [statusFilter, setStatusFilter] = useState<"SELLING" | "SOLD_OUT" | "ALL">("ALL");
 
-    // 상품 목록 조회 쿼리
-    const { data } = useSuspenseQuery(
-        productsQueryOptions({
-            page: page - 1,
-            size,
-            keyword: searchKeyword || undefined,
-            sellingStatus: statusFilter === "ALL" ? undefined : statusFilter,
-        }),
-    );
+    // 리뷰관리 페이지와 동일한 방식으로 API 호출
+    const { data, isFetching } = useQuery<ProductData>({
+        queryKey: ["products", query, searchType, statusFilter, currentPage],
+        queryFn: () => {
+            const searchParam = query ? `${searchType}=${encodeURIComponent(query)}&` : "";
+            const statusParam = statusFilter !== "ALL" ? `status=${statusFilter === "SELLING" ? "ON_SALE" : "UNAVAILABLE"}&` : "";
+            const pageParam = `page=${currentPage - 1}&size=10&`;
+            const isParamEmpty = !searchParam && !statusParam && !pageParam;
+
+            return fetcher(`admin/products${isParamEmpty ? "" : "?"}${searchParam}${statusParam}${pageParam}`);
+        },
+    });
+
+    const products: Product[] = data?.content || [];
+    const totalPages: number = data?.totalPages || 0;
+
+    // query, searchType, statusFilter가 변경될 때마다 현재 페이지를 1로 초기화
+    useEffect(() => {
+        setCurrentPage(1);
+    }, [query, searchType, statusFilter]);
 
     // 상품 삭제 뮤테이션
     const deleteMutation = useMutation({
@@ -61,7 +82,17 @@ export default function ProductsPage() {
 
     // 상품 상태 변경 뮤테이션
     const updateStatusMutation = useMutation({
-        mutationFn: ({ id, status }: { id: number; status: "SELLING" | "SOLD_OUT" }) => updateProductStatus(id, status === "SOLD_OUT"),
+        mutationFn: async ({ id, status }: { id: number; status: "ON_SALE" | "UNAVAILABLE" }) => {
+            // 현재 상품 정보를 가져와서 상태만 변경
+            const currentProduct = await fetcher(`admin/products/${id}`) as Product;
+            return fetcher(`admin/products/${id}`, {
+                method: 'PUT',
+                json: {
+                    ...currentProduct,
+                    status: status
+                }
+            });
+        },
         onSuccess: () => {
             queryClient.invalidateQueries({ queryKey: ["products"] });
             toast({
@@ -79,8 +110,8 @@ export default function ProductsPage() {
     });
 
     // 페이지 변경 핸들러
-    const handlePageChange = (newPage: number) => {
-        navigate({ search: prev => ({ ...prev, page: newPage }) });
+    const handlePageChange = (page: number) => {
+        setCurrentPage(page);
     };
 
     // 삭제 대화상자 핸들러
@@ -91,13 +122,20 @@ export default function ProductsPage() {
 
     // 상태 변경 핸들러
     const handleToggleStatus = (product: Product) => {
-        const newStatus = product.sellingStatus === "SELLING" ? "SOLD_OUT" : "SELLING";
+        const newStatus = product.status === "ON_SALE" ? "UNAVAILABLE" : "ON_SALE";
         updateStatusMutation.mutate({ id: product.id, status: newStatus });
     };
 
-    // 검색 핸들러
-    const handleSearch = () => {
-        navigate({ search: prev => ({ ...prev, page: 1 }) });
+    // 검색 타입 변경 핸들러
+    const handleSearchTypeChange = (event: React.ChangeEvent<HTMLSelectElement>) => {
+        const value = event.target.value;
+        setSearchType(value);
+    };
+
+    // 상태 필터 변경 핸들러
+    const handleStatusFilterChange = (event: React.ChangeEvent<HTMLSelectElement>) => {
+        const value = event.target.value;
+        setStatusFilter(value);
     };
 
     // 상품 등록 페이지 이동 핸들러
@@ -125,43 +163,50 @@ export default function ProductsPage() {
             </div>
 
             {/* 검색 및 필터링 */}
-            <div className="flex gap-4">
-                <div className="flex-1 flex gap-2">
-                    <Input
-                        placeholder="상품명 검색"
-                        value={searchKeyword}
-                        onChange={e => setSearchKeyword(e.target.value)}
-                        onKeyDown={e => e.key === "Enter" && handleSearch()}
-                        className="max-w-xs"
-                    />
-                    <Button variant="outline" onClick={handleSearch}>
-                        <Search className="h-4 w-4" />
-                    </Button>
-                </div>
-                <Select
-                    value={statusFilter}
-                    onValueChange={(value: string) => {
-                        // 타입 안전을 위한 검증
-                        const typedValue = value as "SELLING" | "SOLD_OUT" | "ALL";
-                        setStatusFilter(typedValue);
-                        navigate({ search: prev => ({ ...prev, page: 1 }) });
-                    }}
-                >
-                    <SelectTrigger className="w-[180px]">
-                        <SelectValue placeholder="판매 상태" />
-                    </SelectTrigger>
-                    <SelectContent>
-                        <SelectGroup>
-                            <SelectItem value="ALL">전체</SelectItem>
-                            <SelectItem value="SELLING">판매중</SelectItem>
-                            <SelectItem value="SOLD_OUT">품절</SelectItem>
-                        </SelectGroup>
-                    </SelectContent>
-                </Select>
+            <div className="bg-white shadow-sm rounded-lg overflow-hidden">
+                <Search placeholder="검색어를 입력하세요" setSearchQuery={setQuery}>
+                    <>
+                        {/* 검색 타입 선택 */}
+                        <div className="w-auto">
+                            <select
+                                className="rounded-md border border-gray-300 py-2 pl-3 pr-10 text-sm focus:outline-none focus:ring-2 focus:ring-blue-500 focus:border-blue-500"
+                                value={searchType}
+                                onChange={handleSearchTypeChange}
+                                aria-label="search type options"
+                            >
+                                <option value="name">상품명</option>
+                                <option value="intensity">강도</option>
+                                <option value="cupSize">용량</option>
+                                <option value="status">상태</option>
+                            </select>
+                        </div>
+                        {/* 상태 필터 */}
+                        <div className="w-auto">
+                            <select
+                                className="rounded-md border border-gray-300 py-2 pl-3 pr-10 text-sm focus:outline-none focus:ring-2 focus:ring-blue-500 focus:border-blue-500"
+                                value={statusFilter}
+                                onChange={handleStatusFilterChange}
+                                aria-label="status filter options"
+                            >
+                                <option value="ALL">전체</option>
+                                <option value="SELLING">판매중</option>
+                                <option value="SOLD_OUT">품절</option>
+                            </select>
+                        </div>
+                    </>
+                </Search>
             </div>
 
             {/* 상품 목록 테이블 */}
-            <div className="overflow-x-auto rounded-lg border border-gray-200 bg-white">
+            <div className="overflow-x-auto rounded-lg border border-gray-200 bg-white relative">
+                {isFetching && (
+                    <div className="absolute inset-0 bg-white/50 backdrop-blur-sm flex items-center justify-center z-10">
+                        <div className="flex items-center gap-2 text-blue-600">
+                            <div className="animate-spin h-5 w-5 border-2 border-blue-600 border-t-transparent rounded-full"></div>
+                            <span>검색 중...</span>
+                        </div>
+                    </div>
+                )}
                 <Table>
                     <TableCaption>상품 목록</TableCaption>
                     <TableHeader>
@@ -170,12 +215,14 @@ export default function ProductsPage() {
                             <TableHead>상품명</TableHead>
                             <TableHead>가격</TableHead>
                             <TableHead>재고</TableHead>
+                            <TableHead>강도</TableHead>
+                            <TableHead>용량</TableHead>
                             <TableHead>상태</TableHead>
                             <TableHead>관리</TableHead>
                         </TableRow>
                     </TableHeader>
                     <TableBody>
-                        {data.content.map((product: Product) => (
+                        {products.map((product: Product) => (
                             <TableRow key={product.id}>
                                 <TableCell className="font-medium">{product.id}</TableCell>
                                 <TableCell>
@@ -185,22 +232,24 @@ export default function ProductsPage() {
                                     </div>
                                 </TableCell>
                                 <TableCell>{product.price.toLocaleString()}원</TableCell>
-                                <TableCell>{product.stock}</TableCell>
+                                <TableCell>{product.quantity}</TableCell>
+                                <TableCell>{product.intensity}</TableCell>
+                                <TableCell>{product.cupSize}</TableCell>
                                 <TableCell>
-                                    <Badge variant={product.sellingStatus === "SELLING" ? "outline" : "destructive"}>
-                                        {product.sellingStatus === "SELLING" ? "판매중" : "품절"}
+                                    <Badge variant={product.status === "ON_SALE" ? "outline" : "destructive"}>
+                                        {product.status === "ON_SALE" ? "판매중" : "품절"}
                                     </Badge>
                                 </TableCell>
                                 <TableCell>
                                     <div className="flex items-center space-x-2">
-                                        <Button
+                                        {/* <Button
                                             variant="ghost"
                                             size="sm"
                                             onClick={() => handleToggleStatus(product)}
                                             disabled={updateStatusMutation.isPending}
                                         >
-                                            {product.sellingStatus === "SELLING" ? "품절 처리" : "판매 처리"}
-                                        </Button>
+                                            {product.status === "ON_SALE" ? "품절 처리" : "판매 처리"}
+                                        </Button> */}
                                         <Button variant="ghost" size="sm" onClick={() => handleEditClick(product.id)}>
                                             편집
                                         </Button>
@@ -217,9 +266,9 @@ export default function ProductsPage() {
                                 </TableCell>
                             </TableRow>
                         ))}
-                        {data.content.length === 0 && (
+                        {products.length === 0 && (
                             <TableRow>
-                                <TableCell colSpan={6} className="h-24 text-center">
+                                <TableCell colSpan={8} className="h-24 text-center">
                                     상품이 없습니다.
                                 </TableCell>
                             </TableRow>
@@ -229,7 +278,7 @@ export default function ProductsPage() {
             </div>
 
             {/* 페이지네이션 */}
-            <Pagination currentPage={page} totalPages={data.totalPages} onPageChange={handlePageChange} />
+            <Pagination currentPage={currentPage} totalPages={totalPages} onPageChange={handlePageChange} />
 
             {/* 삭제 확인 대화 상자 */}
             <Dialog open={isDeleteDialogOpen} onOpenChange={setIsDeleteDialogOpen}>
