@@ -9,3 +9,8 @@ export type OrderListItem = {
     customerId: number;
     customerName: string;
 };
+
+export type OrderStatus = {
+    code: string;
+    label: string;
+};

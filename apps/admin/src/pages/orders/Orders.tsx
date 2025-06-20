@@ -4,6 +4,7 @@ import { Pagination } from "@/shared/components/ui/pagination";
 import { Link } from "@tanstack/react-router";
 import { useOrders } from "@/features/order/hooks/useOrders";
 import type { GetOrdersRequestDto } from "@/features/order/api/getOrders";
+import { useOrderStatus } from "@/features/order/hooks/useOrderStatus";
 
 type SearchType = "orderNumber" | "customerName" | "productName";
 
@@ -19,6 +20,7 @@ const initialQuery: GetOrdersRequestDto = {
 export default function OrdersPage() {
     const [searchType, setSearchType] = useState<SearchType>("orderNumber");
     const [query, setQuery] = useState<GetOrdersRequestDto>(initialQuery);
+    const { data: orderStatus } = useOrderStatus();
     const { orders, totalPages, totalElements } = useOrders(query);
     // 페이지 변경 핸들러
 
@@ -28,11 +30,11 @@ export default function OrdersPage() {
         const keyword = formData.get("keyword") as string;
 
         if (searchType === "orderNumber") {
-            setQuery({ ...initialQuery, orderNumber: keyword });
+            setQuery({ ...initialQuery, status: query.status, orderNumber: keyword });
         } else if (searchType === "customerName") {
-            setQuery({ ...initialQuery, nickname: keyword });
+            setQuery({ ...initialQuery, status: query.status, nickname: keyword });
         } else if (searchType === "productName") {
-            setQuery({ ...initialQuery, productName: keyword });
+            setQuery({ ...initialQuery, status: query.status, productName: keyword });
         }
     };
 
@@ -60,18 +62,21 @@ export default function OrdersPage() {
                             <option value="productName">주문상품</option>
                         </select>
                     </div>
-                    {/* 
+
                     <div className="w-auto">
-                        <select className="rounded-md border border-gray-300 py-2 pl-3 pr-10 text-sm focus:outline-none focus:ring-2 focus:ring-blue-500 focus:border-blue-500">
-                            <option value="">모든 상태</option>
-                            <option value="active">주문완료</option>
-                            <option value="inactive">주문취소</option>
-                            <option value="inactive">배송 준비중</option>
-                            <option value="inactive">배송중</option>
-                            <option value="inactive">배송완료</option>
-                            <option value="inactive">환불완료</option>
+                        <select
+                            className="rounded-md border border-gray-300 py-2 pl-3 pr-10 text-sm focus:outline-none focus:ring-2 focus:ring-blue-500 focus:border-blue-500"
+                            name="status"
+                            onChange={e => setQuery({ ...query, status: e.target.value })}
+                        >
+                            <option value="">전체</option>
+                            {orderStatus?.map(status => (
+                                <option key={status.code} value={status.code}>
+                                    {status.label}
+                                </option>
+                            ))}
                         </select>
-                    </div> */}
+                    </div>
                     <div className="flex-1 min-w-[240px]">
                         <div className="relative">
                             <form action="" onSubmit={handleSearch}>
