@@ -1,16 +1,20 @@
 import { useCancelOrder } from "@/features/order/hooks/useCancelOrder";
 import { useOrderDetail } from "@/features/order/hooks/useOrderDetail";
+import { useUpdateTrackingNumber } from "@/features/order/hooks/useUpdateTrackingNumber";
 import { Route } from "@/routes/_authenticated/orders/$orderId";
 import { Button } from "@/shared/components/ui/button";
+import { Input } from "@/shared/components/ui/input";
 import { Table, TableBody, TableCell, TableHead, TableHeader, TableRow } from "@/shared/components/ui/table/table";
+import { useState } from "react";
 
 export default function OrderDetailPage() {
     const { orderId } = Route.useParams();
 
     const { order } = useOrderDetail(Number(orderId));
+    const [inputTrackingNumber, setInputTrackingNumber] = useState<string>("");
 
     const { cancelOrderMutation } = useCancelOrder(Number(orderId));
-
+    const { updateTrackingNumberMutation } = useUpdateTrackingNumber(Number(orderId));
     return (
         <div>
             <h2 className="text-h2 font-bold text-gray-900">주문 상세보기</h2>
@@ -53,7 +57,35 @@ export default function OrderDetailPage() {
                         </TableRow>
                         <TableRow>
                             <TableHead>운송장번호</TableHead>
-                            <TableCell>{order?.trackingNumber}</TableCell>
+                            <TableCell colSpan={3}>
+                                {order?.trackingNumber ||
+                                    (order?.orderStatus === "PAID" && (
+                                        <>
+                                            <Input
+                                                type="text"
+                                                className="w-100"
+                                                value={inputTrackingNumber}
+                                                onChange={e => setInputTrackingNumber(e.target.value)}
+                                            />
+                                            <Button
+                                                type="button"
+                                                className="ml-2 rounded-md text-sm font-medium shadow-sm"
+                                                size="sm"
+                                                variant="outline"
+                                                onClick={() => {
+                                                    if (inputTrackingNumber.trim() !== "") {
+                                                        updateTrackingNumberMutation({
+                                                            orderId: Number(orderId),
+                                                            trackingNumber: inputTrackingNumber,
+                                                        });
+                                                    }
+                                                }}
+                                            >
+                                                운송장 등록
+                                            </Button>
+                                        </>
+                                    ))}
+                            </TableCell>
                         </TableRow>
                     </TableBody>
                 </Table>
