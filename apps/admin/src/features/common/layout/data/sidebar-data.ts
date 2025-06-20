@@ -1,4 +1,4 @@
-import { FileText, MessageSquareText, MessagesSquare, Settings, ShoppingBag } from "lucide-react";
+import { FileText, MessageSquareText, MessagesSquare, ShoppingBag } from "lucide-react";
 
 export const sidebarData = {
     navGroups: [
