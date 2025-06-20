@@ -12,20 +12,15 @@ function Footer() {
                         <p className="mt-6 text-sm font-medium leading-6 text-stone-300">We are a premium capsule coffee specialist,</p>
                         <p className="text-sm font-medium leading-6 text-stone-300">bringing you the perfect cup every time.</p>
                         <p className="text-sm font-medium leading-6 text-stone-300">Experience exceptional quality and convenience.</p>
-                    </section>                </div>
+                    </section>
+                </div>
                 <div className="w-full pt-6">
                     <div className="flex flex-col sm:flex-row justify-center items-center gap-4 mb-4">
-                        <Link 
-                            href="/terms" 
-                            className="text-xs text-stone-400 hover:text-stone-300 transition-colors duration-200"
-                        >
+                        <Link href="/terms" className="text-xs text-stone-400 hover:text-stone-300 transition-colors duration-200">
                             이용약관
                         </Link>
                         <span className="hidden sm:inline text-xs text-stone-600">|</span>
-                        <Link 
-                            href="/privacy" 
-                            className="text-xs text-stone-400 hover:text-stone-300 transition-colors duration-200"
-                        >
+                        <Link href="/privacy" className="text-xs text-stone-400 hover:text-stone-300 transition-colors duration-200">
                             개인정보 처리방침
                         </Link>
                     </div>

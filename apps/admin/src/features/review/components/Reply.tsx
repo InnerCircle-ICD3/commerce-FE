@@ -74,7 +74,7 @@ export default function Reply({ reply, reviewId }: ReplyProps) {
                             <path fillRule="evenodd" d="M10 9a3 3 0 100-6 3 3 0 000 6zm-7 9a7 7 0 1114 0H3z" clipRule="evenodd" />
                         </svg>
                     </div>
-                </div>{" "}
+                </div>
                 <div className="flex-1">
                     <div className="flex items-center justify-between mb-2">
                         <div className="flex items-center gap-2">
