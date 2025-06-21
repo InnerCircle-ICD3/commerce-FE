@@ -22,6 +22,7 @@ export const useNaverAuth = () => {
             client_id: NAVER_CLIENT_ID,
             redirect_uri: REDIRECT_URI,
             state: state,
+            scope: "email,nickname,profile_image", // 이메일, 닉네임, 프로필 이미지 정보 요청
         });
 
         console.log("네이버 로그인 리다이렉트:", `${NAVER_AUTH_URL}?${params.toString()}`);
