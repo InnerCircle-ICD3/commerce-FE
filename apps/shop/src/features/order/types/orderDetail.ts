@@ -36,7 +36,7 @@ export interface OrderDetailData {
     trackingNumber: string | null;
     items: {
         orderItemId: string;
-        productSnapshotId: number;
+        productId: number;
         name: string;
         thumbnail: string;
         unitPrice: number;

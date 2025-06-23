@@ -34,7 +34,7 @@ export const OrderProduct = ({ products, reviewable, orderNumber, trackingNumber
                             key={product.orderItemId}
                             className={`py-6 ${index < products.length - 1 ? "border-b border-gray-300 border-opacity-20" : ""}`}
                         >
-                            <Link href="/product/1" className="block cursor-pointer">
+                            <Link href={`/product/${product.productId}`} className="block cursor-pointer">
                                 <div className="flex gap-4">
                                     <div className="w-20 h-20 relative rounded overflow-hidden">
                                         <Image
@@ -92,7 +92,7 @@ export const OrderProduct = ({ products, reviewable, orderNumber, trackingNumber
             {reviewingProduct && (
                 <CreateReviewModal
                     product={{
-                        productId: reviewingProduct.productSnapshotId,
+                        productId: reviewingProduct.productId,
                         title: reviewingProduct.name,
                         imageUrl: reviewingProduct.thumbnail,
                     }}
