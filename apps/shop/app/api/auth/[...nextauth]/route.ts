@@ -33,29 +33,54 @@ const handler = NextAuth({
     // Safari 호환성을 위한 쿠키 설정
     cookies: {
         sessionToken: {
-            name: "__Secure-next-auth.session-token",
+            name: process.env.NODE_ENV === "production" ? "__Secure-next-auth.session-token" : "next-auth.session-token",
             options: {
                 httpOnly: true,
                 sameSite: "lax",
                 path: "/",
-                secure: process.env.NODE_ENV === "production", // HTTPS에서만 secure 쿠키 사용
+                secure: process.env.NODE_ENV === "production",
+                domain: process.env.NODE_ENV === "production" ? "801base.com" : "localhost", // 개발환경에서 명시적 도메인 설정
             },
         },
         callbackUrl: {
-            name: "__Secure-next-auth.callback-url",
+            name: process.env.NODE_ENV === "production" ? "__Secure-next-auth.callback-url" : "next-auth.callback-url",
             options: {
                 sameSite: "lax",
                 path: "/",
                 secure: process.env.NODE_ENV === "production",
+                domain: process.env.NODE_ENV === "production" ? "801base.com" : "localhost",
             },
         },
         csrfToken: {
-            name: "__Host-next-auth.csrf-token",
+            name: process.env.NODE_ENV === "production" ? "__Host-next-auth.csrf-token" : "next-auth.csrf-token",
             options: {
                 httpOnly: true,
                 sameSite: "lax",
                 path: "/",
                 secure: process.env.NODE_ENV === "production",
+                domain: process.env.NODE_ENV === "production" ? "801base.com" : "localhost",
+            },
+        },
+        state: {
+            name: process.env.NODE_ENV === "production" ? "__Secure-next-auth.state" : "next-auth.state",
+            options: {
+                httpOnly: true,
+                sameSite: "lax",
+                path: "/",
+                secure: process.env.NODE_ENV === "production",
+                maxAge: 900, // 15분
+                domain: process.env.NODE_ENV === "production" ? "801base.com" : "localhost",
+            },
+        },
+        pkceCodeVerifier: {
+            name: process.env.NODE_ENV === "production" ? "__Secure-next-auth.pkce.code_verifier" : "next-auth.pkce.code_verifier",
+            options: {
+                httpOnly: true,
+                sameSite: "lax",
+                path: "/",
+                secure: process.env.NODE_ENV === "production",
+                maxAge: 900, // 15분
+                domain: process.env.NODE_ENV === "production" ? "801base.com" : "localhost",
             },
         },
     },
