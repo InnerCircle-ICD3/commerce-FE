@@ -6,13 +6,21 @@ import { processLoginCallback } from "@/lib/authService";
 
 // 네이버 프로필 타입 정의
 interface NaverProfile {
-    email?: string;
-    name?: string;
-    nickname?: string;
-    profile_image?: string;
-    gender?: string;
-    birthday?: string;
-    age?: string;
+    resultcode: string;
+    message: string;
+    response: {
+        id: string;
+        email: string;
+        name: string;
+        nickname: string;
+        profile_image: string;
+        gender: string;
+        birthday: string;
+        birthyear: string;
+        age: string;
+        mobile?: string;
+        mobile_e164?: string;
+    };
 }
 
 const handler = NextAuth({
@@ -112,15 +120,17 @@ const handler = NextAuth({
 
                 // user_profile 구성 (네이버 프로필 정보 매핑)
                 const naverProfile = profile as NaverProfile;
+                console.log("naverProfile", naverProfile);
                 const userProfile = {
-                    email: naverProfile.email || "",
-                    name: naverProfile.name || "",
-                    nickname: naverProfile.nickname || "",
-                    profile_image: naverProfile.profile_image || "",
-                    gender: naverProfile.gender || "",
-                    birthday: naverProfile.birthday || "",
-                    age: naverProfile.age || "",
+                    email: naverProfile.response.email || "",
+                    name: naverProfile.response.name || "",
+                    nickname: naverProfile.response.nickname || "",
+                    profile_image: naverProfile.response.profile_image || "",
+                    gender: naverProfile.response.gender || "",
+                    birthday: naverProfile.response.birthday || "",
+                    age: naverProfile.response.age || "",
                 };
+                console.log("userProfile", userProfile);
 
                 // 서버로 콜백 데이터 전송하고 토큰 받기
                 const tokens = await processLoginCallback(authInfo, userProfile);
