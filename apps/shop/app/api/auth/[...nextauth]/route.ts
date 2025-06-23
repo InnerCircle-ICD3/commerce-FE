@@ -20,6 +20,11 @@ const handler = NextAuth({
         NaverProvider({
             clientId: process.env.NAVER_CLIENT_ID ?? "",
             clientSecret: process.env.NAVER_CLIENT_SECRET ?? "",
+            authorization: {
+                params: {
+                    scope: "email,nickname,profile_image"
+                }
+            }
         }),
     ],
     // 디버그 모드 설정 (개발 환경에서만 활성화)
