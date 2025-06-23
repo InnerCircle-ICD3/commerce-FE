@@ -2,7 +2,7 @@
 
 import Item from "./Item";
 import EmptyCart from "./EmptyCart";
-import { useState } from "react";
+import { useState, useEffect } from "react";
 import { type CustomError, fetchClient } from "@/src/shared/fetcher";
 import type { CartItem } from "@/src/features/cart/types/cart";
 import { useMutation, useQueryClient } from "@tanstack/react-query";
@@ -15,6 +15,12 @@ export default function CartProduct({ cartItems }: { cartItems: CartItem[] }) {
 
     const fetch = fetchClient();
     const isAllSelected = cartItems.length > 0 && selectedItemIds.length === cartItems.length;
+
+    // cartItems가 변경될 때 selectedItemIds를 정리 (삭제된 아이템 제거)
+    useEffect(() => {
+        const currentCartItemIds = cartItems.map(item => item.cartItemId);
+        setSelectedItemIds(prev => prev.filter(id => currentCartItemIds.includes(id)));
+    }, [cartItems]);
 
     const onSelectAllClick = () => {
         if (isAllSelected) {
@@ -41,8 +47,8 @@ export default function CartProduct({ cartItems }: { cartItems: CartItem[] }) {
                 headers: { "Content-Type": "application/json" },
             });
         },
-        onSuccess: () => {
-            setSelectedItemIds([]);
+        onSuccess: (_, deletedItemIds) => {
+            setSelectedItemIds(prev => prev.filter(id => !deletedItemIds.includes(id))); // 삭제된 아이템만 선택 목록에서 제거 (나머지 선택 상태 유지)
             queryClient.invalidateQueries({ queryKey: ["cart"] });
         },
         onError: (e: unknown) => {
