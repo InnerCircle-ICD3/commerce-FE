@@ -92,7 +92,7 @@ const UserSection = ({
 
 function Header() {
     const router = useRouter();
-    const { data: session, status } = useSession();
+    const { data: session, status, update } = useSession();
     const { data: cartData } = useCart();
 
     // 장바구니 아이템 총 개수 계산
@@ -101,9 +101,11 @@ function Header() {
     // 로그아웃 처리 함수
     const handleLogout = async () => {
         await signOut({ redirect: false });
+        update();
         router.push("/main");
         router.refresh();
     };
+
     return (
         <div className="w-full bg-white border-b border-gray-200">
             <header className="px-6 py-4 mx-auto max-w-7xl">
