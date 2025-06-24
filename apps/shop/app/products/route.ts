@@ -10,7 +10,7 @@ export async function GET(request: NextRequest) {
         const name = searchParams.get("name") || undefined;
         const intensityId = searchParams.get("intensityId") ? Number.parseInt(searchParams.get("intensityId") || "0") : undefined;
         const cupSizeId = searchParams.get("cupSizeId") ? Number.parseInt(searchParams.get("cupSizeId") || "0") : undefined;
-        const page = Number.parseInt(searchParams.get("page") || "0");
+        const page = Number.parseInt(searchParams.get("page") || "1");
         const size = Number.parseInt(searchParams.get("size") || "20");
 
         // 문자열 필터 파라미터 추가

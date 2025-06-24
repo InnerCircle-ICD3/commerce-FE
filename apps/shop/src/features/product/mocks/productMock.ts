@@ -314,7 +314,7 @@ const PRODUCT_REVIEWS: Record<number, ReviewType[]> = {
 /**
  * 제품 리뷰 목 데이터를 반환하는 함수
  */
-export function getMockReviews(page = 0, size = 20, productId?: string): ReviewResponse {
+export function getMockReviews(page = 1, size = 20, productId?: string): ReviewResponse {
     const id = productId ? Number.parseInt(productId, 10) : 1;
 
     // 해당 제품이 존재하는지 확인

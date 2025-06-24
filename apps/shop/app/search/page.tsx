@@ -16,7 +16,7 @@ interface SearchPageProps {
 export default async function Search({ searchParams }: SearchPageProps) {
     const params = await searchParams;
     const searchTerm = params.q || "";
-    const page = Number.parseInt(params.page || "1") - 1; // 1-based를 0-based로 변환
+    const page = Number.parseInt(params.page || "1"); // 1-based 페이지네이션 유지
 
     // 서버에서 데이터 fetch
     const searchResult = await searchProducts(searchTerm, page, 20);
@@ -26,7 +26,7 @@ export default async function Search({ searchParams }: SearchPageProps) {
             initialProducts={searchResult.content || []}
             initialTotalElements={searchResult.totalElements || 0}
             initialTotalPages={searchResult.totalPages || 0}
-            initialPage={page + 1} // 0-based를 1-based로 변환
+            initialPage={page} // 1-based 페이지네이션 유지
             initialSearchTerm={searchTerm}
         />
     );

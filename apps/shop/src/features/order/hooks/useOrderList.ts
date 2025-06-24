@@ -7,8 +7,9 @@ export const useOrderList = ({ status, period }: { status: OrderStatus | null; p
         queryKey: ["orderList", status, period],
         queryFn: ({ pageParam = 1 }) => getOrderList(pageParam, status, period),
         getNextPageParam: lastPage => {
-            const page = lastPage.data?.page || 0;
-            if (page === lastPage.data?.totalPages) {
+            const page = lastPage.data?.page || 1;
+            const totalPages = lastPage.data?.totalPages || 0;
+            if (page >= totalPages) {
                 return undefined;
             }
             return page + 1;

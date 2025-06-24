@@ -36,7 +36,7 @@ function handleSearchError(error: unknown, context: string, searchTerm: string, 
  */
 export async function searchProducts(
     searchTerm = "",
-    page = 0,
+    page = 1,
     size = 10,
     intensityIds?: string,
     cupSizeIds?: string,
