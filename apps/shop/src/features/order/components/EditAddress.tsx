@@ -46,9 +46,7 @@ export default function EditAddress({ address, onComplete }: EditAddressProps) {
 
     const openDaumPostCode = useDaumPostcodePopup();
 
-    const handleSubmit = (e: React.FormEvent<HTMLFormElement>) => {
-        e.preventDefault();
-        // validate();
+    const handleSubmit = () => {
         mutate({ address: { ...inputs, addressId: address?.addressId } });
     };
 
@@ -67,7 +65,7 @@ export default function EditAddress({ address, onComplete }: EditAddressProps) {
     };
 
     return (
-        <form className="flex flex-col gap-2" onSubmit={handleSubmit}>
+        <div className="flex flex-col gap-2">
             <div>
                 <h4 className={labelStyle()}>배송지명</h4>
                 <Input id="alias" name="alias" placeholder="ex) 집" value={inputs.alias} onChange={handleChange} />
@@ -134,11 +132,11 @@ export default function EditAddress({ address, onComplete }: EditAddressProps) {
                     />
                     <label htmlFor="isDefault">기본 배송지로 설정</label>
                 </div>
-                <Button size="full" type="submit">
+                <Button size="full" type="button" onClick={handleSubmit}>
                     저장하기
                 </Button>
             </div>
-        </form>
+        </div>
     );
 }
 
