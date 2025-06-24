@@ -3,7 +3,7 @@ import { type NextRequest, NextResponse } from "next/server";
 export async function DELETE(req: NextRequest, { params }: { params: Promise<{ addressId: string }> }) {
     const { addressId } = await params;
     try {
-        const response = await fetch(`${process.env.NEXT_PUBLIC_API_URL}/users/addresses/${addressId}`, {
+        const response = await fetch(`http://3.39.233.3:8080/users/addresses/${addressId}`, {
             method: "DELETE",
         });
         return NextResponse.json(response);
@@ -18,7 +18,7 @@ export async function PUT(req: NextRequest, { params }: { params: Promise<{ addr
     const body = await req.json();
 
     try {
-        const response = await fetch(`${process.env.NEXT_PUBLIC_API_URL}/users/addresses/${addressId}`, {
+        const response = await fetch(`http://3.39.233.3:8080/users/addresses/${addressId}`, {
             method: "PUT",
             body: JSON.stringify(body),
             headers: {

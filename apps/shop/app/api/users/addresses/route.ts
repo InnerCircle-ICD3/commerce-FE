@@ -13,7 +13,7 @@ const schema = z.object({
 
 export async function GET() {
     try {
-        const response = await fetch(`${process.env.NEXT_PUBLIC_API_URL}/users/addresses`, {
+        const response = await fetch("http://3.39.233.3:8080/users/addresses", {
             method: "GET",
             headers: {
                 "Content-Type": "application/json",
@@ -31,7 +31,7 @@ export async function GET() {
 export async function POST(req: NextRequest) {
     const body = await req.json();
     try {
-        const response = await fetch(`${process.env.NEXT_PUBLIC_API_URL}/users/addresses`, {
+        const response = await fetch("http://3.39.233.3:8080/users/addresses", {
             method: "POST",
             body: JSON.stringify(body),
             headers: {
