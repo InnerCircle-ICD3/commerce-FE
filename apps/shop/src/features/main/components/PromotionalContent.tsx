@@ -24,18 +24,19 @@ export default function CoffeeLetter() {
             </section>
             <section className="flex flex-col justify-center self-stretch my-auto min-w-60">
                 <div className="flex flex-col justify-center">
-                    <h2 className="text-base font-semibold tracking-tight leading-snug text-neutral-700">커피레터</h2>                    <h3 className="mt-3 text-3xl font-bold tracking-tight leading-9 text-black">
+                    <h2 className="text-base font-semibold tracking-tight leading-snug text-neutral-700">커피레터</h2>{" "}
+                    <h3 className="mt-3 text-3xl font-bold tracking-tight leading-9 text-black">
                         {/* Desktop version */}
                         <span className="hidden md:block">
-                            언제든지 편안하게,
+                            카페인 걱정 없는 여유로운 시간,
                             <br />
-                            여유로운 시간은 어떨까요?
+                            언제든지 편안하게 즐기세요
                         </span>
                         {/* Mobile version */}
                         <span className="block md:hidden">
-                            언제든지 편안하게,
+                            카페인 걱정 없는 여유로운 시간,
                             <br />
-                            여유로운 시간은 어떨까요?
+                            언제든지 편안하게 즐기세요
                         </span>
                     </h3>
                     <p className="mt-4 text-sm font-medium text-neutral-600">하루 중 언제라도 따뜻한 한 잔으로 여유를 즐기세요</p>

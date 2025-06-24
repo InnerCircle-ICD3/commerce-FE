@@ -18,16 +18,16 @@ const Products = async () => {
                     <h2 className="text-2xl font-bold mb-6 ml-20">추천 상품</h2>
                     <ProductGrid products={mockProducts} showArrows={false} />
                 </div> */}
-                
+
                 {/* 신상품 섹션 */}
                 <div className="mb-12">
-                    <h2 className="text-2xl font-bold mb-6 ml-20">신상품</h2>
+                    <h2 className="text-2xl font-bold mb-6">신상품</h2>
                     <ProductGrid products={productData.new} />
                 </div>
-                
+
                 {/* 베스트 상품 섹션 */}
                 <div>
-                    <h2 className="text-2xl font-bold mb-6 ml-20">베스트 상품</h2>
+                    <h2 className="text-2xl font-bold mb-6">베스트 상품</h2>
                     <ProductGrid products={productData.best} />
                 </div>
             </section>

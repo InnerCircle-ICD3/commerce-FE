@@ -6,13 +6,21 @@ import { processLoginCallback } from "@/lib/authService";
 
 // 네이버 프로필 타입 정의
 interface NaverProfile {
-    email?: string;
-    name?: string;
-    nickname?: string;
-    profile_image?: string;
-    gender?: string;
-    birthday?: string;
-    age?: string;
+    resultcode: string;
+    message: string;
+    response: {
+        id: string;
+        email: string;
+        name: string;
+        nickname: string;
+        profile_image: string;
+        gender: string;
+        birthday: string;
+        birthyear: string;
+        age: string;
+        mobile?: string;
+        mobile_e164?: string;
+    };
 }
 
 const handler = NextAuth({
@@ -20,6 +28,11 @@ const handler = NextAuth({
         NaverProvider({
             clientId: process.env.NAVER_CLIENT_ID ?? "",
             clientSecret: process.env.NAVER_CLIENT_SECRET ?? "",
+            authorization: {
+                params: {
+                    scope: "email,nickname,profile_image"
+                }
+            }
         }),
     ],
     // 디버그 모드 설정 (개발 환경에서만 활성화)
@@ -28,29 +41,54 @@ const handler = NextAuth({
     // Safari 호환성을 위한 쿠키 설정
     cookies: {
         sessionToken: {
-            name: "next-auth.session-token",
+            name: process.env.NODE_ENV === "production" ? "__Secure-next-auth.session-token" : "next-auth.session-token",
             options: {
                 httpOnly: true,
                 sameSite: "lax",
                 path: "/",
-                secure: process.env.NODE_ENV === "production", // HTTPS에서만 secure 쿠키 사용
+                secure: process.env.NODE_ENV === "production",
+                domain: process.env.NODE_ENV === "production" ? "801base.com" : "localhost", // 개발환경에서 명시적 도메인 설정
             },
         },
         callbackUrl: {
-            name: "next-auth.callback-url",
+            name: process.env.NODE_ENV === "production" ? "__Secure-next-auth.callback-url" : "next-auth.callback-url",
             options: {
                 sameSite: "lax",
                 path: "/",
                 secure: process.env.NODE_ENV === "production",
+                domain: process.env.NODE_ENV === "production" ? "801base.com" : "localhost",
             },
         },
         csrfToken: {
-            name: "next-auth.csrf-token",
+            name: process.env.NODE_ENV === "production" ? "__Host-next-auth.csrf-token" : "next-auth.csrf-token",
             options: {
                 httpOnly: true,
                 sameSite: "lax",
                 path: "/",
                 secure: process.env.NODE_ENV === "production",
+                domain: process.env.NODE_ENV === "production" ? "801base.com" : "localhost",
+            },
+        },
+        state: {
+            name: process.env.NODE_ENV === "production" ? "__Secure-next-auth.state" : "next-auth.state",
+            options: {
+                httpOnly: true,
+                sameSite: "lax",
+                path: "/",
+                secure: process.env.NODE_ENV === "production",
+                maxAge: 900, // 15분
+                domain: process.env.NODE_ENV === "production" ? "801base.com" : "localhost",
+            },
+        },
+        pkceCodeVerifier: {
+            name: process.env.NODE_ENV === "production" ? "__Secure-next-auth.pkce.code_verifier" : "next-auth.pkce.code_verifier",
+            options: {
+                httpOnly: true,
+                sameSite: "lax",
+                path: "/",
+                secure: process.env.NODE_ENV === "production",
+                maxAge: 900, // 15분
+                domain: process.env.NODE_ENV === "production" ? "801base.com" : "localhost",
             },
         },
     },
@@ -82,15 +120,17 @@ const handler = NextAuth({
 
                 // user_profile 구성 (네이버 프로필 정보 매핑)
                 const naverProfile = profile as NaverProfile;
+                console.log("naverProfile", naverProfile);
                 const userProfile = {
-                    email: naverProfile.email || "",
-                    name: naverProfile.name || "",
-                    nickname: naverProfile.nickname || "",
-                    profile_image: naverProfile.profile_image || "",
-                    gender: naverProfile.gender || "",
-                    birthday: naverProfile.birthday || "",
-                    age: naverProfile.age || "",
+                    email: naverProfile.response.email || "",
+                    name: naverProfile.response.name || "",
+                    nickname: naverProfile.response.nickname || "",
+                    profile_image: naverProfile.response.profile_image || "",
+                    gender: naverProfile.response.gender || "",
+                    birthday: naverProfile.response.birthday || "",
+                    age: naverProfile.response.age || "",
                 };
+                console.log("userProfile", userProfile);
 
                 // 서버로 콜백 데이터 전송하고 토큰 받기
                 const tokens = await processLoginCallback(authInfo, userProfile);

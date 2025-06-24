@@ -1,9 +1,10 @@
 "use client";
 
 import { useState, useEffect, useCallback } from "react";
-import { useSearchParams } from "next/navigation";
+import { useSearchParams, useRouter, usePathname } from "next/navigation";
 import SearchFilter from "./SearchFilter";
 import ProductList from "./ProductList";
+import Pagination from "@/src/shared/components/shared/Pagination";
 import { searchProducts } from "@/src/features/search/api/searchProductApi";
 import { getProductCategories, type CategoriesResponse, type CategoryItem } from "@/src/features/search/api/categoriesApi";
 import type { SearchResultResponse, Product } from "@/src/features/search/types";
@@ -14,18 +15,29 @@ import Loading from "@/src/shared/components/shared/Loading";
 interface SearchPageProps {
     initialProducts?: Product[];
     initialTotalElements?: number;
+    initialTotalPages?: number;
+    initialPage?: number;
     initialSearchTerm?: string;
 }
 
-export default function SearchPage({ initialProducts = [], initialTotalElements = 0, initialSearchTerm = "" }: SearchPageProps) {
+export default function SearchPage({
+    initialProducts = [],
+    initialTotalElements = 0,
+    initialTotalPages = 0,
+    initialPage = 1,
+    initialSearchTerm = "",
+}: SearchPageProps) {
     const searchParams = useSearchParams();
+    const router = useRouter();
+    const pathname = usePathname();
     const query = searchParams.get("q") || initialSearchTerm;
+    const currentPage = Number.parseInt(searchParams.get("page") || "1");
 
     const [searchResults, setSearchResults] = useState<SearchResultResponse | null>({
         content: initialProducts,
         totalElements: initialTotalElements,
-        totalPages: Math.ceil(initialTotalElements / 20),
-        page: 0,
+        totalPages: initialTotalPages,
+        page: initialPage - 1, // 1-based를 0-based로 변환
         size: 20,
     });
     const [productsLoading, setProductsLoading] = useState(false); // 상품 목록만을 위한 로딩 상태
@@ -35,6 +47,20 @@ export default function SearchPage({ initialProducts = [], initialTotalElements 
 
     // 카테고리 상태
     const [categories, setCategories] = useState<CategoriesResponse | null>(null);
+
+    // URL 업데이트 함수
+    const updateURL = useCallback(
+        (newPage = 1) => {
+            const params = new URLSearchParams(searchParams.toString());
+            if (newPage === 1) {
+                params.delete("page");
+            } else {
+                params.set("page", newPage.toString());
+            }
+            router.push(`${pathname}?${params.toString()}`);
+        },
+        [searchParams, router, pathname],
+    );
 
     // 카테고리 로드
     const loadCategories = useCallback(async () => {
@@ -53,15 +79,16 @@ export default function SearchPage({ initialProducts = [], initialTotalElements 
             // 개별 ID를 직접 사용 (그룹핑 없음)
             const intensityIds = selectedIntensity || undefined;
             const cupSizeIds = selectedCupSize || undefined;
+            const pageIndex = currentPage - 1; // 1-based를 0-based로 변환
 
-            const results = await searchProducts(query, 0, 20, intensityIds, cupSizeIds);
+            const results = await searchProducts(query, pageIndex, 20, intensityIds, cupSizeIds);
             setSearchResults(results);
         } catch (error) {
             console.error("검색 실패:", error);
         } finally {
             setProductsLoading(false);
         }
-    }, [query, selectedIntensity, selectedCupSize]);
+    }, [query, selectedIntensity, selectedCupSize, currentPage]);
 
     // 초기 카테고리 로드
     useEffect(() => {
@@ -78,10 +105,18 @@ export default function SearchPage({ initialProducts = [], initialTotalElements 
 
     const handleIntensityChange = (intensity: string | null) => {
         setSelectedIntensity(intensity);
+        // 필터 변경 시 첫 페이지로 이동
+        if (currentPage !== 1) {
+            updateURL(1);
+        }
     };
 
     const handleCupSizeChange = (cupSize: string | null) => {
         setSelectedCupSize(cupSize);
+        // 필터 변경 시 첫 페이지로 이동
+        if (currentPage !== 1) {
+            updateURL(1);
+        }
     };
 
     // 카테고리가 로딩 중일 때만 전체 로딩 화면 표시
@@ -121,7 +156,18 @@ export default function SearchPage({ initialProducts = [], initialTotalElements 
                                     <Loading message="상품을 검색하는 중..." />
                                 </div>
                             ) : (
-                                <ProductList products={searchResults?.content || []} />
+                                <>
+                                    <ProductList products={searchResults?.content || []} />
+
+                                    {/* 페이징 컴포넌트 추가 */}
+                                    {searchResults?.totalPages && searchResults.totalPages > 1 && (
+                                        <Pagination
+                                            page={currentPage}
+                                            totalPages={searchResults.totalPages}
+                                            totalElements={searchResults.totalElements}
+                                        />
+                                    )}
+                                </>
                             )}
                         </div>
                     </div>

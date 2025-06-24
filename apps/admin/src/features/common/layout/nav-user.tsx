@@ -20,9 +20,9 @@ export function NavUser({ user: fallbackUser }: NavUserProps) {
     // 실제 로그인한 사용자 정보를 우선 사용
     const user = loggedInUser ||
         fallbackUser || {
-            name: "관리자",
-            email: "admin@example.com",
-        };
+        name: "관리자",
+        email: "admin@example.com",
+    };
 
     const handleLogout = () => {
         signOut();
@@ -42,8 +42,8 @@ export function NavUser({ user: fallbackUser }: NavUserProps) {
                 </div>
                 {open && (
                     <div className="truncate">
-                        <div className="truncate text-sm font-medium">{user.name}</div>
-                        <div className="truncate text-xs text-gray-500 dark:text-zinc-400">{user.email}</div>
+                        <div className="truncate text-sm text-gray-500 dark:text-white-400 font-medium">{user.name}</div>
+                        <div className="truncate text-xs text-gray-500 dark:text-white-400">{user.email}</div>
                     </div>
                 )}
             </div>

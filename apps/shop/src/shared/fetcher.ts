@@ -30,6 +30,7 @@ const createFetcher = (url: string, getHeaders?: () => Promise<HeadersInit> | He
         const headers = getHeaders ? await getHeaders() : {};
         const res = await fetch(`${url}${path}`, {
             ...options,
+            cache: "no-store",
             headers: {
                 ...headers,
                 "Content-Type": "application/json",

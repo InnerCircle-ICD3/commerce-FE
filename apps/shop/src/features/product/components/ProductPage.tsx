@@ -17,11 +17,7 @@ interface ProductPageProps {
 }
 
 export function ProductPage({ product, reviews, reviewStats, recommendedProducts }: ProductPageProps) {
-    const breadcrumbItems = [
-        { label: "버츄오", href: "/category/virtuo" },
-        { label: "New 시즌 한정 커피", href: "/category/seasonal" },
-        { label: product.name, isCurrent: true },
-    ];
+    const breadcrumbItems = [{ label: product.name, isCurrent: true }];
 
     // 채팅을 위한 상품 정보 구성
     const productInfoForChat = {
