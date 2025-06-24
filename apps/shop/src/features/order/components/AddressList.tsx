@@ -66,7 +66,7 @@ export default function AddressList({ onSelect, selectMode = false, selectedAddr
             </ul>
             {selectMode && (
                 <div className="py-5">
-                    <Button size="full" onClick={handleSumit}>
+                    <Button size="full" type="button" onClick={handleSumit}>
                         변경하기
                     </Button>
                 </div>
