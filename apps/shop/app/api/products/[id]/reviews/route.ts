@@ -67,7 +67,7 @@ export async function GET(request: NextRequest, { params }: { params: Promise<{ 
         const url = new URL(request.url);
 
         // 쿼리 파라미터 파싱
-        const page = Number.parseInt(url.searchParams.get("page") || "0");
+        const page = Number.parseInt(url.searchParams.get("page") || "1");
         const size = Number.parseInt(url.searchParams.get("size") || "10");
 
         // 해당 상품의 리뷰 데이터 가져오기

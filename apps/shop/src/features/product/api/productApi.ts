@@ -84,7 +84,7 @@ const emptyReview: ReviewResponse = {
 /**
  * 제품 리뷰를 가져오는 API 함수
  */
-export async function getProductReviews(productId: string, page = 0, sort?: string): Promise<ReviewResponse> {
+export async function getProductReviews(productId: string, page = 1, sort?: string): Promise<ReviewResponse> {
     // 제품 ID 기반 목 데이터 생성 함수
     const mockFn = () => getMockReviews(page, 20, productId);
 

@@ -37,7 +37,7 @@ export default function SearchPage({
         content: initialProducts,
         totalElements: initialTotalElements,
         totalPages: initialTotalPages,
-        page: initialPage - 1, // 1-based를 0-based로 변환
+        page: initialPage, // 1-based 페이지네이션 유지
         size: 20,
     });
     const [productsLoading, setProductsLoading] = useState(false); // 상품 목록만을 위한 로딩 상태
@@ -79,9 +79,8 @@ export default function SearchPage({
             // 개별 ID를 직접 사용 (그룹핑 없음)
             const intensityIds = selectedIntensity || undefined;
             const cupSizeIds = selectedCupSize || undefined;
-            const pageIndex = currentPage - 1; // 1-based를 0-based로 변환
 
-            const results = await searchProducts(query, pageIndex, 20, intensityIds, cupSizeIds);
+            const results = await searchProducts(query, currentPage, 20, intensityIds, cupSizeIds);
             setSearchResults(results);
         } catch (error) {
             console.error("검색 실패:", error);

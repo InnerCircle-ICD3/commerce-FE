@@ -44,7 +44,7 @@ export default function ProductsPage() {
         queryFn: () => {
             const searchParam = query ? `${searchType}=${encodeURIComponent(query)}&` : "";
             const statusParam = statusFilter !== "ALL" ? `status=${statusFilter === "SELLING" ? "ON_SALE" : "UNAVAILABLE"}&` : "";
-            const pageParam = `page=${currentPage - 1}&size=10&`;
+            const pageParam = `page=${currentPage}&size=10&`;
             const isParamEmpty = !searchParam && !statusParam && !pageParam;
 
             return fetcher(`admin/products${isParamEmpty ? "" : "?"}${searchParam}${statusParam}${pageParam}`);
